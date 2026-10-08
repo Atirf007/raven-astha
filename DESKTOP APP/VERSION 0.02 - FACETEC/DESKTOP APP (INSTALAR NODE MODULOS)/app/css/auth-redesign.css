@@ -1,0 +1,312 @@
+/* ============================================================
+   ASTAH RAVEN — AUTHENTICATION REDESIGN
+   Estilos baseados na interface limpa, radial gradient purple
+   ============================================================ */
+
+:root {
+  --astah-purple-bg: #e3d5ff;
+  --astah-purple-btn: #8b5cf6;
+  --astah-purple-btn-hover: #7c3aed;
+  --astah-purple-dark: #4c1d95;
+  --astah-text-dark: #1e293b;
+  --astah-text-muted: #64748b;
+  --astah-border: #f1f5f9;
+}
+
+body.auth-redesign {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', system-ui, sans-serif;
+  /* Soft purple gradient background with blur effect */
+  background: radial-gradient(circle at 60% 40%, rgba(139, 92, 246, 0.4) 0%, rgba(227, 213, 255, 0.2) 50%, #fdfcff 100%);
+  background-color: #fdfcff;
+}
+
+.auth-box {
+  width: 900px;
+  max-width: 95vw;
+  min-height: 500px;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.08), 0 1px 3px rgba(0,0,0,0.02);
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+
+.auth-box-left {
+  flex: 1;
+  padding: 60px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-box-right {
+  flex: 1;
+  padding: 60px 50px;
+  background: #fcfbfe;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.auth-box-right::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(139,92,246,0.1), transparent);
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--astah-text-dark);
+  letter-spacing: 0.5px;
+}
+.auth-logo img {
+  height: 28px;
+  border-radius: 6px;
+}
+
+.auth-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--astah-text-dark);
+  margin-bottom: 8px;
+}
+
+.auth-subtitle {
+  font-size: 13px;
+  color: var(--astah-purple-btn);
+  margin-bottom: 32px;
+}
+
+.auth-input-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.auth-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 1.5px solid var(--astah-border);
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--astah-text-dark);
+  outline: none;
+  transition: all 0.2s ease;
+  background: #fff;
+}
+.auth-input::placeholder { color: #cbd5e1; }
+.auth-input:focus {
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+}
+
+.auth-btn {
+  width: 100%;
+  height: 48px;
+  background: var(--astah-purple-btn);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+.auth-btn:hover { background: var(--astah-purple-btn-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(139,92,246,0.3); }
+.auth-btn:active { transform: translateY(0); }
+
+/* Lado Direito (Hero) */
+.auth-hero-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--astah-purple-dark);
+  line-height: 1.2;
+  text-align: right;
+  margin-bottom: auto;
+}
+.auth-hero-footer {
+  text-align: right;
+  margin-top: auto;
+}
+.auth-hero-footer h4 {
+  font-size: 13px;
+  color: var(--astah-text-dark);
+  margin-bottom: 4px;
+}
+.auth-hero-footer p {
+  font-size: 12px;
+  color: var(--astah-text-muted);
+  line-height: 1.5;
+}
+
+/* Links externos inferiores */
+.auth-bottom-links {
+  margin-top: 30px;
+  display: flex;
+  gap: 24px;
+  z-index: 10;
+}
+.auth-bottom-links a {
+  color: var(--astah-purple-dark);
+  font-size: 13px;
+  text-decoration: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.auth-bottom-links a:hover { opacity: 1; }
+
+/* EYE ICON */
+.pwd-toggle {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+}
+.pwd-toggle:hover { color: var(--astah-purple-btn); }
+/* ============================================================
+   ASTAH RAVEN — WIZARD REGISTRATION CSS
+   ============================================================ */
+
+.wizard-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.wizard-step {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.wizard-step.active {
+  pointer-events: auto;
+}
+
+.wizard-step.previous {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.wizard-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.wizard-header h2 {
+  font-size: 28px;
+  color: var(--astah-text-dark);
+  margin-bottom: 8px;
+}
+.wizard-header p {
+  color: var(--astah-text-muted);
+  font-size: 15px;
+}
+
+/* CARDS: Account Type Selection */
+.account-type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.type-card {
+  border: 2px solid var(--astah-border);
+  border-radius: 20px;
+  padding: 32px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fff;
+}
+.type-card:hover {
+  border-color: rgba(139,92,246,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(139,92,246,0.08);
+}
+.type-card.selected {
+  border-color: var(--astah-purple-btn);
+  background: rgba(139,92,246,0.03);
+}
+.type-card svg {
+  color: var(--astah-purple-btn);
+  margin-bottom: 16px;
+  width: 48px;
+  height: 48px;
+}
+.type-card h3 {
+  color: var(--astah-text-dark);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.type-card p {
+  color: var(--astah-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.wizard-controls {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 400px;
+}
+.btn-back {
+  background: transparent;
+  color: var(--astah-text-muted);
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.btn-back:hover { color: var(--astah-text-dark); }
+
+.wizard-form-group {
+  width: 100%;
+  max-width: 400px;
+}
+
+.wizard-success {
+  text-align: center;
+}
+.wizard-success svg {
+  color: #10b981;
+  margin-bottom: 24px;
+  animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes scaleIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+.wizard-container {
+  min-height: 500px;
+}

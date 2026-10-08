@@ -1,0 +1,376 @@
+/* ============================================================
+   ASTAH RAVEN ? Forms (forms.css)
+   Estilos de formulários, auth pages, validação visual
+   ============================================================ */
+
+/* ???? Auth Page Layout ???? */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  background: var(--bg-primary);
+  background-image: var(--gradient-mesh);
+}
+
+.auth-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+  position: relative;
+}
+
+.auth-right {
+  flex: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(255,255,255,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(0,0,0,0.2) 0%, transparent 50%);
+}
+
+.auth-right-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #fff;
+  padding: var(--space-8);
+  max-width: 400px;
+}
+
+.auth-right-content h2 {
+  margin-bottom: var(--space-4);
+}
+
+.auth-right-content p {
+  color: rgba(255,255,255,0.8);
+}
+
+@media (min-width: 1024px) {
+  .auth-right { display: flex; }
+}
+
+/* ???? Form Container ???? */
+.form-container {
+  width: 100%;
+  max-width: 440px;
+}
+
+.form-header {
+  margin-bottom: var(--space-8);
+}
+
+.form-header .logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+}
+
+.form-header h1 {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-2);
+}
+
+.form-header p {
+  font-size: var(--text-base);
+}
+
+/* ???? Form ???? */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 480px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+
+/* ???? Password Strength ???? */
+.password-strength {
+  display: flex;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.password-strength-bar {
+  flex: 1;
+  height: 3px;
+  background: var(--surface-glass);
+  border-radius: var(--radius-full);
+  transition: background var(--transition-fast);
+}
+
+.password-strength-bar.weak { background: var(--color-error); }
+.password-strength-bar.medium { background: var(--color-warning); }
+.password-strength-bar.strong { background: var(--color-success); }
+
+.password-strength-text {
+  font-size: var(--text-xs);
+  margin-top: var(--space-1);
+}
+
+/* ???? Social Login ???? */
+.social-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin: var(--space-6) 0;
+}
+
+.social-divider::before,
+.social-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--surface-border);
+}
+
+.social-divider span {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.social-buttons {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.social-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--surface-glass);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.social-btn:hover {
+  background: var(--surface-glass-hover);
+  border-color: var(--surface-border-hover);
+}
+
+.social-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ???? Checkbox ???? */
+.checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--surface-border);
+  background: var(--surface-glass);
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all var(--transition-fast);
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.checkbox-group input[type="checkbox"]:checked::after {
+  content: '?S';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.checkbox-group label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.checkbox-group label a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+/* ???? Form Footer ???? */
+.form-footer {
+  text-align: center;
+  margin-top: var(--space-6);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.form-footer a {
+  color: var(--color-primary);
+  font-weight: var(--font-medium);
+}
+
+.form-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ???? Form Link row ???? */
+.form-link-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-link-row a {
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+}
+
+.form-link-row a:hover {
+  text-decoration: underline;
+}
+
+/* ???? Multi-step Progress ???? */
+.step-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-8);
+}
+
+.step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--surface-glass);
+  border: 2px solid var(--surface-border);
+  transition: all var(--transition-base);
+}
+
+.step-dot.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+.step-dot.completed {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.step-line {
+  width: 40px;
+  height: 2px;
+  background: var(--surface-border);
+  transition: background var(--transition-base);
+}
+
+.step-line.completed {
+  background: var(--color-success);
+}
+
+/* ???? Contact Page ???? */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-12);
+  align-items: start;
+}
+
+.contact-info-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: var(--surface-glass);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+}
+
+.contact-info-card:hover {
+  border-color: var(--surface-border-hover);
+  transform: translateX(4px);
+}
+
+.contact-info-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  background: var(--gradient-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 20px;
+  border: 1px solid var(--surface-border);
+}
+
+.contact-info-card h4 {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-1);
+}
+
+.contact-info-card p {
+  font-size: var(--text-sm);
+}
+
+.contact-info-card a {
+  color: var(--color-primary);
+}
+
+/* WhatsApp Button */
+.btn-whatsapp {
+  background: #25D366;
+  color: #fff;
+}
+
+.btn-whatsapp:hover {
+  background: #20BD5A;
+  box-shadow: 0 0 20px rgba(37, 211, 102, 0.3);
+}
+
+@media (max-width: 768px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+
+
+
+

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Quem Somos — Kazinho Systems: tecnologia, inovação e excelência em gestão empresarial.">
+  <title>Quem Somos — Kazinho Systems</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/hero.css">
+  <link rel="stylesheet" href="../css/sections.css">
+  <link rel="stylesheet" href="../css/kazinho.css">
+  <link rel="shortcut icon" type="image/png" href="../images/Logotipo (Alpha).png">
+  <style>
+    /* ── Hero ── */
+    .about-hero {
+      padding-top: calc(var(--navbar-height) + var(--space-20));
+      padding-bottom: var(--space-16);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gradient-mesh);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .about-hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(to top, var(--bg-primary), transparent);
+      pointer-events: none;
+    }
+    .about-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, var(--text-6xl));
+      font-weight: var(--font-extrabold);
+      margin-bottom: var(--space-6);
+      position: relative;
+      letter-spacing: -0.02em;
+    }
+    .about-hero .hero-sub {
+      font-size: var(--text-xl);
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: var(--leading-relaxed);
+      position: relative;
+    }
+
+    /* ── Mission / Vision / Values cards ── */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-6);
+      margin-top: var(--space-12);
+    }
+    .pillar-card {
+      padding: var(--space-8);
+      background: var(--surface-glass);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-xl);
+      backdrop-filter: blur(var(--blur-md));
+      transition: all var(--transition-slow);
+      position: relative;
+      overflow: hidden;
+    }
+    .pillar-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-primary);
+      opacity: 0;
+      transition: opacity var(--transition-slow);
+    }
+    .pillar-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(108,99,255,0.3);
+      box-shadow: var(--shadow-lg), 0 0 30px rgba(108,99,255,0.1);
+    }
+    .pillar-card:hover::before { opacity: 1; }
+    .pillar-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(108,99,255,0.15), rgba(0,212,255,0.08));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-5);
+      border: 1px solid rgba(108,99,255,0.2);
+      color: var(--color-primary);
+    }
+    .pillar-icon svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .pillar-card h3 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-bold);
+      margin-bottom: var(--space-3);
+    }
+    .pillar-card p {
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+      font-size: var(--text-sm);
+    }
+
+    /* ── Stats row ── */
+    .about-stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-6);
+      margin-top: var(--space-16);
+      padding: var(--space-10) 0;
+      border-top: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--surface-border);
+    }
+    .about-stat-item { text-align: center; }
+    .about-stat-num {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      font-weight: var(--font-extrabold);
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .about-stat-lbl {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      margin-top: var(--space-1);
+    }
+
+    /* ── Team section ── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-8);
+      margin-top: var(--space-10);
+    }
+    .team-card {
+      text-align: center;
+      padding: var(--space-8) var(--space-6);
+      background: var(--surface-glass);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-xl);
+      backdrop-filter: blur(var(--blur-md));
+      transition: all var(--transition-slow);
+    }
+    .team-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(108,99,255,0.25);
+      box-shadow: var(--shadow-lg), 0 0 20px rgba(108,99,255,0.08);
+    }
+    .team-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      margin: 0 auto var(--space-5);
+      background: linear-gradient(145deg, rgba(108,99,255,0.2), rgba(0,212,255,0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      border: 2px solid rgba(108,99,255,0.3);
+    }
+    .team-avatar svg {
+      width: 40px;
+      height: 40px;
+      stroke: var(--color-primary);
+      fill: none;
+      stroke-width: 1.5;
+    }
+    .team-card h4 {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      margin-bottom: var(--space-1);
+    }
+    .team-card .team-role {
+      font-size: var(--text-sm);
+      color: var(--color-primary);
+      font-weight: var(--font-medium);
+      margin-bottom: var(--space-3);
+    }
+    .team-card .team-bio {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+    }
+
+    /* ── Timeline ── */
+    .timeline {
+      max-width: 720px;
+      margin: 0 auto;
+      position: relative;
+      padding-left: var(--space-10);
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--color-primary), var(--color-secondary), transparent);
+    }
+    .timeline-item {
+      margin-bottom: var(--space-10);
+      position: relative;
+      padding-left: var(--space-6);
+      opacity: 0;
+      transform: translateX(-20px);
+      animation: tlSlideIn 0.5s ease forwards;
+    }
+    .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+    .timeline-item:nth-child(2) { animation-delay: 0.25s; }
+    .timeline-item:nth-child(3) { animation-delay: 0.4s; }
+    .timeline-item:nth-child(4) { animation-delay: 0.55s; }
+    .timeline-item:nth-child(5) { animation-delay: 0.7s; }
+    @keyframes tlSlideIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-10) - 5px);
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      border: 3px solid var(--bg-primary);
+      box-shadow: 0 0 12px rgba(108,99,255,0.5);
+    }
+    .timeline-year {
+      font-size: var(--text-sm);
+      font-weight: var(--font-bold);
+      color: var(--color-primary);
+      margin-bottom: var(--space-2);
+      letter-spacing: 0.05em;
+    }
+    .timeline-title {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      margin-bottom: var(--space-1);
+    }
+    .timeline-text {
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+    }
+
+    /* ── Tech stack ── */
+    .tech-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      justify-content: center;
+      margin-top: var(--space-8);
+    }
+    .tech-badge {
+      padding: var(--space-3) var(--space-6);
+      background: var(--surface-glass);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-full);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      font-weight: var(--font-medium);
+      transition: all var(--transition-base);
+      backdrop-filter: blur(var(--blur-sm));
+    }
+    .tech-badge:hover {
+      border-color: rgba(108,99,255,0.3);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(108,99,255,0.1);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .about-stats-row { grid-template-columns: repeat(2, 1fr); }
+      .pillars-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <nav class="navbar scrolled" id="navbar">
+    <div class="navbar-inner">
+      <a href="../index.html" class="navbar-logo">
+        <img src="../images/Logotipo (Alpha).png" alt="Kazinho Systems" style="height:32px;vertical-align:middle">
+      </a>
+      <div class="navbar-links">
+        <a href="../index.html#servicos" class="navbar-link">Serviços</a>
+        <a href="index.html" class="navbar-link">EVAH OPHIM</a>
+        <a href="contact.html" class="navbar-link">Contato</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="login.html" class="btn btn-ghost">Login</a>
+        <a href="index.html" class="btn btn-primary">Conheça o EVAH →</a>
+      </div>
+      <button class="navbar-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="navbar-mobile" id="navMobile">
+      <a href="../index.html#servicos" class="navbar-link">Serviços</a>
+      <a href="index.html" class="navbar-link">EVAH OPHIM</a>
+      <a href="contact.html" class="navbar-link">Contato</a>
+      <div class="navbar-actions">
+        <a href="login.html" class="btn btn-secondary btn-block">Login</a>
+        <a href="index.html" class="btn btn-primary btn-block">Conheça o EVAH →</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ═══ HERO ═══ -->
+    <section class="about-hero">
+      <div class="container">
+        <h1 class="reveal">Quem <span class="text-gradient">Somos</span></h1>
+        <p class="hero-sub reveal">Nascemos da paixão por conectar tecnologia e operação industrial. A Kazinho Systems desenvolve soluções que transformam a gestão empresarial com inovação, segurança e excelência — tornando a transformação digital acessível para empresas de todos os tamanhos.</p>
+      </div>
+    </section>
+
+    <!-- ═══ MISSÃO / VISÃO / VALORES ═══ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Nosso Propósito</span>
+          <h2>O que nos <span class="text-gradient">move</span></h2>
+        </div>
+        <div class="pillars-grid">
+          <div class="pillar-card reveal">
+            <div class="pillar-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16 12l-4-4-4 4M12 16V8"/></svg>
+            </div>
+            <h3>Missão</h3>
+            <p>Democratizar o acesso à tecnologia de gestão empresarial, entregando plataformas robustas, escaláveis e com suporte humanizado — para que cada empresa possa operar com a eficiência de uma grande corporação.</p>
+          </div>
+          <div class="pillar-card reveal">
+            <div class="pillar-icon">
+              <svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h3>Visão</h3>
+            <p>Ser referência nacional em soluções tecnológicas para gestão operacional, reconhecida pela qualidade, inovação contínua e pelo impacto real que geramos nos resultados dos nossos clientes.</p>
+          </div>
+          <div class="pillar-card reveal">
+            <div class="pillar-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Valores</h3>
+            <p>Excelência técnica, segurança intransigente (LGPD nativa), inovação com propósito, transparência radical e parceria genuína com cada cliente que confia em nossas soluções.</p>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="about-stats-row reveal">
+          <div class="about-stat-item">
+            <div class="about-stat-num" data-target="10">0</div>
+            <div class="about-stat-lbl">Anos de Experiência</div>
+          </div>
+          <div class="about-stat-item">
+            <div class="about-stat-num" data-target="150">0</div>
+            <div class="about-stat-lbl">Clientes Ativos</div>
+          </div>
+          <div class="about-stat-item">
+            <div class="about-stat-num" data-target="35">0</div>
+            <div class="about-stat-lbl">Especialistas</div>
+          </div>
+          <div class="about-stat-item">
+            <div class="about-stat-num" data-target="99">0</div>
+            <div class="about-stat-lbl">% Satisfação</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ EQUIPE ═══ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Nossa Equipe</span>
+          <h2>Pessoas que fazem <span class="text-gradient">acontecer</span></h2>
+        </div>
+        <div class="team-grid">
+          <div class="team-card reveal">
+            <div class="team-avatar">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <h4>Carlos Eduardo</h4>
+            <div class="team-role">CEO & Founder</div>
+            <p class="team-bio">Engenheiro de automação com 15+ anos em indústria 4.0. Visionário por trás do EVAH OPHIM.</p>
+          </div>
+          <div class="team-card reveal">
+            <div class="team-avatar">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <h4>Marina Oliveira</h4>
+            <div class="team-role">CTO</div>
+            <p class="team-bio">Especialista em arquitetura cloud e backend. Lidera a engenharia por trás das nossas plataformas.</p>
+          </div>
+          <div class="team-card reveal">
+            <div class="team-avatar">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <h4>Rafael Santos</h4>
+            <div class="team-role">Head de Produto</div>
+            <p class="team-bio">Design thinking aplicado à indústria. Transforma complexidade operacional em interfaces intuitivas.</p>
+          </div>
+          <div class="team-card reveal">
+            <div class="team-avatar">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <h4>Ana Beatriz</h4>
+            <div class="team-role">Head de Segurança</div>
+            <p class="team-bio">CISSP certificada. Garante conformidade LGPD e segurança enterprise em toda a stack.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ TRAJETÓRIA ═══ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Nossa Trajetória</span>
+          <h2>Uma história de <span class="text-gradient">evolução</span></h2>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">2016</div>
+            <div class="timeline-title">Fundação</div>
+            <div class="timeline-text">Kazinho Systems nasce em São Paulo com foco em consultoria de TI para indústrias, atendendo os primeiros clientes do setor automotivo.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2019</div>
+            <div class="timeline-title">Automação Industrial</div>
+            <div class="timeline-text">Primeiros projetos de automação industrial e integração de sistemas CLP/SCADA, consolidando expertise no chão de fábrica.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2022</div>
+            <div class="timeline-title">Cloud-Native</div>
+            <div class="timeline-text">Parceria com Microsoft Azure e Google Cloud. Migração de clientes para infraestrutura cloud-native com alta disponibilidade.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2024</div>
+            <div class="timeline-title">EVAH OPHIM</div>
+            <div class="timeline-text">Lançamento da plataforma de gestão operacional inteligente, consolidando anos de aprendizado em um produto SaaS escalável.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2026</div>
+            <div class="timeline-title">Expansão & IA</div>
+            <div class="timeline-text">Integração de inteligência artificial, expansão para novos mercados e soluções totalmente personalizadas para grandes operações.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ TECNOLOGIAS ═══ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Stack Tecnológico</span>
+          <h2>Tecnologias que <span class="text-gradient">utilizamos</span></h2>
+          <p>Trabalhamos com as ferramentas mais modernas e confiáveis do mercado.</p>
+        </div>
+        <div class="tech-grid reveal">
+          <span class="tech-badge">Node.js</span>
+          <span class="tech-badge">Express</span>
+          <span class="tech-badge">MySQL</span>
+          <span class="tech-badge">Microsoft Azure</span>
+          <span class="tech-badge">Google Cloud</span>
+          <span class="tech-badge">Docker</span>
+          <span class="tech-badge">Kubernetes</span>
+          <span class="tech-badge">JavaScript / ES2024</span>
+          <span class="tech-badge">Python</span>
+          <span class="tech-badge">TensorFlow</span>
+          <span class="tech-badge">OAuth 2.0</span>
+          <span class="tech-badge">JWT</span>
+          <span class="tech-badge">REST APIs</span>
+          <span class="tech-badge">CI/CD</span>
+          <span class="tech-badge">WebSockets</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CTA ═══ -->
+    <section class="section cta-section">
+      <div class="container">
+        <div class="cta-box reveal-scale">
+          <h2>Vamos trabalhar juntos?</h2>
+          <p>Entre em contato e descubra como podemos transformar a gestão da sua empresa com tecnologia de ponta.</p>
+          <div style="display:flex;gap:var(--space-4);justify-content:center;flex-wrap:wrap;">
+            <a href="contact.html" class="btn btn-lg">Fale Conosco →</a>
+            <a href="index.html" class="btn btn-secondary btn-lg">Conheça o EVAH</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="navbar-logo">
+            <img src="../images/Logotipo (Alpha).png" alt="Kazinho Systems" style="height:28px;">
+          </a>
+          <p>Soluções tecnológicas de excelência para gestão empresarial.</p>
+        </div>
+        <div class="footer-column">
+          <h4>Produtos</h4>
+          <a href="index.html">EVAH OPHIM</a>
+          <a href="sistema/index.html">Sistema Beta</a>
+        </div>
+        <div class="footer-column">
+          <h4>Empresa</h4>
+          <a href="sobre.html">Quem Somos</a>
+          <a href="contact.html">Contato</a>
+        </div>
+        <div class="footer-column">
+          <h4>Legal</h4>
+          <a href="termos.html">Termos de Serviço</a>
+          <a href="privacidade.html">Privacidade & LGPD</a>
+          <a href="eula.html">EULA</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Kazinho Systems. Todos os direitos reservados.</span>
+        <span>Feito com 💜 por Kazinho Systems</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/animations.js"></script>
+  <script src="../js/navbar.js"></script>
+  <script>
+    // Counter animation for stats
+    document.addEventListener('DOMContentLoaded', () => {
+      const counters = document.querySelectorAll('[data-target]');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const target = parseFloat(el.dataset.target);
+          const dur = 2000;
+          const start = performance.now();
+          const step = (now) => {
+            const p = Math.min((now - start) / dur, 1);
+            const ease = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.floor(target * ease);
+            if (p < 1) requestAnimationFrame(step);
+            else el.textContent = target;
+          };
+          requestAnimationFrame(step);
+          observer.unobserve(el);
+        });
+      }, { threshold: 0.3 });
+      counters.forEach(c => observer.observe(c));
+    });
+  </script>
+</body>
+</html>
+
+

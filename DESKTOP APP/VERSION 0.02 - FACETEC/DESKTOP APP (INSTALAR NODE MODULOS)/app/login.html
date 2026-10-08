@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASTHA RAVEN - Login</title>
+  <link rel="stylesheet" href="./css/auth-redesign.css">
+</head>
+<body class="auth-redesign">
+  <script>
+    window.onerror = function(msg, url, lineNo, columnNo, error) {
+      alert("JS Error: " + msg + "\nLinha: " + lineNo + "\nArquivo: " + url);
+      return false;
+    };
+  </script>
+
+  <div class="auth-box">
+    
+    <!-- Lado Esquerdo: Formulário -->
+    <div class="auth-box-left">
+      <div class="auth-logo">
+        <img src="./images/Logotipo (Alpha).png" alt="Logo">
+        ASTHA RAVEN
+      </div>
+
+      <h1 class="auth-title">Bem-vindo ao ASTHA</h1>
+      <p class="auth-subtitle">Faça login para acessar o sistema</p>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="auth-input-group">
+          <input type="email" id="email" class="auth-input" placeholder="Crachá ou Usuário (E-mail)" required>
+        </div>
+        
+        <div class="auth-input-group">
+          <input type="password" id="password" class="auth-input" placeholder="Senha" required>
+          <button type="button" class="pwd-toggle" onclick="togglePwd()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </button>
+        </div>
+
+        <button type="submit" class="auth-btn">Entrar</button>
+      </form>
+    </div>
+
+    <!-- Lado Direito: Branding -->
+    <div class="auth-box-right">
+      <h2 class="auth-hero-title">
+        Seu Parceiro<br>
+        <strong>Inteligente para<br>
+        Gestão e controle!</strong>
+      </h2>
+
+      <div class="auth-hero-footer">
+        <h4><a href="./contact.html" style="color:var(--astah-text-dark); text-decoration:none;">Esqueceu a senha?</a></h4>
+        <p style="margin-top: 15px;"><a href="./register.html" style="color:var(--astah-purple-btn);text-decoration:none;font-weight:600;">Criar uma nova conta</a></p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="auth-bottom-links">
+    <a href="#">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+      Ajuda
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      Privacidade
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      Termos
+    </a>
+  </div>
+
+  <script src="./js/api.js?v=2"></script>
+  <script>
+    function togglePwd() {
+      const p = document.getElementById('password');
+      p.type = p.type === 'password' ? 'text' : 'password';
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const pass = document.getElementById('password').value;
+      const btn = document.querySelector('.auth-btn');
+      const originalText = btn.textContent;
+      
+      const oldError = document.getElementById('login-error-msg');
+      if(oldError) oldError.remove();
+
+      btn.textContent = 'Aguarde...';
+      btn.style.opacity = '0.7';
+
+      try {
+        const res = await API.post('/auth/login', { email, password: pass });
+        if (res.success && res.token) {
+          localStorage.setItem('astah_token', res.token);
+          if (res.user) {
+            localStorage.setItem('astah_user', JSON.stringify(res.user));
+          }
+          window.location.href = './home.html';
+        } else {
+          showError(res.error || 'Erro de autenticação. Verifique os dados e o servidor.');
+          btn.textContent = originalText;
+          btn.style.opacity = '1';
+        }
+      } catch (err) {
+        showError('Erro de conexão: ' + err.message);
+        btn.textContent = originalText;
+        btn.style.opacity = '1';
+      }
+    }
+
+    function showError(msg) {
+      const form = document.getElementById('loginForm');
+      const errDiv = document.createElement('div');
+      errDiv.id = 'login-error-msg';
+      errDiv.style.color = '#ef4444';
+      errDiv.style.fontSize = '13px';
+      errDiv.style.marginBottom = '15px';
+      errDiv.style.fontWeight = '500';
+      errDiv.textContent = msg;
+      form.insertBefore(errDiv, document.querySelector('.auth-btn'));
+    }
+  </script>
+</body>
+</html>

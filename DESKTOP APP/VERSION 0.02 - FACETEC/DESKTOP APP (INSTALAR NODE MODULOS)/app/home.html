@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASTHA RAVEN - Launchpad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100vh;
+      background-color: #f8fafc;
+      color: #0f172a;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Background subtle gradient */
+    body::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at top right, #e2e8f0 0%, #cbd5e1 100%);
+      z-index: 0;
+    }
+
+    /* Main Container imitating the template's window */
+    .app-window {
+      position: relative;
+      z-index: 1;
+      width: 95%; max-width: 1400px;
+      height: 90vh; max-height: 900px;
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      display: flex;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background-color: #f8fafc;
+      border-right: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px;
+    }
+
+    .brand {
+      font-size: 20px; font-weight: 700; color: #0f172a;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 40px; padding-left: 12px;
+    }
+    .brand-badge {
+      background: rgba(16, 185, 129, 0.15); color: #10b981;
+      font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-section { margin-bottom: 24px; }
+    .nav-label {
+      font-size: 11px; color: #64748b; text-transform: uppercase;
+      font-weight: 600; letter-spacing: 1px; margin-bottom: 12px;
+      padding-left: 12px;
+    }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; border-radius: 8px;
+      color: #475569; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+      text-decoration: none;
+      margin-bottom: 4px;
+    }
+    .nav-item:hover { background-color: rgba(0,0,0,0.03); color: #0f172a; }
+    .nav-item.active { background-color: rgba(0,0,0,0.05); color: #0f172a; border: 1px solid #e2e8f0; }
+    .nav-item svg { width: 16px; height: 16px; opacity: 0.7; }
+    .nav-item.active svg { opacity: 1; color: #10b981; }
+
+    /* Support Box */
+    .support-box {
+      margin-top: auto;
+      background-color: #ffffff; border: 1px solid #e2e8f0;
+      border-radius: 12px; padding: 16px;
+    }
+    .support-box h4 { font-size: 13px; margin-bottom: 4px; font-weight: 600; }
+    .support-box p { font-size: 11px; color: #475569; margin-bottom: 12px; line-height: 1.4; }
+    .support-btn {
+      width: 100%; padding: 8px; background-color: #10b981; color: #000;
+      border: none; border-radius: 6px; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: 0.2s;
+    }
+    .support-btn:hover { background-color: #0ea5e9; }
+
+    /* Main Content */
+    .main-content {
+      flex: 1; display: flex; flex-direction: column;
+      padding: 32px 40px; overflow-y: auto;
+    }
+
+    /* Topbar */
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 32px;
+    }
+    .page-title h1 { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+    .page-title p { font-size: 13px; color: #475569; }
+    
+    .user-pill {
+      display: flex; align-items: center; gap: 10px;
+      padding: 6px 12px 6px 6px; border: 1px solid #e2e8f0;
+      border-radius: 20px; background-color: #ffffff;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+    }
+    .user-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      background-color: #cbd5e1; display: flex; align-items: center;
+      justify-content: center; font-size: 10px; font-weight: 700;
+    }
+
+    /* Grid Layout */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      grid-auto-rows: minmax(140px, auto);
+    }
+
+    /* Cards */
+    .card {
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+      cursor: pointer; transition: border-color 0.2s, transform 0.2s;
+      text-decoration: none; color: inherit;
+    }
+    .card:hover { border-color: #cbd5e1; transform: translateY(-2px); }
+    
+    /* Hero Card (takes 2 columns) */
+    .card-hero { grid-column: span 2; grid-row: span 2; background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); }
+    .hero-title { font-size: 32px; font-weight: 700; margin-top: 16px; margin-bottom: 24px; letter-spacing: -0.5px; }
+    
+    .card-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; display: flex; justify-content: space-between; }
+    .card-subtitle { font-size: 12px; color: #475569; margin-bottom: 16px; }
+    
+    /* Status indicators */
+    .status {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; color: #0f172a;
+    }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background-color: #10b981; }
+    .status-dot.blue { background-color: #3b82f6; }
+    
+    /* Progress bars */
+    .progress-container { margin-top: auto; }
+    .progress-labels { display: flex; justify-content: space-between; font-size: 11px; color: #475569; margin-bottom: 6px; }
+    .progress-track { width: 100%; height: 4px; background-color: #e2e8f0; border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background-color: #10b981; border-radius: 2px; }
+
+    /* Action buttons inside cards */
+    .card-action {
+      position: absolute; bottom: 20px; right: 20px;
+      background-color: rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+      padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .card:hover .card-action { background-color: rgba(0,0,0,0.1); }
+
+    /* Icons */
+    .svg-icon { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Specific Cards Styling */
+    .stat-circle {
+      position: absolute; right: 20px; top: 20px;
+      width: 60px; height: 60px; border-radius: 50%;
+      border: 3px solid #e2e8f0; border-top-color: #10b981;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; transform: rotate(-45deg);
+    }
+    .stat-circle span { transform: rotate(45deg); }
+
+  </style>
+</head>
+<body>
+
+  <div class="app-window">
+    
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="brand">
+        ASTHA <span class="brand-badge">PRO</span>
+      </div>
+
+      <div class="nav-label">Main</div>
+      <a href="#" class="nav-item active">
+        <svg class="svg-icon"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        Launchpad
+      </a>
+      <a href="./sistema.html" class="nav-item">
+        <svg class="svg-icon"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        WMS Core
+      </a>
+
+      <div class="nav-label" style="margin-top: 24px;">Configurações</div>
+      <a href="javascript:void(0)" class="nav-item" onclick="window.location.href='./settings.html'">
+        <svg class="svg-icon"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        Corporativo
+      </a>
+      <a href="javascript:void(0)" class="nav-item" onclick="window.location.href='./settings.html'">
+        <svg class="svg-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        Meu Perfil
+      </a>
+      <a href="javascript:void(0)" class="nav-item" onclick="alert('Módulo Relatórios em desenvolvimento')">
+        <svg class="svg-icon"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        Relatórios
+      </a>
+
+      <div class="support-box">
+        <h4>Precisa de ajuda?</h4>
+        <p>Suporte técnico 24/7 disponível.</p>
+        <button class="support-btn" onclick="window.location.href='mailto:suporte@astah.com'">Falar com Suporte</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      
+      <div class="topbar">
+        <div class="page-title">
+          <p>Visão Geral</p>
+          <h1>Home</h1>
+        </div>
+        <div class="user-pill" onclick="window.location.href='./settings.html'" title="Sair">
+          <div class="user-avatar" id="avatarLetter">A</div>
+          <span id="userNameDisplay">Admin Supremo</span>
+        </div>
+      </div>
+
+      <div class="grid">
+        
+        <!-- Hero Card -->
+        <div class="card card-hero">
+          <div class="status"><div class="status-dot"></div> Sistema Operacional</div>
+          <div class="hero-title">Bem-vindo,<br><span id="heroName">Admin</span></div>
+          
+          <div style="display:flex; flex-direction:column; gap:12px; max-width:280px; margin-top:20px;">
+            <div class="status"><div class="status-dot"></div> WMS Core (Online)</div>
+            <div class="status"><div class="status-dot"></div> Sincronização 3D (Ativa)</div>
+            <div class="status"><div class="status-dot"></div> Banco de Dados (Estável)</div>
+          </div>
+
+          <a href="./sistema.html" class="card-action" style="text-decoration:none; color:inherit;">
+            Acessar WMS
+            <svg class="svg-icon"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </a>
+        </div>
+
+        <!-- WMS Gestão Card -->
+        <a href="./sistema.html" class="card">
+          <div class="card-title">Gestão WMS <svg class="svg-icon" style="width:14px;height:14px;opacity:0.5;"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+          <div class="card-subtitle">Controle de Estoque</div>
+          <div class="status"><div class="status-dot"></div> Operacional</div>
+          
+          <div class="progress-container">
+            <div class="progress-labels"><span>Capacidade</span> <span>45%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width: 45%;"></div></div>
+          </div>
+        </a>
+
+        <!-- Configurações Corporativas Card -->
+        <div class="card" onclick="window.location.href='./settings.html'">
+          <div class="card-title">Corporativo <svg class="svg-icon" style="width:14px;height:14px;opacity:0.5;"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+          <div class="card-subtitle">Regras e Usuários</div>
+          <div class="status"><div class="status-dot blue"></div> Atualizado</div>
+          
+          <div class="progress-container">
+            <div class="progress-labels"><span>Auditoria</span> <span>100%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width: 100%; background-color:#3b82f6;"></div></div>
+          </div>
+        </div>
+
+        <!-- Integrations Card -->
+        <div class="card" onclick="alert('Integrações em breve')">
+          <div class="card-title">Integrações <svg class="svg-icon" style="width:14px;height:14px;opacity:0.5;"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+          <div class="card-subtitle">APIs e ERP</div>
+          <div class="status"><div class="status-dot"></div> Conectado</div>
+          <div class="card-action">Gerenciar <svg class="svg-icon"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+        </div>
+
+        <!-- System Health Card -->
+        <div class="card" style="grid-column: span 2;">
+          <div class="card-title">Saúde do Sistema</div>
+          <div class="card-subtitle">Monitoramento em tempo real</div>
+          <div class="status"><div class="status-dot"></div> Verificação concluída</div>
+          
+          <div style="display:flex; justify-content:space-between; margin-top:24px;">
+             <div>
+               <div style="font-size:11px; color:#475569; margin-bottom:4px;">Latência API</div>
+               <div style="font-size:18px; font-weight:600;">24 ms</div>
+             </div>
+             <div>
+               <div style="font-size:11px; color:#475569; margin-bottom:4px;">Uptime DB</div>
+               <div style="font-size:18px; font-weight:600;">99.9%</div>
+             </div>
+             <div>
+               <div style="font-size:11px; color:#475569; margin-bottom:4px;">Sincronização 3D</div>
+               <div style="font-size:18px; font-weight:600; color:#10b981;">Ativa</div>
+             </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script src="./js/api.js?v=3">    
+  </script>
+    <script>
+    
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const userStr = localStorage.getItem('astah_user');
+        if (userStr) {
+          const user = JSON.parse(userStr);
+          document.getElementById('userNameDisplay').textContent = user.name || 'Admin';
+          document.getElementById('heroName').textContent = user.name || 'Admin';
+          if(user.name) {
+             document.getElementById('avatarLetter').textContent = user.name.charAt(0).toUpperCase();
+          }
+        }
+      } catch (e) {
+        console.error("Erro ao ler usuário", e);
+      }
+    });
+      
+  </script>
+    
+  </div>
+
+  
+      
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button onclick="document.getElementById('corpModal').style.display='none'" style="padding:8px 16px; background:#10b981; border:none; color:#ffffff; border-radius:6px; font-weight:600; cursor:pointer;">Entendi</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+
+
+
+

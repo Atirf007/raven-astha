@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contrato de Licença de Usuário Final (EULA) — EVAH OPHIM por Kazinho Systems">
+  <title>EULA — EVAH OPHIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/sections.css">
+  <link rel="shortcut icon" type="image/png" href="../images/Evhaophim1 (2).png">
+  <style>
+    .legal-page {
+      padding-top: calc(var(--navbar-height) + var(--space-12));
+      padding-bottom: var(--space-16);
+    }
+    .legal-layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: var(--space-10);
+    }
+    /* ── Sidebar TOC ── */
+    .legal-toc {
+      position: sticky;
+      top: calc(var(--navbar-height) + var(--space-6));
+      align-self: start;
+      max-height: calc(100vh - var(--navbar-height) - var(--space-12));
+      overflow-y: auto;
+      padding-right: var(--space-4);
+    }
+    .legal-toc h4 {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-4);
+      font-weight: var(--font-bold);
+    }
+    .legal-toc a {
+      display: block;
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      padding: var(--space-2) 0;
+      border-left: 2px solid transparent;
+      padding-left: var(--space-3);
+      transition: all var(--transition-fast);
+      text-decoration: none;
+    }
+    .legal-toc a:hover,
+    .legal-toc a.active {
+      color: var(--color-primary);
+      border-left-color: var(--color-primary);
+    }
+    /* ── Content ── */
+    .legal-content h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      font-weight: var(--font-extrabold);
+      margin-bottom: var(--space-2);
+    }
+    .legal-content .legal-date {
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-4);
+    }
+    .legal-content .legal-version {
+      display: inline-block;
+      font-size: var(--text-xs);
+      color: var(--color-primary);
+      background: rgba(108,99,255,0.1);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: var(--radius-full);
+      padding: var(--space-1) var(--space-3);
+      margin-bottom: var(--space-10);
+      font-weight: var(--font-semibold);
+    }
+    .legal-content h2 {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      margin-top: var(--space-10);
+      margin-bottom: var(--space-4);
+      color: var(--text-primary);
+      scroll-margin-top: calc(var(--navbar-height) + var(--space-6));
+    }
+    .legal-content h3 {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      margin-top: var(--space-6);
+      margin-bottom: var(--space-3);
+      color: var(--text-primary);
+    }
+    .legal-content p {
+      font-size: var(--text-base);
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-4);
+    }
+    .legal-content ul, .legal-content ol {
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-4);
+      padding-left: var(--space-6);
+    }
+    .legal-content li { margin-bottom: var(--space-2); }
+    .legal-content a { color: var(--color-primary); text-decoration: underline; }
+    .legal-content strong { color: var(--text-primary); }
+    .legal-content .highlight-box {
+      background: rgba(108,99,255,0.06);
+      border: 1px solid rgba(108,99,255,0.15);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5) var(--space-6);
+      margin: var(--space-6) 0;
+    }
+    .legal-content .highlight-box p { margin-bottom: 0; }
+    .legal-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--space-4) 0;
+    }
+    .legal-content th, .legal-content td {
+      text-align: left;
+      padding: var(--space-3);
+      border: 1px solid var(--surface-border);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
+    .legal-content th {
+      background: var(--surface-glass);
+      color: var(--text-primary);
+      font-weight: var(--font-semibold);
+    }
+    @media (max-width: 768px) {
+      .legal-layout {
+        grid-template-columns: 1fr;
+      }
+      .legal-toc { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar scrolled" id="navbar">
+    <div class="navbar-inner">
+      <a href="../index.html" class="navbar-logo"><img src="../images/Logotipo (Alpha).png" alt="EVAH OPHIM" style="height: 32px; object-fit: contain; "></a>
+      <div class="navbar-links">
+        <a href="index.html" class="navbar-link">Produto</a>
+        <a href="index.html#pricing" class="navbar-link">Preços</a>
+        <a href="contact.html" class="navbar-link">Contato</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="login.html" class="btn btn-ghost">Login</a>
+        <a href="register.html" class="btn btn-primary">Começar Grátis</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="legal-page">
+    <div class="legal-layout">
+      <!-- Sidebar TOC -->
+      <aside class="legal-toc" id="legalToc">
+        <h4>Sumário</h4>
+        <a href="#s1">1. Concessão de Licença</a>
+        <a href="#s2">2. Tipos de Licença</a>
+        <a href="#s3">3. Restrições de Uso</a>
+        <a href="#s4">4. Propriedade Intelectual</a>
+        <a href="#s5">5. Dados do Usuário</a>
+        <a href="#s6">6. Atualizações e Suporte</a>
+        <a href="#s7">7. Integrações e APIs</a>
+        <a href="#s8">8. Garantia Limitada</a>
+        <a href="#s9">9. Limitação de Responsabilidade</a>
+        <a href="#s10">10. Indenização</a>
+        <a href="#s11">11. Vigência e Rescisão</a>
+        <a href="#s12">12. Exportação de Dados</a>
+        <a href="#s13">13. Conformidade Legal</a>
+        <a href="#s14">14. Disposições Gerais</a>
+        <a href="#s15">15. Contato</a>
+      </aside>
+
+      <!-- Content -->
+      <div class="legal-content">
+        <h1>Contrato de Licença <span class="text-gradient">(EULA)</span></h1>
+        <p class="legal-date">Última atualização: 18 de maio de 2026</p>
+        <span class="legal-version">Versão 2.1</span>
+
+        <div class="highlight-box">
+          <p><strong>IMPORTANTE:</strong> Ao instalar, acessar ou utilizar o software EVAH OPHIM, você declara ter lido, compreendido e concordado com todos os termos deste Contrato de Licença de Usuário Final. Se não concordar, não utilize o software.</p>
+        </div>
+
+        <h2 id="s1">1. Concessão de Licença</h2>
+        <p>A Kazinho Systems ("Licenciante") concede a você ("Licenciado") uma licença limitada, não exclusiva, intransferível e revogável para usar a plataforma EVAH OPHIM conforme os termos do seu plano de assinatura.</p>
+        <h3>1.1 Escopo</h3>
+        <p>A licença permite o acesso à plataforma via navegador web e aplicações móveis autorizadas, para uso interno do Licenciado e seus colaboradores autorizados, dentro dos limites do plano contratado.</p>
+        <h3>1.2 Usuários Autorizados</h3>
+        <p>O número de usuários autorizados é definido pelo plano. Cada credencial é pessoal e intransferível. Compartilhamento de credenciais configura violação deste contrato.</p>
+
+        <h2 id="s2">2. Tipos de Licença</h2>
+        <table>
+          <thead><tr><th>Plano</th><th>Usuários</th><th>Recursos</th><th>SLA</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Starter</strong></td><td>1</td><td>Até 100 materiais, dashboard básico</td><td>Best-effort</td></tr>
+            <tr><td><strong>Pro</strong></td><td>Até 5</td><td>Ilimitado, Azure, mapa 2D</td><td>99.5% uptime</td></tr>
+            <tr><td><strong>Personalizado</strong></td><td>Ilimitado</td><td>Tudo + API dedicada + componentes custom</td><td>SLA sob medida</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="s3">3. Restrições de Uso</h2>
+        <p>O Licenciado concorda em <strong>NÃO</strong>:</p>
+        <ul>
+          <li>Copiar, modificar, distribuir ou criar obras derivadas do software</li>
+          <li>Realizar engenharia reversa, descompilar ou desmontar qualquer componente</li>
+          <li>Sublicenciar, alugar, emprestar ou transferir o acesso a terceiros</li>
+          <li>Remover ou alterar avisos de propriedade intelectual, marcas ou atribuições</li>
+          <li>Usar o software para atividades ilegais ou que violem direitos de terceiros</li>
+          <li>Realizar scraping, crawling automatizado ou extração massiva de dados</li>
+          <li>Tentar sobrecarregar, hackear ou comprometer a infraestrutura</li>
+          <li>Utilizar o software para desenvolver produto concorrente</li>
+        </ul>
+
+        <h2 id="s4">4. Propriedade Intelectual</h2>
+        <p>O software EVAH OPHIM, incluindo mas não limitado a código-fonte, código-objeto, algoritmos, design de interface, documentação técnica, APIs, logotipos e marcas registradas, é propriedade exclusiva da Kazinho Systems, protegido pelas leis brasileiras e internacionais de propriedade intelectual.</p>
+        <p>Esta licença <strong>não transfere</strong> nenhum direito de propriedade. O Licenciado reconhece que o software contém informações confidenciais e segredos comerciais.</p>
+
+        <h2 id="s5">5. Dados do Usuário</h2>
+        <p>O Licenciado mantém a propriedade integral sobre os dados inseridos na plataforma. A Kazinho Systems detém apenas uma licença de uso limitada, necessária exclusivamente para a prestação do serviço contratado.</p>
+        <h3>5.1 Tratamento de Dados</h3>
+        <p>Os dados são tratados conforme nossa <a href="privacidade.html">Política de Privacidade</a> e em conformidade com a LGPD (Lei 13.709/2018). Criptografia AES-256 em repouso e TLS 1.3 em trânsito.</p>
+        <h3>5.2 Backup</h3>
+        <p>Backups automáticos diários são realizados com retenção de 30 dias (planos Pro e Personalizado). O plano Starter possui backup semanal com retenção de 7 dias.</p>
+
+        <h2 id="s6">6. Atualizações e Suporte</h2>
+        <p>A Kazinho Systems poderá lançar atualizações, patches de segurança e novas funcionalidades periodicamente. Atualizações são parte integrante desta licença e sujeitas a estes termos.</p>
+        <h3>6.1 Suporte Técnico</h3>
+        <ul>
+          <li><strong>Starter:</strong> suporte por email, resposta em até 48h úteis</li>
+          <li><strong>Pro:</strong> suporte prioritário por email e chat, resposta em até 12h</li>
+          <li><strong>Personalizado:</strong> suporte dedicado 24/7, gerente de conta</li>
+        </ul>
+
+        <h2 id="s7">7. Integrações e APIs</h2>
+        <p>O uso das APIs do EVAH OPHIM está sujeito a limites de requisições (rate limits) conforme o plano contratado. O uso abusivo ou automatizado que exceda os limites pode resultar em bloqueio temporário ou permanente do acesso à API.</p>
+
+        <h2 id="s8">8. Garantia Limitada</h2>
+        <p>O software é fornecido "COMO ESTÁ" (as-is). A Kazinho Systems se compromete a:</p>
+        <ul>
+          <li>Corrigir defeitos reportados em tempo razoável conforme o SLA do plano</li>
+          <li>Manter a disponibilidade conforme os níveis estabelecidos</li>
+          <li>Garantir a segurança dos dados conforme padrões da indústria</li>
+        </ul>
+        <p>A Licenciante <strong>não garante</strong> que o software será livre de erros, ininterrupto ou adequado a finalidades específicas não previstas.</p>
+
+        <h2 id="s9">9. Limitação de Responsabilidade</h2>
+        <p>Em nenhuma hipótese a Kazinho Systems será responsável por danos indiretos, incidentais, especiais, punitivos ou consequentes, incluindo perda de lucros, dados ou oportunidades de negócio. A responsabilidade total e cumulativa da Licenciante está limitada ao <strong>valor efetivamente pago pelo Licenciado nos últimos 12 meses</strong>.</p>
+
+        <h2 id="s10">10. Indenização</h2>
+        <p>O Licenciado concorda em indenizar e isentar a Kazinho Systems de quaisquer reclamações, danos, perdas ou despesas decorrentes do uso indevido do software ou violação deste EULA.</p>
+
+        <h2 id="s11">11. Vigência e Rescisão</h2>
+        <p>Esta licença entra em vigor na data de aceitação e permanece válida enquanto o plano estiver ativo. Pode ser rescindida:</p>
+        <ul>
+          <li><strong>Pelo Licenciado:</strong> a qualquer momento, cancelando a assinatura</li>
+          <li><strong>Pela Licenciante:</strong> em caso de violação destes termos, mediante notificação</li>
+          <li><strong>Automaticamente:</strong> por inadimplência após 30 dias de vencimento</li>
+        </ul>
+        <p>Após a rescisão, o Licenciado terá <strong>90 dias</strong> para exportar seus dados. Findo este prazo, a Kazinho Systems poderá excluir permanentemente os dados associados à conta.</p>
+
+        <h2 id="s12">12. Exportação de Dados</h2>
+        <p>O Licenciado pode exportar seus dados a qualquer momento nos formatos CSV, JSON ou PDF, através das ferramentas disponíveis na plataforma. Nenhuma taxa adicional é cobrada pela exportação.</p>
+
+        <h2 id="s13">13. Conformidade Legal</h2>
+        <p>Este EULA é regido pelas leis da República Federativa do Brasil. A Licenciante atende aos requisitos da:</p>
+        <ul>
+          <li><strong>LGPD</strong> — Lei Geral de Proteção de Dados (Lei 13.709/2018)</li>
+          <li><strong>Marco Civil da Internet</strong> — Lei 12.965/2014</li>
+          <li><strong>Código de Defesa do Consumidor</strong> — quando aplicável</li>
+        </ul>
+        <p>Foro eleito: comarca de <strong>São Paulo — SP</strong>.</p>
+
+        <h2 id="s14">14. Disposições Gerais</h2>
+        <ul>
+          <li>Se qualquer cláusula for considerada inválida, as demais permanecem vigentes</li>
+          <li>A omissão no exercício de qualquer direito não constitui renúncia</li>
+          <li>Este EULA constitui o acordo integral entre as partes sobre o assunto</li>
+          <li>Alterações só são válidas por escrito e mediante notificação prévia de 30 dias</li>
+        </ul>
+
+        <h2 id="s15">15. Contato</h2>
+        <p>Para dúvidas sobre este EULA:</p>
+        <ul>
+          <li><strong>Email:</strong> <a href="mailto:legal@kazinhosystems.com">legal@kazinhosystems.com</a></li>
+          <li><strong>DPO:</strong> <a href="mailto:dpo@kazinhosystems.com">dpo@kazinhosystems.com</a></li>
+          <li><strong>Página de contato:</strong> <a href="contact.html">contato</a></li>
+        </ul>
+
+        <div class="highlight-box" style="margin-top:var(--space-10)">
+          <p>📄 Consulte também: <a href="termos.html">Termos de Serviço</a> · <a href="privacidade.html">Política de Privacidade & LGPD</a></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="navbar-logo"><img src="../images/Logotipo (Alpha).png" alt="EVAH OPHIM" style="height: 32px; object-fit: contain; "></a>
+          <p>Serviço inteligente para gestão empresarial.</p>
+        </div>
+        <div class="footer-column">
+          <h4>Produto</h4>
+          <a href="index.html#features">Features</a>
+          <a href="index.html#pricing">Preços</a>
+        </div>
+        <div class="footer-column">
+          <h4>Empresa</h4>
+          <a href="sobre.html">Quem Somos</a>
+          <a href="contact.html">Contato</a>
+        </div>
+        <div class="footer-column">
+          <h4>Legal</h4>
+          <a href="termos.html">Termos de Uso</a>
+          <a href="privacidade.html">Privacidade & LGPD</a>
+          <a href="eula.html">EULA</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Kazinho Systems. Todos os direitos reservados.</span>
+        <a href="../index.html">Kazinho Systems</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    // TOC active section tracking
+    document.addEventListener('DOMContentLoaded', () => {
+      const headings = document.querySelectorAll('.legal-content h2[id]');
+      const tocLinks = document.querySelectorAll('.legal-toc a');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(l => l.classList.remove('active'));
+            const active = document.querySelector(`.legal-toc a[href="#${entry.target.id}"]`);
+            if (active) active.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      headings.forEach(h => observer.observe(h));
+    });
+  </script>
+</body>
+</html>
+
+

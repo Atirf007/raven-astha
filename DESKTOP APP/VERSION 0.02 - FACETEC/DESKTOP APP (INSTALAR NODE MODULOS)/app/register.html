@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASTHA RAVEN - Cadastro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/auth-redesign.css?v=4">
+</head>
+<body class="auth-redesign">
+  
+  <div id="toast"></div>
+
+  <div class="auth-box" style="width: 1000px;">
+    
+    <div class="auth-box-left" style="flex: 1.2;">
+      <div class="auth-logo" style="margin-bottom: 24px;">
+        ASTHA RAVEN
+      </div>
+
+      <!-- WIZARD -->
+      <div id="wizard-container" style="width: 100%; display: flex; flex-direction: column;">
+        
+        <!-- STEP 1: Tipo de Conta -->
+        <div class="wizard-step" id="step1" style="display: block;">
+          <div class="wizard-header" style="margin-bottom: 20px;">
+            <h2 class="auth-title">Como você pretende usar o ASTHA?</h2>
+            <p class="auth-subtitle">Escolha o plano que melhor se adapta a você.</p>
+          </div>
+          
+          <div class="account-type-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="type-card" onclick="selectType('personal', this)" style="padding: 24px 16px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <h3 style="font-size: 16px;">Pessoal</h3>
+              <p style="font-size: 12px; margin-bottom:0;">Uso independente para pequenos estoques.</p>
+            </div>
+            
+            <div class="type-card" onclick="selectType('corp', this)" style="padding: 24px 16px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+              <h3 style="font-size: 16px;">Corporativo</h3>
+              <p style="font-size: 12px; margin-bottom:0;">Para empresas, colaborativo e multi-armazéns.</p>
+            </div>
+          </div>
+          
+          <button class="auth-btn" id="btnNext1" style="width:100%; margin-top: 24px;" onclick="if(typeof selectedType !== 'undefined' && selectedType) nextStep(2); else showToast('Selecione um tipo de conta para continuar.', true);">Continuar</button>
+        </div>
+
+        <!-- STEP 2: Dados Pessoais -->
+        <div class="wizard-step" id="step2" style="display: none;">
+          <div class="wizard-header" style="margin-bottom: 24px;">
+            <h2 class="auth-title">Sobre você</h2>
+            <p class="auth-subtitle">Precisamos de algumas informações básicas para o seu perfil.</p>
+          </div>
+          
+          <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="auth-input-group" style="grid-column: span 2;">
+              <input type="text" id="regName" class="auth-input" placeholder="Nome Completo (ex: João da Silva)">
+            </div>
+            <div class="auth-input-group" style="grid-column: span 2;">
+              <input type="email" id="regEmail" class="auth-input" placeholder="E-mail Pessoal ou Profissional">
+            </div>
+            <div class="auth-input-group">
+              <input type="date" id="regDob" class="auth-input" placeholder="Data de Nascimento">
+            </div>
+            <div class="auth-input-group">
+              <select id="regGender" class="auth-input" style="color: #64748b;">
+                <option value="" disabled selected>Gênero</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Feminino">Feminino</option>
+                <option value="Outro">Outro</option>
+                <option value="Prefiro não dizer">Prefiro não dizer</option>
+              </select>
+            </div>
+            <div class="auth-input-group">
+              <input type="text" id="regCountry" class="auth-input" placeholder="País / Região">
+            </div>
+            <div class="auth-input-group">
+              <input type="tel" id="regPhone" class="auth-input" placeholder="Telefone">
+            </div>
+          </div>
+          
+          <button class="auth-btn" style="width:100%; margin-top: 24px;" onclick="nextStep(3)">Avançar</button>
+          <div class="back-link" style="text-align:center; margin-top:16px; font-size:13px; color:var(--astah-text-muted); cursor:pointer;" onclick="prevStep(1)">Voltar</div>
+        </div>
+
+        <!-- STEP 3: Senha e Conclusão -->
+        <div class="wizard-step" id="step3" style="display: none;">
+          <div class="wizard-header" style="margin-bottom: 24px;">
+            <h2 class="auth-title">Segurança da Conta</h2>
+            <p class="auth-subtitle">Crie uma senha forte para proteger seus dados.</p>
+          </div>
+          
+          <div class="form-grid">
+            <div class="auth-input-group">
+              <input type="password" id="regPass" class="auth-input" placeholder="Senha (mínimo 6 caracteres)">
+            </div>
+            <div class="auth-input-group">
+              <input type="password" id="regPassConfirm" class="auth-input" placeholder="Confirme sua senha">
+            </div>
+          </div>
+          
+          <button class="auth-btn" style="width:100%; margin-top: 24px;" onclick="finishRegistration()">Criar Conta</button>
+          <div class="back-link" style="text-align:center; margin-top:16px; font-size:13px; color:var(--astah-text-muted); cursor:pointer;" onclick="prevStep(2)">Voltar</div>
+        </div>
+
+        <!-- STEP 4: Success -->
+        <div class="wizard-step" id="step4" style="display: none;">
+          <div class="wizard-success" style="text-align: center;">
+            <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="#10b981" stroke-width="2" style="margin: 0 auto 20px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <h2 class="auth-title">Conta Criada com Sucesso!</h2>
+            <p class="auth-subtitle">Bem-vindo ao ASTHA RAVEN. Seu painel de organização já está pronto para uso.</p>
+            
+            <button class="auth-btn" style="width:100%; margin-top: 32px;" onclick="window.location.href='./home.html'">Ir para o Painel</button>
+          </div>
+        </div>
+
+      </div> <!-- /wizard-container -->
+
+    </div>
+
+    <!-- Lado Direito: Branding -->
+    <div class="auth-box-right" style="flex: 0.8; background: #faf8ff; border-left: 1px solid var(--astah-border);">
+      <h2 class="auth-hero-title" style="font-size: 24px;">
+        Organize tudo<br>
+        <strong>em um só lugar.</strong>
+      </h2>
+      <p class="auth-hero-subtitle" style="font-size: 15px; margin-top: 16px;">
+        O ASTHA foi pensado para ajudar você a ter controle total sobre seus itens pessoais ou inventário profissional. Comece pequeno e expanda conforme sua necessidade.
+      </p>
+    </div>
+
+  </div>
+
+  <script src="./js/api.js?v=2"></script>
+  <script src="./js/register-wizard.js?v=4"></script>
+</body>
+</html>

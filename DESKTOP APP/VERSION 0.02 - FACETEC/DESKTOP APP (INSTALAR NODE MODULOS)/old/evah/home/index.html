@@ -1,0 +1,2284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EVAH OPHIM — Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/global.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <link rel="stylesheet" href="../../css/animations.css">
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       LAUNCHPAD LAYOUT
+    ═══════════════════════════════════════════════════════ */
+    * { box-sizing: border-box; }
+
+    /* ── WALLPAPER + DARK OVERRIDE ── */
+    html { background: #080810 !important; }
+    body {
+      overflow: hidden;
+      height: 100vh;
+      background: transparent !important;
+      --color-primary: #818cf8;
+      --color-secondary: #a78bfa;
+      --surface-glass: rgba(15, 15, 30, 0.55);
+      --surface-glass-hover: rgba(255,255,255,0.06);
+      --surface-border: rgba(255,255,255,0.09);
+      --bg-primary: #080810;
+      --bg-secondary: #0d0d1a;
+      --bg-elevated: #12121f;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-tertiary: #475569;
+    }
+
+    /* Wallpaper canvas */
+    #lp-wallpaper {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Floating orbs */
+    .lp-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .lp-orb-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, #4f46e5 0%, transparent 70%);
+      top: -150px; left: -100px;
+      animation: orbFloat1 14s ease-in-out infinite;
+    }
+    .lp-orb-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, #7c3aed 0%, transparent 70%);
+      bottom: -100px; right: -80px;
+      animation: orbFloat2 18s ease-in-out infinite;
+    }
+    .lp-orb-3 {
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, #0ea5e9 0%, transparent 70%);
+      top: 40%; left: 40%;
+      animation: orbFloat3 22s ease-in-out infinite;
+      opacity: 0.18;
+    }
+    @keyframes orbFloat1 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33% { transform: translate(60px,40px) scale(1.08); }
+      66% { transform: translate(-30px,70px) scale(0.95); }
+    }
+    @keyframes orbFloat2 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(-80px,-50px) scale(1.1); }
+    }
+    @keyframes orbFloat3 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      25% { transform: translate(100px,-60px) scale(1.15); }
+      75% { transform: translate(-80px,80px) scale(0.9); }
+    }
+
+    /* Noise texture overlay */
+    .lp-noise {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* Light mode wallpaper override */
+    html.light-mode body {
+      --color-primary: #4f46e5;
+      --color-secondary: #7c3aed;
+      --surface-glass: rgba(255,255,255,0.65);
+      --surface-glass-hover: rgba(255,255,255,0.8);
+      --surface-border: rgba(0,0,0,0.08);
+      --bg-primary: #eef2ff;
+      --bg-secondary: #e0e7ff;
+      --bg-elevated: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-tertiary: #94a3b8;
+    }
+    html.light-mode .lp-orb-1 {
+      background: radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%);
+      opacity: 0.4;
+    }
+    html.light-mode .lp-orb-2 {
+      background: radial-gradient(circle, rgba(124,58,237,0.25) 0%, transparent 70%);
+      opacity: 0.3;
+    }
+    html.light-mode { background: #eef2ff !important; }
+
+    .lp-root {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── SIDEBAR ── */
+    .lp-sidebar {
+      width: 64px;
+      height: 100vh;
+      background: var(--surface-glass);
+      backdrop-filter: var(--liquid-blur);
+      -webkit-backdrop-filter: var(--liquid-blur);
+      border-right: 1px solid var(--surface-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+      gap: 4px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .lp-sidebar-logo {
+      width: 36px;
+      height: 36px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lp-sidebar-logo img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .lp-sidebar-divider {
+      width: 32px;
+      height: 1px;
+      background: var(--surface-border);
+      margin: 8px 0;
+    }
+
+    .lp-nav-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .lp-nav-btn:hover {
+      background: var(--surface-glass-hover);
+      color: var(--text-primary);
+    }
+
+    .lp-nav-btn.active {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.35);
+    }
+
+    .lp-nav-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .lp-nav-tooltip {
+      position: absolute;
+      left: calc(100% + 12px);
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
+      z-index: 100;
+      letter-spacing: 0.01em;
+    }
+
+    .lp-nav-btn:hover .lp-nav-tooltip { opacity: 1; }
+
+    .lp-sidebar-spacer { flex: 1; }
+
+    /* ── MAIN AREA ── */
+    .lp-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── TOP BAR ── */
+    .lp-topbar {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: var(--surface-glass);
+      backdrop-filter: var(--liquid-blur);
+      -webkit-backdrop-filter: var(--liquid-blur);
+      border-bottom: 1px solid var(--surface-border);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .lp-topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .lp-topbar-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .lp-breadcrumb {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lp-breadcrumb span { color: var(--text-secondary); }
+
+    .lp-topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+
+    .lp-icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid var(--surface-border);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .lp-icon-btn:hover { background: var(--surface-glass-hover); color: var(--text-primary); }
+    .lp-icon-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .lp-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+      border: 2px solid var(--surface-border);
+      transition: border-color 0.2s;
+    }
+
+    .lp-avatar:hover { border-color: var(--color-primary); }
+
+    /* ── CONTENT AREA ── */
+    .lp-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px 28px;
+    }
+
+    /* ── LAUNCHPAD VIEW ── */
+    #viewLaunchpad { display: block; }
+    #viewSettings { display: none; }
+
+    .lp-greeting {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .lp-greeting-sub {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    /* ── BENTO GRID ── */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      gap: 16px;
+    }
+
+    .bento-card {
+      background: var(--surface-glass);
+      backdrop-filter: var(--liquid-blur);
+      -webkit-backdrop-filter: var(--liquid-blur);
+      border: 1px solid var(--surface-border);
+      border-radius: 20px;
+      padding: 28px;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bento-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    }
+
+    .bento-card:hover {
+      transform: translateY(-3px) scale(1.01);
+      border-color: rgba(99,102,241,0.5);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25), 0 0 0 1px rgba(99,102,241,0.2);
+    }
+
+    .bento-card-wide { grid-column: span 2; }
+    .bento-card-tall { grid-row: span 2; }
+
+    .bento-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 18px;
+      flex-shrink: 0;
+    }
+
+    .bento-icon-blue { background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(99,102,241,0.1)); border: 1px solid rgba(99,102,241,0.25); }
+    .bento-icon-green { background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(16,185,129,0.1)); border: 1px solid rgba(16,185,129,0.25); }
+    .bento-icon-amber { background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(245,158,11,0.1)); border: 1px solid rgba(245,158,11,0.25); }
+    .bento-icon-rose { background: linear-gradient(135deg, rgba(244,63,94,0.2), rgba(244,63,94,0.1)); border: 1px solid rgba(244,63,94,0.25); }
+    .bento-icon-purple { background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(168,85,247,0.1)); border: 1px solid rgba(168,85,247,0.25); }
+
+    .bento-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .bento-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .bento-arrow {
+      margin-top: 20px;
+      align-self: flex-start;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--surface-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .bento-card:hover .bento-arrow {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #fff;
+      transform: translateX(2px);
+    }
+
+    .bento-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-live { background: rgba(16,185,129,0.15); color: var(--color-success); border: 1px solid rgba(16,185,129,0.3); }
+    .badge-admin { background: rgba(99,102,241,0.15); color: var(--color-primary); border: 1px solid rgba(99,102,241,0.3); }
+
+    /* ═══════════════════════════════════════════════════════
+       SETTINGS PANEL (replaces admin modal)
+    ═══════════════════════════════════════════════════════ */
+    .sp-root {
+      display: flex;
+      height: 100%;
+      overflow: hidden;
+      background: var(--surface-glass);
+      backdrop-filter: var(--liquid-blur);
+      -webkit-backdrop-filter: var(--liquid-blur);
+      border-radius: 16px;
+    }
+
+    /* Settings inner sidebar */
+    .sp-sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      padding: 20px 12px;
+      border-right: 1px solid var(--surface-border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow-y: auto;
+    }
+
+    .sp-sidebar-section {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 12px 10px 6px;
+    }
+
+    .sp-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.18s;
+      border: 1px solid transparent;
+    }
+
+    .sp-nav-item:hover {
+      background: var(--surface-glass-hover);
+      color: var(--text-primary);
+    }
+
+    .sp-nav-item.active {
+      background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(99,102,241,0.06));
+      border-color: rgba(99,102,241,0.25);
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .sp-nav-item svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    /* Settings main content */
+    .sp-main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 32px;
+    }
+
+    .sp-section-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .sp-section-sub {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+
+    /* Settings tab panels */
+    .sp-panel { display: none; }
+    .sp-panel.active { display: block; }
+
+    /* ── DASHBOARD TAB ── */
+    .sp-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .sp-metric-card {
+      background: var(--surface-glass);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sp-metric-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(99,102,241,0.06);
+    }
+
+    .sp-metric-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    .sp-metric-value {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .sp-metric-sub {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    .sp-metric-icon {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 22px;
+      opacity: 0.5;
+    }
+
+    .sp-metric-trend {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 4px;
+      padding: 2px 7px;
+      border-radius: 20px;
+    }
+
+    .trend-up { color: var(--color-success); background: rgba(16,185,129,0.1); }
+    .trend-neutral { color: var(--text-tertiary); background: var(--surface-glass); }
+
+    .sp-org-banner {
+      background: linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(168,85,247,0.08) 100%);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 16px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .sp-org-banner-info { display: flex; align-items: center; gap: 14px; }
+    .sp-org-logo-box {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: var(--surface-glass);
+      border: 1px solid var(--surface-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      overflow: hidden;
+    }
+    .sp-org-logo-box img { width: 100%; height: 100%; object-fit: contain; }
+    .sp-org-name { font-size: 16px; font-weight: 700; }
+    .sp-org-plan { font-size: 12px; color: var(--color-primary); font-weight: 600; margin-top: 2px; }
+
+    /* ── CALENDAR TAB ── */
+    .sp-calendar {
+      background: var(--surface-glass);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .sp-cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .sp-cal-nav { display: flex; gap: 8px; }
+    .sp-cal-nav-btn {
+      width: 32px; height: 32px;
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      transition: all 0.15s;
+    }
+    .sp-cal-nav-btn:hover { background: var(--surface-glass-hover); color: var(--text-primary); }
+
+    .sp-cal-month {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .sp-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      padding: 0;
+    }
+
+    .sp-cal-day-name {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .sp-cal-day {
+      text-align: center;
+      padding: 14px 0;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border-radius: 0;
+      color: var(--text-secondary);
+      position: relative;
+    }
+
+    .sp-cal-day:hover { background: var(--surface-glass-hover); color: var(--text-primary); }
+    .sp-cal-day.empty { color: transparent; pointer-events: none; }
+    .sp-cal-day.today {
+      font-weight: 800;
+      color: var(--color-primary);
+    }
+    .sp-cal-day.today::after {
+      content: '';
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--color-primary);
+    }
+    .sp-cal-day.has-event::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--color-success);
+    }
+
+    .sp-events-list {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sp-event-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: var(--surface-glass);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+    }
+
+    .sp-event-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .sp-event-title { font-size: 13px; font-weight: 600; }
+    .sp-event-date { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+
+    /* ── ACTIVITIES TAB ── */
+    .sp-activity-list { display: flex; flex-direction: column; gap: 0; }
+
+    .sp-activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .sp-activity-item:last-child { border-bottom: none; }
+
+    .sp-activity-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .sp-activity-body { flex: 1; }
+    .sp-activity-text { font-size: 13px; font-weight: 500; }
+    .sp-activity-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
+
+    .sp-activity-chip {
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── INFORMAÇÕES / DETALHES TABS ── */
+    .sp-form-section {
+      background: var(--surface-glass);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .sp-form-section-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sp-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .sp-form-full { grid-column: span 2; }
+
+    .sp-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .sp-input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--surface-border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: var(--font-sans);
+      transition: border-color 0.2s;
+    }
+
+    .sp-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    }
+
+    select.sp-input { cursor: pointer; }
+
+    .sp-checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .sp-checkbox-row:last-child { border-bottom: none; }
+
+    .sp-toggle {
+      width: 40px;
+      height: 22px;
+      background: var(--surface-border);
+      border-radius: 11px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+      border: none;
+    }
+
+    .sp-toggle.on { background: var(--color-primary); }
+
+    .sp-toggle::after {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      top: 3px; left: 3px;
+      transition: left 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .sp-toggle.on::after { left: 21px; }
+
+    .sp-checkbox-info { flex: 1; }
+    .sp-checkbox-title { font-size: 13px; font-weight: 600; }
+    .sp-checkbox-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+
+    .sp-user-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      transition: background 0.15s;
+    }
+
+    .sp-user-row:hover { background: var(--surface-glass-hover); }
+
+    .sp-user-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .sp-user-name { font-size: 13px; font-weight: 600; }
+    .sp-user-email { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; }
+    .sp-user-role-badge {
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .role-superadmin { background: rgba(244,63,94,0.15); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); }
+    .role-admin { background: rgba(99,102,241,0.15); color: var(--color-primary); border: 1px solid rgba(99,102,241,0.3); }
+    .role-manager { background: rgba(245,158,11,0.15); color: #d97706; border: 1px solid rgba(245,158,11,0.3); }
+    .role-operator { background: rgba(16,185,129,0.15); color: var(--color-success); border: 1px solid rgba(16,185,129,0.3); }
+    .role-viewer { background: var(--surface-glass); color: var(--text-secondary); border: 1px solid var(--surface-border); }
+
+    /* ── MODALS ── */
+    .eo-modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; transition: all 0.2s;
+      padding: 16px;
+    }
+    .eo-modal-overlay.active { opacity: 1; visibility: visible; }
+    .eo-modal {
+      background: var(--surface-glass);
+      backdrop-filter: var(--liquid-blur);
+      -webkit-backdrop-filter: var(--liquid-blur);
+      border: 1px solid var(--surface-border);
+      border-radius: 20px;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+      width: 100%; max-width: 500px;
+      max-height: 90vh; overflow-y: auto;
+      padding: 28px;
+      transform: translateY(20px) scale(0.96);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+    .eo-modal-overlay.active .eo-modal { transform: translateY(0) scale(1); }
+    .eo-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .eo-modal-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; }
+    .eo-modal-close {
+      width: 32px; height: 32px;
+      background: var(--surface-glass);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .eo-modal-close:hover { background: rgba(244,63,94,0.15); border-color: rgba(244,63,94,0.3); color: var(--color-error); }
+    .eo-input {
+      width: 100%; padding: 10px 14px;
+      background: var(--bg-primary); border: 1px solid var(--surface-border);
+      border-radius: 10px; color: var(--text-primary); font-size: 13px;
+      font-family: var(--font-sans);
+      transition: border-color 0.2s;
+    }
+    .eo-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+    .input-group { margin-bottom: 16px; }
+    .eo-input-label {
+      display: block;
+      font-size: 11px; font-weight: 700; color: var(--text-tertiary);
+      margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .eo-image-upload {
+      border: 1px dashed var(--surface-border);
+      border-radius: 12px; padding: 24px;
+      text-align: center; color: var(--text-tertiary);
+      cursor: pointer; transition: all 0.2s;
+      position: relative;
+    }
+    .eo-image-upload:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .eo-image-upload input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .eo-image-upload img { max-width: 100%; max-height: 120px; border-radius: 8px; margin-top: 8px; }
+
+    /* Dropdown */
+    .eo-dropdown {
+      position: absolute;
+      top: calc(100% + 8px); right: 0;
+      background: var(--surface-glass);
+      backdrop-filter: var(--liquid-blur); -webkit-backdrop-filter: var(--liquid-blur);
+      border: 1px solid var(--surface-border);
+      border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      min-width: 260px;
+      padding: 8px;
+      display: none; flex-direction: column;
+      z-index: 200;
+    }
+    .eo-dropdown.active { display: flex; }
+    .eo-dropdown-item {
+      padding: 10px 14px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 13px;
+      border-radius: 8px;
+      transition: background 0.15s;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .eo-dropdown-item:hover { background: var(--surface-glass-hover); }
+    .eo-dropdown-divider { height: 1px; background: var(--surface-border); margin: 6px 0; }
+
+    /* ── TOAST ── */
+    .toast-container {
+      position: fixed; bottom: 24px; right: 24px;
+      z-index: 9999; display: flex; flex-direction: column; gap: 8px;
+    }
+    .toast {
+      padding: 12px 20px; border-radius: 12px;
+      font-weight: 600; font-size: 13px;
+      color: #fff; background: var(--color-primary);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      transition: opacity 0.3s;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .toast-success { background: linear-gradient(135deg, #059669, #10b981); }
+    .toast-error { background: linear-gradient(135deg, #dc2626, #ef4444); }
+    .toast-warning { background: linear-gradient(135deg, #d97706, #f59e0b); }
+    .toast-info { background: linear-gradient(135deg, #4f46e5, #6366f1); }
+
+    /* ── ACTION BAR ── */
+    .sp-action-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 20px;
+      border-top: 1px solid var(--surface-border);
+      margin-top: 24px;
+    }
+
+    /* ── ADD USER INLINE ── */
+    .sp-add-user-form {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      padding: 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Apply theme immediately to avoid flash -->
+  <script>
+    (function(){
+      const t = localStorage.getItem('evah_theme');
+      if(t === 'light') document.documentElement.classList.add('light-mode');
+    })();
+  </script>
+
+  <!-- Wallpaper layer -->
+  <div class="lp-orb lp-orb-1"></div>
+  <div class="lp-orb lp-orb-2"></div>
+  <div class="lp-orb lp-orb-3"></div>
+  <div class="lp-noise"></div>
+
+  <div class="lp-root">
+
+    <!-- ═══════════════ SIDEBAR ═══════════════ -->
+    <aside class="lp-sidebar">
+      <div class="lp-sidebar-logo">
+        <img src="../../images/Logotipo (Alpha).png" alt="EVAH OPHIM">
+      </div>
+
+      <button class="lp-nav-btn active" id="navHome" onclick="showView('launchpad')" title="Home">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="lp-nav-tooltip">Home</span>
+      </button>
+
+      <button class="lp-nav-btn" id="navSettings" onclick="showView('settings')" title="Configurações">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+        <span class="lp-nav-tooltip">Configurações</span>
+      </button>
+
+      <div class="lp-sidebar-divider"></div>
+
+      <button class="lp-nav-btn" onclick="window.location.href='../sistema/index.html'" title="WMS">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <span class="lp-nav-tooltip">Gestão WMS</span>
+      </button>
+
+      <button class="lp-nav-btn" onclick="openProfileModal()" title="Perfil">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="lp-nav-tooltip">Meu Perfil</span>
+      </button>
+
+      <div class="lp-sidebar-spacer"></div>
+
+      <button class="lp-nav-btn" onclick="toggleTheme()" title="Tema">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <span class="lp-nav-tooltip">Alternar Tema</span>
+      </button>
+
+      <button class="lp-nav-btn" style="color: var(--color-error);" onclick="Auth.logout()" title="Sair">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span class="lp-nav-tooltip">Sair do Sistema</span>
+      </button>
+    </aside>
+
+    <!-- ═══════════════ MAIN ═══════════════ -->
+    <div class="lp-main">
+
+      <!-- TOP BAR -->
+      <header class="lp-topbar">
+        <div class="lp-topbar-left">
+          <div>
+            <div class="lp-topbar-title" id="topbarTitle">Launchpad</div>
+            <div class="lp-breadcrumb">EVAH OPHIM <span>›</span> <span id="topbarBreadcrumb">Home</span></div>
+          </div>
+        </div>
+        <div class="lp-topbar-right">
+          <button class="lp-icon-btn" onclick="toggleTheme()" title="Tema">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </button>
+          <div class="lp-avatar" id="headerAvatar" onclick="toggleDropdown()"></div>
+          <!-- Dropdown -->
+          <div class="eo-dropdown" id="userDropdown">
+            <div style="padding: 16px; text-align: center; border-bottom: 1px solid var(--surface-border); margin: -8px -8px 8px;">
+              <div id="dropAvatar" style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg,var(--color-primary),var(--color-secondary)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: bold; margin: 0 auto 12px; background-size: cover; background-position: center;"></div>
+              <div id="dropName" style="font-weight: 700; font-size: 15px; margin-bottom: 3px;">Nome</div>
+              <div id="dropEmail" style="color: var(--text-secondary); font-size: 12px; margin-bottom: 10px;">email</div>
+              <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(99,102,241,0.1); padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(99,102,241,0.25);">
+                <span id="dropPlan" style="font-size: 11px; font-weight: 700; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.06em;">Enterprise</span>
+                <span style="color: var(--text-tertiary); font-size: 11px;">|</span>
+                <span id="dropRole" style="font-size: 11px; color: var(--text-secondary);">Cargo</span>
+              </div>
+            </div>
+            <div class="eo-dropdown-item" onclick="openProfileModal(); toggleDropdown();">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Meu Perfil
+            </div>
+            <div class="eo-dropdown-item" onclick="showView('settings'); toggleDropdown();">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+              Configurações Corporativas
+            </div>
+            <div class="eo-dropdown-divider"></div>
+            <div class="eo-dropdown-item" style="color:var(--color-error)" onclick="Auth.logout()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sair do Sistema
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <div class="lp-content">
+
+        <!-- ══ VIEW: LAUNCHPAD ══ -->
+        <div id="viewLaunchpad">
+          <h1 class="lp-greeting" id="greetingText">Olá, Usuário</h1>
+          <p class="lp-greeting-sub">O que você gostaria de acessar hoje?</p>
+
+          <div class="bento-grid">
+            <!-- WMS -->
+            <a href="../sistema/index.html" class="bento-card bento-card-wide">
+              <span class="bento-badge badge-live">● Live Beta</span>
+              <div class="bento-icon bento-icon-blue">📦</div>
+              <div class="bento-title">Gestão WMS</div>
+              <div class="bento-desc">Controle completo de estoque, entradas & saídas, mapa 2D interativo e visualização 3D de materiais.</div>
+              <div class="bento-arrow">→</div>
+            </a>
+
+            <!-- Configurações (Admin) -->
+            <div class="bento-card" id="adminCard" onclick="showView('settings')" style="display:none;">
+              <span class="bento-badge badge-admin">Admin</span>
+              <div class="bento-icon bento-icon-purple">🏢</div>
+              <div class="bento-title">Configurações Corporativas</div>
+              <div class="bento-desc">Dashboard, calendário, usuários, políticas e configurações da sua organização.</div>
+              <div class="bento-arrow">→</div>
+            </div>
+
+            <!-- Meu Perfil -->
+            <div class="bento-card" onclick="openProfileModal()">
+              <div class="bento-icon bento-icon-green">👤</div>
+              <div class="bento-title">Meu Perfil</div>
+              <div class="bento-desc">Edite seus dados pessoais, foto de perfil e preferências de conta.</div>
+              <div class="bento-arrow">→</div>
+            </div>
+
+            <!-- Relatórios (placeholder) -->
+            <div class="bento-card" style="opacity:0.55; cursor:not-allowed;">
+              <div class="bento-icon bento-icon-amber">📊</div>
+              <div class="bento-title">Relatórios</div>
+              <div class="bento-desc">Exportações avançadas, analytics e BI integrado. <br><br><em>Em breve.</em></div>
+            </div>
+
+            <!-- Integrações (placeholder) -->
+            <div class="bento-card" style="opacity:0.55; cursor:not-allowed;">
+              <div class="bento-icon bento-icon-rose">🔗</div>
+              <div class="bento-title">Integrações</div>
+              <div class="bento-desc">Azure AD, SAP, APIs externas e conectores de dados. <br><br><em>Em breve.</em></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ VIEW: SETTINGS ══ -->
+        <div id="viewSettings">
+          <div class="sp-root">
+
+            <!-- Settings sidebar -->
+            <nav class="sp-sidebar">
+              <div class="sp-sidebar-section">Principal</div>
+              <div class="sp-nav-item active" id="spNavDashboard" onclick="switchSpPanel('dashboard')">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+              </div>
+              <div class="sp-nav-item" id="spNavCalendar" onclick="switchSpPanel('calendar')">
+                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Calendário
+              </div>
+              <div class="sp-nav-item" id="spNavActivities" onclick="switchSpPanel('activities')">
+                <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Atividades
+              </div>
+              <div class="sp-sidebar-section">Organização</div>
+              <div class="sp-nav-item" id="spNavInfo" onclick="switchSpPanel('info')">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Informações
+              </div>
+              <div class="sp-nav-item" id="spNavDetails" onclick="switchSpPanel('details')">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                Detalhes
+              </div>
+            </nav>
+
+            <!-- Settings main -->
+            <div class="sp-main">
+
+              <!-- ── DASHBOARD PANEL ── -->
+              <div class="sp-panel active" id="spPanelDashboard">
+                <div class="sp-section-title">Dashboard</div>
+                <div class="sp-section-sub">Visão geral da sua organização e status do sistema.</div>
+
+                <!-- Org Banner -->
+                <div class="sp-org-banner">
+                  <div class="sp-org-banner-info">
+                    <div class="sp-org-logo-box" id="spOrgLogoBox">🏢</div>
+                    <div>
+                      <div class="sp-org-name" id="spOrgName">Carregando...</div>
+                      <div class="sp-org-plan" id="spOrgPlan">Enterprise</div>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:8px; height:8px; border-radius:50%; background: var(--color-success); box-shadow: 0 0 6px rgba(16,185,129,0.5);"></div>
+                    <span style="font-size: 12px; color: var(--color-success); font-weight: 600;">Sistema Online</span>
+                  </div>
+                </div>
+
+                <!-- Metrics -->
+                <div class="sp-metrics-grid">
+                  <div class="sp-metric-card">
+                    <div class="sp-metric-icon">👥</div>
+                    <div class="sp-metric-label">Usuários Ativos</div>
+                    <div class="sp-metric-value" id="metricUsers">—</div>
+                    <div class="sp-metric-sub">Na organização atual</div>
+                    <div class="sp-metric-trend trend-up">↑ Atualizado</div>
+                  </div>
+                  <div class="sp-metric-card">
+                    <div class="sp-metric-icon">🏢</div>
+                    <div class="sp-metric-label">Organizações</div>
+                    <div class="sp-metric-value" id="metricOrgs">—</div>
+                    <div class="sp-metric-sub">Locatários no sistema</div>
+                    <div class="sp-metric-trend trend-neutral">Gerenciadas por você</div>
+                  </div>
+                  <div class="sp-metric-card">
+                    <div class="sp-metric-icon">📦</div>
+                    <div class="sp-metric-label">Itens WMS</div>
+                    <div class="sp-metric-value" id="metricItems">—</div>
+                    <div class="sp-metric-sub">Materiais cadastrados</div>
+                    <div class="sp-metric-trend trend-up">↑ Monitorados</div>
+                  </div>
+                  <div class="sp-metric-card">
+                    <div class="sp-metric-icon">🗓️</div>
+                    <div class="sp-metric-label">Último Acesso</div>
+                    <div class="sp-metric-value" style="font-size: 22px;" id="metricAccess">—</div>
+                    <div class="sp-metric-sub">Horário de hoje</div>
+                    <div class="sp-metric-trend trend-neutral">Sessão atual</div>
+                  </div>
+                </div>
+
+                <!-- Removed recent org selector to enforce strict isolation -->
+              </div>
+
+              <!-- ── CALENDAR PANEL ── -->
+              <div class="sp-panel" id="spPanelCalendar">
+                <div class="sp-section-title">Calendário</div>
+                <div class="sp-section-sub">Acompanhe eventos, vencimentos e atividades planejadas.</div>
+
+                <div class="sp-calendar">
+                  <div class="sp-cal-header">
+                    <div class="sp-cal-month" id="calMonthLabel">Junho 2026</div>
+                    <div class="sp-cal-nav">
+                      <button class="sp-cal-nav-btn" onclick="calNav(-1)">‹</button>
+                      <button class="sp-cal-nav-btn" onclick="calNav(1)">›</button>
+                    </div>
+                  </div>
+                  <div class="sp-cal-grid">
+                    <div class="sp-cal-day-name">Dom</div>
+                    <div class="sp-cal-day-name">Seg</div>
+                    <div class="sp-cal-day-name">Ter</div>
+                    <div class="sp-cal-day-name">Qua</div>
+                    <div class="sp-cal-day-name">Qui</div>
+                    <div class="sp-cal-day-name">Sex</div>
+                    <div class="sp-cal-day-name">Sáb</div>
+                  </div>
+                  <div class="sp-cal-grid" id="calGrid"></div>
+                </div>
+
+                <div class="sp-events-list" style="margin-top: 24px;">
+                  <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-secondary);">PRÓXIMOS EVENTOS</div>
+                  <div id="eventsListContainer">
+                    <div style="color:var(--text-tertiary); font-size:13px; padding:20px 0; text-align:center;">Carregando eventos...</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ── ACTIVITIES PANEL ── -->
+              <div class="sp-panel" id="spPanelActivities">
+                <div class="sp-section-title">Atividades</div>
+                <div class="sp-section-sub">Histórico de ações e auditoria de eventos do sistema.</div>
+
+                <div class="sp-form-section">
+                  <div class="sp-form-section-title">📋 Log de Auditoria</div>
+                  <div class="sp-activity-list" id="spActivityList">
+                    <div style="color:var(--text-tertiary); font-size:13px; padding: 20px 0; text-align:center;">Carregando atividades...</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ── INFORMAÇÕES PANEL ── -->
+              <div class="sp-panel" id="spPanelInfo">
+                <div class="sp-section-title">Informações da Organização</div>
+                <div class="sp-section-sub">Configure os dados da sua corporação e marca.</div>
+
+                <div class="sp-form-section">
+                  <div class="sp-form-section-title">🏢 Identidade Corporativa</div>
+                  <div style="display:flex; gap:20px; align-items:flex-start; margin-bottom: 20px;">
+                    <div>
+                      <label class="sp-label">Logo</label>
+                      <div class="eo-image-upload" style="width:100px; height:100px; padding:0; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:14px;">
+                        <span id="corpLogoPlaceholder" style="font-size:2rem;">🏢</span>
+                        <input type="file" accept="image/*" onchange="previewCorpLogo(this)">
+                        <img id="corpLogoPreview" style="display:none; width:100%; height:100%; object-fit:contain; background:#fff;">
+                        <input type="hidden" id="corpLogoData">
+                      </div>
+                    </div>
+                    <div style="flex:1;">
+                      <div class="sp-form-grid">
+                        <div>
+                          <label class="sp-label">Nome da Corporação</label>
+                          <input type="text" class="sp-input" id="corpName" value="Evah Ophim Ltda.">
+                        </div>
+                        <div>
+                          <label class="sp-label">Plano de Assinatura</label>
+                          <select class="sp-input" id="corpPlan">
+                            <option value="Free">Free</option>
+                            <option value="Professional">Professional</option>
+                            <option value="Enterprise" selected>Enterprise</option>
+                            <option value="Personalized">Personalized</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sp-action-bar">
+                    <button class="btn btn-secondary btn-sm" onclick="loadOrgSettings()">Cancelar</button>
+                    <button class="btn btn-primary btn-sm" onclick="saveOrgSettings()">Salvar Organização</button>
+                  </div>
+                </div>
+
+                <div class="sp-form-section">
+                  <div class="sp-form-section-title">⚙️ Políticas de Segurança</div>
+                  <div id="spPoliciesSection">
+                    <div class="sp-checkbox-row">
+                      <button class="sp-toggle on" id="toggleEditProfile" onclick="toggleSpPolicy(this)"></button>
+                      <div class="sp-checkbox-info">
+                        <div class="sp-checkbox-title">Edição de Perfil</div>
+                        <div class="sp-checkbox-sub">Permite que usuários editem seus próprios nomes e fotos</div>
+                      </div>
+                    </div>
+                    <div class="sp-checkbox-row">
+                      <button class="sp-toggle" id="toggle2FA" onclick="toggleSpPolicy(this)"></button>
+                      <div class="sp-checkbox-info">
+                        <div class="sp-checkbox-title">Autenticação em 2 Etapas (2FA)</div>
+                        <div class="sp-checkbox-sub">Exigir 2FA obrigatório para todos os usuários da organização</div>
+                      </div>
+                    </div>
+                    <div class="sp-checkbox-row">
+                      <button class="sp-toggle" id="toggleIP" onclick="toggleSpPolicy(this)"></button>
+                      <div class="sp-checkbox-info">
+                        <div class="sp-checkbox-title">Restrição de IP Corporativo</div>
+                        <div class="sp-checkbox-sub">Bloquear acessos externos à rede IP corporativa</div>
+                      </div>
+                    </div>
+                    <div class="sp-checkbox-row">
+                      <button class="sp-toggle on" id="toggleAudit" onclick="toggleSpPolicy(this)"></button>
+                      <div class="sp-checkbox-info">
+                        <div class="sp-checkbox-title">Trilha de Auditoria Avançada</div>
+                        <div class="sp-checkbox-sub">Habilitar logs ISO do WMS para conformidade</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sp-action-bar">
+                    <button class="btn btn-primary btn-sm" onclick="saveOrgSettings()">Salvar Políticas</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ── DETALHES PANEL ── -->
+              <div class="sp-panel" id="spPanelDetails">
+                <div class="sp-section-title">Detalhes & Usuários</div>
+                <div class="sp-section-sub">Gerencie usuários e permissões da sua organização.</div>
+
+                <div class="sp-form-section">
+                  <div class="sp-form-section-title">👥 Usuários da Organização</div>
+                  <div id="spUserList" style="margin-bottom:0;"></div>
+
+                  <!-- Add user inline -->
+                  <div class="sp-add-user-form">
+                    <div style="flex:1;">
+                      <label class="sp-label">Nome</label>
+                      <input type="text" id="newUserName" class="sp-input" placeholder="Ex: João Silva">
+                    </div>
+                    <div style="flex:1;">
+                      <label class="sp-label">E-mail</label>
+                      <input type="email" id="newUserEmail" class="sp-input" placeholder="joao@evah.com">
+                    </div>
+                    <div style="padding-top:20px;">
+                      <button class="btn btn-secondary btn-sm" onclick="addAdminUser()">+ Adicionar</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sp-form-section" id="spTILogsSection" style="display:none;">
+                  <div class="sp-form-section-title">🔒 Logs de Acesso TI</div>
+                  <div style="background:var(--bg-primary); border:1px solid var(--surface-border); border-radius:10px; padding:16px; max-height:200px; overflow-y:auto; font-family:var(--font-mono); font-size:11px; line-height:1.7;">
+                    <div style="color:var(--color-success);">[2026-06-23T18:02:33Z] ACCESS_GRANTED - <span id="spLogUser">root@evah.local</span> (IP: 127.0.0.1)</div>
+                    <div style="color:var(--text-secondary);">[2026-06-23T17:53:43Z] POLICY_UPDATE - allowEdit = true</div>
+                    <div style="color:var(--color-error);">[2026-06-22T21:12:05Z] FAILED_LOGIN - attempt from IP: 45.33.22.11</div>
+                    <div style="color:var(--text-secondary);">[2026-06-21T18:07:03Z] USER_CREATED - operador@evah.com by root</div>
+                  </div>
+                </div>
+
+                <div class="sp-action-bar">
+                  <button class="btn btn-primary" onclick="saveAdminUsers()">Salvar Permissões</button>
+                </div>
+              </div>
+
+            </div><!-- /sp-main -->
+          </div><!-- /sp-root -->
+        </div><!-- /viewSettings -->
+
+      </div><!-- /lp-content -->
+    </div><!-- /lp-main -->
+  </div><!-- /lp-root -->
+
+  <!-- ══ MODAL: Meu Perfil ══ -->
+  <div class="eo-modal-overlay" id="profileModal">
+    <div class="eo-modal">
+      <div class="eo-modal-header">
+        <h3 class="eo-modal-title">Meu Perfil</h3>
+        <button class="eo-modal-close" onclick="closeModal('profileModal')">✕</button>
+      </div>
+      <form onsubmit="handleProfileSubmit(event)">
+        <div class="input-group" style="text-align:center;">
+          <label class="eo-input-label">Foto de Perfil</label>
+          <div class="eo-image-upload" style="width:90px; height:90px; border-radius:50%; margin:0 auto; display:flex; align-items:center; justify-content:center; overflow:hidden; padding:0;">
+            <span id="profImagePlaceholder" style="font-size:2rem;">📷</span>
+            <input type="file" accept="image/*" onchange="previewProfileImage(this)">
+            <img id="profImagePreview" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%; margin:0;">
+            <input type="hidden" id="profImageData">
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="eo-input-label">Nome Completo</label>
+          <input type="text" id="profName" class="eo-input" required>
+        </div>
+        <div class="input-group">
+          <label class="eo-input-label">Email Corporativo</label>
+          <input type="email" id="profEmail" class="eo-input" required disabled>
+        </div>
+        <div class="input-group">
+          <label class="eo-input-label">Organização / Corporação</label>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img id="profOrgLogo" style="width:28px; height:28px; object-fit:contain; border-radius:4px; display:none;">
+            <input type="text" id="profOrg" class="eo-input" disabled>
+          </div>
+        </div>
+        <div class="input-group" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div>
+            <label class="eo-input-label">Nível / Cargo</label>
+            <input type="text" id="profRole" class="eo-input" disabled>
+          </div>
+          <div>
+            <label class="eo-input-label">Setor</label>
+            <input type="text" id="profSector" class="eo-input" disabled>
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="eo-input-label">Plano Corporativo</label>
+          <span id="profPlan" style="display:inline-block; padding:4px 12px; border-radius:20px; background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.25); font-size:12px; font-weight:700; color:var(--color-primary);">Enterprise</span>
+        </div>
+        <div class="input-group">
+          <label class="eo-input-label">Segurança</label>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="showToast('Um email de redefinição de senha foi enviado para você.','info')">Redefinir Senha</button>
+        </div>
+        <div style="margin-top:20px;">
+          <button type="submit" class="btn btn-primary btn-block">Salvar Perfil</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: Nova Organização ══ -->
+  <div class="eo-modal-overlay" id="newOrgModal">
+    <div class="eo-modal" style="max-width:440px;">
+      <div class="eo-modal-header">
+        <h3 class="eo-modal-title">Nova Organização</h3>
+        <button class="eo-modal-close" onclick="closeModal('newOrgModal')">✕</button>
+      </div>
+      <div class="input-group">
+        <label class="eo-input-label">Nome da Corporação</label>
+        <input type="text" class="eo-input" id="newOrgName" placeholder="Ex: Evah Ophim Ltda.">
+      </div>
+      <div class="input-group">
+        <label class="eo-input-label">Plano Inicial</label>
+        <select class="eo-input" id="newOrgPlan">
+          <option value="Free">Free</option>
+          <option value="Professional">Professional</option>
+          <option value="Enterprise">Enterprise</option>
+          <option value="Personalized">Personalized</option>
+        </select>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('newOrgModal')">Cancelar</button>
+        <button class="btn btn-primary btn-sm" onclick="submitNewOrg()">Criar Locatário</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="../../js/api.js"></script>
+  <script src="../../js/security.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script>
+    /* ════════════════════════════════════════════
+       UTILITIES
+    ════════════════════════════════════════════ */
+    function compressImage(file, maxSize, callback) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let w = img.width, h = img.height;
+          if(w > maxSize || h > maxSize) {
+            const ratio = Math.min(maxSize/w, maxSize/h);
+            w = w * ratio; h = h * ratio;
+          }
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          callback(canvas.toDataURL('image/jpeg', 0.8));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function showToast(m, t='info') {
+      const c = document.getElementById('toastContainer');
+      const d = document.createElement('div');
+      d.className = `toast toast-${t}`;
+      d.textContent = m;
+      c.appendChild(d);
+      setTimeout(() => { d.style.opacity = '0'; setTimeout(() => d.remove(), 300); }, 4000);
+    }
+
+    /* ════════════════════════════════════════════
+       STATE
+    ════════════════════════════════════════════ */
+    let currentUser = null;
+    let localUsers = [];
+    let corpSettings = { id: 'org_1', name: 'Evah Ophim Corp', plan: 'Enterprise', logo: null, policies: { allowEdit: true, require2FA: false, restrictIP: false, advancedAudit: true } };
+    let organizations = [corpSettings];
+    let currentOrgId = 'org_1';
+
+    /* ════════════════════════════════════════════
+       INIT
+    ════════════════════════════════════════════ */
+    window.onload = async () => {
+      if(!Auth.isAuthenticated()) { window.location.href = '../login.html'; return; }
+
+      const theme = localStorage.getItem('evah_theme') || 'dark';
+      if(theme === 'light') document.documentElement.classList.add('light-mode');
+
+      // Fetch user
+      const resMe = await API.get('/auth/me');
+      if(resMe.success) {
+        currentUser = resMe.data;
+        Auth.setUser(currentUser);
+      } else { Auth.logout(); return; }
+
+      // Fetch org (Current Org Only)
+      const resOrg = await API.get('/org/me');
+      if(resOrg.success) {
+        corpSettings = resOrg.data;
+        organizations = [corpSettings];
+      }
+
+      currentOrgId = currentUser.org_id || 'org_1';
+
+      // Populate UI
+      const name = currentUser.name || 'Usuário';
+      document.getElementById('greetingText').textContent = `Olá, ${name} 👋`;
+
+      // Avatar (header + dropdown)
+      setAvatarEl('headerAvatar', currentUser, 'small');
+      setAvatarEl('dropAvatar', currentUser, 'large');
+      document.getElementById('dropName').textContent = name;
+      document.getElementById('dropEmail').textContent = currentUser.email || 'N/A';
+      document.getElementById('dropRole').textContent = currentUser.role || 'Usuário';
+
+      const myOrg = organizations.find(o => o.id === currentUser.org_id) || organizations[0];
+      document.getElementById('dropPlan').textContent = myOrg?.plan || 'Enterprise';
+
+      // Close dropdown on outside click
+      document.addEventListener('click', e => {
+        const drop = document.getElementById('userDropdown');
+        const avatar = document.getElementById('headerAvatar');
+        if(drop && drop.classList.contains('active') && !drop.contains(e.target) && e.target !== avatar) {
+          drop.classList.remove('active');
+        }
+      });
+
+      // Show admin card if eligible
+      const isAdmin = currentUser.role === 'admin' || currentUser.role === 'superadmin' || currentUser.email === 'root';
+      if(isAdmin) document.getElementById('adminCard').style.display = 'flex';
+
+      // Pre-load settings data
+      loadOrgSettings();
+      renderDashboardMetrics();
+      loadEvents();
+      renderActivities();
+
+      // TI logs
+      if(currentUser.sector === 'TI' || currentUser.email === 'root@evah.local') {
+        document.getElementById('spTILogsSection').style.display = 'block';
+      }
+      if(currentUser.email) document.getElementById('spLogUser').textContent = currentUser.email;
+    };
+
+    /* ════════════════════════════════════════════
+       AVATAR HELPER
+    ════════════════════════════════════════════ */
+    function setAvatarEl(id, user, size) {
+      const el = document.getElementById(id);
+      if(!el) return;
+      if(user.avatar_url) {
+        el.style.backgroundImage = `url(${user.avatar_url})`;
+        el.style.backgroundSize = 'cover';
+        el.textContent = '';
+      } else {
+        el.style.backgroundImage = 'none';
+        el.textContent = (user.name || 'U').charAt(0).toUpperCase();
+      }
+    }
+
+    /* ════════════════════════════════════════════
+       VIEW SWITCHING
+    ════════════════════════════════════════════ */
+    function showView(view) {
+      const views = { launchpad: 'viewLaunchpad', settings: 'viewSettings' };
+      Object.entries(views).forEach(([k, id]) => {
+        document.getElementById(id).style.display = k === view ? 'block' : 'none';
+      });
+
+      const navMap = { launchpad: 'navHome', settings: 'navSettings' };
+      document.querySelectorAll('.lp-nav-btn').forEach(b => b.classList.remove('active'));
+      if(navMap[view]) document.getElementById(navMap[view]).classList.add('active');
+
+      const titles = { launchpad: 'Launchpad', settings: 'Configurações' };
+      const breadcrumbs = { launchpad: 'Home', settings: 'Configurações Corporativas' };
+      document.getElementById('topbarTitle').textContent = titles[view] || '';
+      document.getElementById('topbarBreadcrumb').textContent = breadcrumbs[view] || '';
+
+      if(view === 'settings') {
+        loadSpUserList();
+      }
+    }
+
+    /* ════════════════════════════════════════════
+       SETTINGS PANEL NAVIGATION
+    ════════════════════════════════════════════ */
+    function switchSpPanel(panel) {
+      const panelMap = {
+        dashboard:  'spPanelDashboard',
+        calendar:   'spPanelCalendar',
+        activities: 'spPanelActivities',
+        info:       'spPanelInfo',
+        details:    'spPanelDetails',
+      };
+      const navMap = {
+        dashboard:  'spNavDashboard',
+        calendar:   'spNavCalendar',
+        activities: 'spNavActivities',
+        info:       'spNavInfo',
+        details:    'spNavDetails',
+      };
+
+      document.querySelectorAll('.sp-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.sp-nav-item').forEach(n => n.classList.remove('active'));
+
+      const targetPanel = document.getElementById(panelMap[panel]);
+      const targetNav = document.getElementById(navMap[panel]);
+      if(targetPanel) targetPanel.classList.add('active');
+      if(targetNav) targetNav.classList.add('active');
+    }
+
+    /* ════════════════════════════════════════════
+       DASHBOARD METRICS
+    ════════════════════════════════════════════ */
+    async function renderDashboardMetrics() {
+      // Org selector
+      const sel = document.getElementById('orgSelector');
+      if(sel) sel.innerHTML = organizations.map(o => `<option value="${o.id}" ${o.id===currentOrgId?'selected':''}>${o.name}</option>`).join('');
+
+      // Org banner
+      const org = corpSettings || organizations[0];
+      document.getElementById('spOrgName').textContent = org?.name || 'N/A';
+      document.getElementById('spOrgPlan').textContent = org?.plan || 'Enterprise';
+
+      const logoBox = document.getElementById('spOrgLogoBox');
+      if(org?.logo) {
+        logoBox.innerHTML = `<img src="${org.logo}" alt="Logo">`;
+      } else {
+        logoBox.textContent = '🏢';
+      }
+
+      // Users
+      const resUsers = await API.get('/auth/users');
+      if(resUsers.success) {
+        localUsers = resUsers.data;
+        document.getElementById('metricUsers').textContent = localUsers.length;
+      }
+
+      // Orgs count
+      document.getElementById('metricOrgs').textContent = organizations.length;
+
+      // Items
+      const resItems = await API.get('/materials');
+      if(resItems.success) {
+        document.getElementById('metricItems').textContent = Array.isArray(resItems.data) ? resItems.data.length : (resItems.data?.total || '—');
+      }
+
+      // Last access time
+      const now = new Date();
+      document.getElementById('metricAccess').textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    /* ════════════════════════════════════════════
+       CALENDAR
+    ════════════════════════════════════════════ */
+    let calYear = new Date().getFullYear();
+    let calMonth = new Date().getMonth();
+    const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+    let orgEvents = [];
+
+    async function loadEvents() {
+      const res = await API.get('/org/events');
+      if (res.success) orgEvents = res.data;
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      document.getElementById('calMonthLabel').textContent = `${monthNames[calMonth]} ${calYear}`;
+      const grid = document.getElementById('calGrid');
+      grid.innerHTML = '';
+
+      const firstDay = new Date(calYear, calMonth, 1).getDay();
+      const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+      const today = new Date();
+
+      // Empty cells
+      for(let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'sp-cal-day empty';
+        grid.appendChild(empty);
+      }
+
+      // Day cells
+      for(let d = 1; d <= daysInMonth; d++) {
+        const cell = document.createElement('div');
+        cell.className = 'sp-cal-day';
+        if(d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear()) {
+          cell.classList.add('today');
+        }
+        
+        // Check events
+        const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const dayEvents = orgEvents.filter(ev => ev.event_date.startsWith(dateStr));
+        
+        if (dayEvents.length > 0) {
+          cell.classList.add('has-event');
+          if (dayEvents[0].color) {
+            cell.style.setProperty('--color-success', dayEvents[0].color);
+          }
+        }
+
+        cell.textContent = d;
+        cell.onclick = () => promptAddEvent(dateStr);
+        grid.appendChild(cell);
+      }
+      
+      renderEventsList();
+    }
+
+    async function promptAddEvent(dateStr) {
+      if (!Auth.canEdit()) { showToast('Sem permissão para adicionar eventos', 'error'); return; }
+      const title = prompt(`Adicionar evento para ${dateStr.split('-').reverse().join('/')}:\nTítulo:`);
+      if (!title) return;
+      const sector = prompt('Setor (ex: Logística, TI, RH):') || 'Geral';
+      const colors = ['#6366f1', '#10b981', '#f59e0b', '#f43f5e', '#a855f7'];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      
+      const res = await API.post('/org/events', { title, date: dateStr, sector, color });
+      if (res.success) {
+        showToast('Evento adicionado!', 'success');
+        loadEvents();
+      } else {
+        showToast(res.error || 'Erro ao criar evento', 'error');
+      }
+    }
+
+    async function deleteEvent(id) {
+      if (!Auth.canEdit()) return;
+      if (!confirm('Deseja excluir este evento?')) return;
+      const res = await API.delete(`/org/events/${id}`);
+      if (res.success) {
+        showToast('Evento excluído', 'success');
+        loadEvents();
+      } else {
+        showToast('Erro ao excluir', 'error');
+      }
+    }
+
+    function renderEventsList() {
+      const listContainer = document.getElementById('eventsListContainer');
+      if (!listContainer) return;
+      
+      const upcoming = orgEvents.filter(ev => new Date(ev.event_date) >= new Date().setHours(0,0,0,0)).slice(0, 5);
+      
+      if (upcoming.length === 0) {
+        listContainer.innerHTML = '<div style="color:var(--text-tertiary); font-size:13px; text-align:center; padding:20px;">Nenhum evento futuro.</div>';
+        return;
+      }
+      
+      const fmt = (dStr) => {
+        const d = new Date(dStr + 'T00:00:00'); // Force local midnight
+        return `${d.getDate()} ${monthNames[d.getMonth()].substring(0,3)} ${d.getFullYear()}`;
+      };
+
+      listContainer.innerHTML = upcoming.map(ev => `
+        <div class="sp-event-item">
+          <div class="sp-event-dot" style="background: ${ev.color || 'var(--color-primary)'};"></div>
+          <div style="flex: 1;">
+            <div class="sp-event-title">${ev.title}</div>
+            <div class="sp-event-date">${fmt(ev.event_date)} · ${ev.sector}</div>
+          </div>
+          ${Auth.canEdit() ? `<button class="btn btn-ghost btn-sm" style="color:var(--color-error); padding:4px 8px; height:auto; min-height:0;" onclick="deleteEvent(${ev.id})">✕</button>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function calNav(dir) {
+      calMonth += dir;
+      if(calMonth > 11) { calMonth = 0; calYear++; }
+      if(calMonth < 0)  { calMonth = 11; calYear--; }
+      renderCalendar();
+    }
+
+    /* ════════════════════════════════════════════
+       ACTIVITIES LOG
+    ════════════════════════════════════════════ */
+    function renderActivities() {
+      const list = document.getElementById('spActivityList');
+      const now = new Date();
+      const fmt = d => d.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+
+      const logs = [
+        { color: '#10b981', label: 'ACCESS', text: `Login realizado por ${currentUser?.name || 'Usuário'}`, time: now },
+        { color: '#6366f1', label: 'UPDATE', text: 'Configurações de organização atualizadas', time: new Date(now - 3600000) },
+        { color: '#f59e0b', label: 'WARN', text: 'Tentativa de login falhou — IP: 45.33.22.11', time: new Date(now - 86400000) },
+        { color: '#10b981', label: 'CREATE', text: 'Novo usuário criado no sistema', time: new Date(now - 172800000) },
+        { color: '#6366f1', label: 'POLICY', text: 'Política de auditoria habilitada', time: new Date(now - 259200000) },
+      ];
+
+      list.innerHTML = logs.map(l => `
+        <div class="sp-activity-item">
+          <div class="sp-activity-dot" style="background:${l.color};"></div>
+          <div class="sp-activity-body">
+            <div class="sp-activity-text">${l.text}</div>
+            <div class="sp-activity-meta">${fmt(l.time)}</div>
+          </div>
+          <div class="sp-activity-chip" style="background:${l.color}22; color:${l.color}; border:1px solid ${l.color}44;">${l.label}</div>
+        </div>
+      `).join('');
+    }
+
+    /* ════════════════════════════════════════════
+       THEME
+    ════════════════════════════════════════════ */
+    function toggleTheme() {
+      document.documentElement.classList.toggle('light-mode');
+      const isLight = document.documentElement.classList.contains('light-mode');
+      localStorage.setItem('evah_theme', isLight ? 'light' : 'dark');
+    }
+
+    function toggleDropdown() {
+      document.getElementById('userDropdown').classList.toggle('active');
+    }
+
+    /* ════════════════════════════════════════════
+       MODALS
+    ════════════════════════════════════════════ */
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function previewProfileImage(input) {
+      const file = input.files[0];
+      if(!file) return;
+      compressImage(file, 256, (dataUrl) => {
+        document.getElementById('profImagePreview').src = dataUrl;
+        document.getElementById('profImagePreview').style.display = 'block';
+        document.getElementById('profImagePlaceholder').style.display = 'none';
+        document.getElementById('profImageData').value = dataUrl;
+      });
+    }
+
+    function openProfileModal() {
+      const u = currentUser;
+      document.getElementById('profName').value = u.name || '';
+      document.getElementById('profEmail').value = u.email || '';
+
+      const org = organizations.find(o => o.id === (u.org_id || 'org_1')) || organizations[0];
+      document.getElementById('profOrg').value = org?.name || 'Evah Ophim Corp';
+      document.getElementById('profPlan').textContent = org?.plan || 'Enterprise';
+      document.getElementById('profRole').value = u.role || 'Usuário';
+      document.getElementById('profSector').value = u.sector || 'Logística';
+
+      if(org?.logo) {
+        document.getElementById('profOrgLogo').src = org.logo;
+        document.getElementById('profOrgLogo').style.display = 'block';
+      } else { document.getElementById('profOrgLogo').style.display = 'none'; }
+
+      if(u.avatar_url) {
+        document.getElementById('profImagePreview').src = u.avatar_url;
+        document.getElementById('profImagePreview').style.display = 'block';
+        document.getElementById('profImagePlaceholder').style.display = 'none';
+        document.getElementById('profImageData').value = u.avatar_url;
+      } else {
+        document.getElementById('profImagePreview').style.display = 'none';
+        document.getElementById('profImagePlaceholder').style.display = 'block';
+        document.getElementById('profImageData').value = '';
+      }
+
+      const canEdit = org?.policies?.allowEdit !== false || u.role === 'admin' || u.role === 'superadmin' || u.email === 'root';
+      document.getElementById('profName').disabled = !canEdit;
+
+      document.getElementById('profileModal').classList.add('active');
+    }
+
+    async function handleProfileSubmit(e) {
+      e.preventDefault();
+      if(currentUser.email === 'root') { showToast('A conta Root não pode ser alterada', 'error'); return; }
+
+      const res = await API.put('/auth/profile', {
+        name: document.getElementById('profName').value.trim(),
+        surname: currentUser.surname || '',
+        company: currentUser.company || '',
+        phone: currentUser.phone || '',
+        sector: currentUser.sector || 'Logística',
+        avatar_url: document.getElementById('profImageData').value
+      });
+
+      if(res.success) {
+        const resMe = await API.get('/auth/me');
+        if(resMe.success) { currentUser = resMe.data; Auth.setUser(currentUser); }
+        document.getElementById('greetingText').textContent = `Olá, ${currentUser.name} 👋`;
+        setAvatarEl('headerAvatar', currentUser, 'small');
+        setAvatarEl('dropAvatar', currentUser, 'large');
+        document.getElementById('dropName').textContent = currentUser.name;
+        showToast('Perfil atualizado com sucesso!', 'success');
+        closeModal('profileModal');
+      } else {
+        showToast(res.error || 'Erro ao atualizar perfil', 'error');
+      }
+    }
+
+    /* ════════════════════════════════════════════
+       ORG SETTINGS
+    ════════════════════════════════════════════ */
+    function loadOrgSettings() {
+      const sel = document.getElementById('orgSelector');
+      if(sel && sel.value) currentOrgId = sel.value;
+      corpSettings = organizations.find(o => o.id === currentOrgId) || organizations[0];
+      if(!corpSettings) return;
+
+      const nameEl = document.getElementById('corpName');
+      const planEl = document.getElementById('corpPlan');
+      if(nameEl) nameEl.value = corpSettings.name || '';
+      if(planEl) planEl.value = corpSettings.plan || 'Enterprise';
+
+      // Policies toggles
+      const p = corpSettings.policies || {};
+      setToggle('toggleEditProfile', p.allowEdit !== false);
+      setToggle('toggle2FA', !!p.require2FA);
+      setToggle('toggleIP', !!p.restrictIP);
+      setToggle('toggleAudit', !!p.advancedAudit);
+
+      // Logo
+      if(corpSettings.logo) {
+        if(document.getElementById('corpLogoPreview')) {
+          document.getElementById('corpLogoPreview').src = corpSettings.logo;
+          document.getElementById('corpLogoPreview').style.display = 'block';
+          document.getElementById('corpLogoPlaceholder').style.display = 'none';
+          document.getElementById('corpLogoData').value = corpSettings.logo;
+        }
+      } else {
+        if(document.getElementById('corpLogoPreview')) {
+          document.getElementById('corpLogoPreview').style.display = 'none';
+          document.getElementById('corpLogoPlaceholder').style.display = 'block';
+          document.getElementById('corpLogoData').value = '';
+        }
+      }
+
+      // Update dashboard org banner
+      const spName = document.getElementById('spOrgName');
+      const spPlan = document.getElementById('spOrgPlan');
+      if(spName) spName.textContent = corpSettings.name;
+      if(spPlan) spPlan.textContent = corpSettings.plan;
+    }
+
+    function setToggle(id, state) {
+      const el = document.getElementById(id);
+      if(!el) return;
+      if(state) el.classList.add('on'); else el.classList.remove('on');
+    }
+
+    function toggleSpPolicy(btn) {
+      btn.classList.toggle('on');
+    }
+
+    function previewCorpLogo(input) {
+      const file = input.files[0];
+      if(!file) return;
+      compressImage(file, 400, (dataUrl) => {
+        document.getElementById('corpLogoPreview').src = dataUrl;
+        document.getElementById('corpLogoPreview').style.display = 'block';
+        document.getElementById('corpLogoPlaceholder').style.display = 'none';
+        document.getElementById('corpLogoData').value = dataUrl;
+      });
+    }
+
+    async function saveOrgSettings(silent = false) {
+      if(corpSettings) {
+        const nameEl = document.getElementById('corpName');
+        const planEl = document.getElementById('corpPlan');
+        if(nameEl) corpSettings.name = nameEl.value.trim() || 'Nova Organização';
+        if(planEl) corpSettings.plan = planEl.value;
+        if(!corpSettings.policies) corpSettings.policies = {};
+        corpSettings.policies.allowEdit = document.getElementById('toggleEditProfile')?.classList.contains('on');
+        corpSettings.policies.require2FA = document.getElementById('toggle2FA')?.classList.contains('on');
+        corpSettings.policies.restrictIP = document.getElementById('toggleIP')?.classList.contains('on');
+        corpSettings.policies.advancedAudit = document.getElementById('toggleAudit')?.classList.contains('on');
+        const logoData = document.getElementById('corpLogoData');
+        if(logoData) corpSettings.logo = logoData.value;
+      }
+
+      const res = await API.put('/org/me', {
+        name: corpSettings.name,
+        plan: corpSettings.plan,
+        logo_url: corpSettings.logo,
+        policies: corpSettings.policies
+      });
+
+      if(res.success) {
+        if(!silent) showToast('Configurações salvas!', 'success');
+        const resOrg = await API.get('/org/me');
+        if(resOrg.success) corpSettings = resOrg.data;
+        loadOrgSettings();
+
+        // Refresh dashboard banner
+        const spName = document.getElementById('spOrgName');
+        const spPlan = document.getElementById('spOrgPlan');
+        if(spName) spName.textContent = corpSettings.name;
+        if(spPlan) spPlan.textContent = corpSettings.plan;
+      } else {
+        if(!silent) showToast(res.error || 'Erro ao salvar', 'error');
+      }
+    }
+
+    /* ════════════════════════════════════════════
+       NEW ORG
+    ════════════════════════════════════════════ */
+    function createNewOrg() {
+      document.getElementById('newOrgName').value = '';
+      document.getElementById('newOrgPlan').value = 'Free';
+      document.getElementById('newOrgModal').classList.add('active');
+    }
+
+    async function submitNewOrg() {
+      const name = document.getElementById('newOrgName').value.trim();
+      if(!name) { showToast('Preencha o nome', 'warning'); return; }
+
+      const newOrgId = 'org_' + Date.now();
+      const res = await API.post('/auth/organizations', {
+        id: newOrgId, name,
+        plan: document.getElementById('newOrgPlan').value,
+        logo: null,
+        policies: { allowEdit: true, require2FA: false, restrictIP: false, advancedAudit: false }
+      });
+
+      if(res.success) {
+        showToast('Organização criada com sucesso!', 'success');
+        closeModal('newOrgModal');
+        const resOrgs = await API.get('/auth/organizations');
+        if(resOrgs.success) organizations = resOrgs.data;
+        currentOrgId = newOrgId;
+        const sel = document.getElementById('orgSelector');
+        if(sel) sel.innerHTML = organizations.map(o => `<option value="${o.id}" ${o.id===currentOrgId?'selected':''}>${o.name}</option>`).join('');
+        loadOrgSettings();
+      } else {
+        showToast(res.error || 'Erro ao criar organização', 'error');
+      }
+    }
+
+    /* ════════════════════════════════════════════
+       USERS LIST (Settings > Detalhes)
+    ════════════════════════════════════════════ */
+    function getRoleBadge(role) {
+      const map = {
+        superadmin: ['Super Admin', 'role-superadmin'],
+        admin: ['Admin', 'role-admin'],
+        manager: ['Gerente', 'role-manager'],
+        operator: ['Operador', 'role-operator'],
+        viewer: ['Visualizador', 'role-viewer'],
+      };
+      const [label, cls] = map[role] || ['Usuário', 'role-viewer'];
+      return `<span class="sp-user-role-badge ${cls}">${label}</span>`;
+    }
+
+    async function loadSpUserList() {
+      const resUsers = await API.get('/auth/users');
+      if(resUsers.success) localUsers = resUsers.data;
+      renderSpUserList();
+    }
+
+    function renderSpUserList() {
+      const list = document.getElementById('spUserList');
+      if(!list) return;
+
+      if(!localUsers.length) {
+        list.innerHTML = '<div style="color:var(--text-tertiary); font-size:13px; padding:20px 0; text-align:center;">Nenhum usuário encontrado.</div>';
+        return;
+      }
+
+      list.innerHTML = localUsers.map((u, idx) => `
+        <div class="sp-user-row">
+          <div class="sp-user-avatar" style="${u.avatar_url ? `background-image:url(${u.avatar_url});` : `background:linear-gradient(135deg,var(--color-primary),var(--color-secondary));`}">
+            ${u.avatar_url ? '' : (u.name||'U').charAt(0).toUpperCase()}
+          </div>
+          <div style="flex:1;">
+            <div class="sp-user-name">${u.name || 'N/A'} ${u.surname||''}</div>
+            <div class="sp-user-email">${u.email}</div>
+          </div>
+          <select class="sp-input user-role-select" data-idx="${idx}" style="width:130px; padding:5px 8px; height:34px;">
+            <option value="viewer" ${u.role==='viewer'?'selected':''}>Visualizador</option>
+            <option value="operator" ${u.role==='operator'?'selected':''}>Operador</option>
+            <option value="manager" ${u.role==='manager'?'selected':''}>Gerente</option>
+            <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+            <option value="superadmin" ${u.role==='superadmin'?'selected':''}>Super Admin</option>
+          </select>
+          <select class="sp-input user-sector-select" data-idx="${idx}" style="width:120px; padding:5px 8px; height:34px;">
+            <option value="Logística" ${u.sector==='Logística'?'selected':''}>Logística</option>
+            <option value="TI" ${u.sector==='TI'?'selected':''}>TI</option>
+            <option value="RH" ${u.sector==='RH'?'selected':''}>RH</option>
+            <option value="Financeiro" ${u.sector==='Financeiro'?'selected':''}>Financeiro</option>
+          </select>
+          <select class="sp-input user-org-select" data-idx="${idx}" style="width:140px; padding:5px 8px; height:34px;">
+            ${organizations.map(o => `<option value="${o.id}" ${u.org_id===o.id?'selected':''}>${o.name}</option>`).join('')}
+          </select>
+          <button class="btn btn-ghost btn-sm" style="color:var(--color-error); flex-shrink:0;" onclick="removeAdminUser(${idx})">✕</button>
+        </div>
+      `).join('');
+    }
+
+    async function addAdminUser() {
+      const name = document.getElementById('newUserName').value.trim();
+      const email = document.getElementById('newUserEmail').value.trim();
+      if(!name || !email) { showToast('Preencha nome e e-mail', 'warning'); return; }
+      if(localUsers.find(u => u.email === email)) { showToast('E-mail já existe', 'error'); return; }
+
+      const res = await API.post('/auth/users', {
+        name, surname: '', email, password: 'ChangeMe#2026',
+        role: 'viewer', org_id: currentOrgId, sector: 'Logística', company: '', phone: ''
+      });
+
+      if(res.success) {
+        showToast('Usuário criado! Senha: ChangeMe#2026', 'success');
+        document.getElementById('newUserName').value = '';
+        document.getElementById('newUserEmail').value = '';
+        await loadSpUserList();
+      } else {
+        showToast(res.error || 'Erro ao criar usuário', 'error');
+      }
+    }
+
+    async function removeAdminUser(idx) {
+      const user = localUsers[idx];
+      if(user.email === currentUser.email) { showToast('Você não pode se remover', 'error'); return; }
+      if(!confirm(`Excluir ${user.name}?`)) return;
+
+      const res = await API.delete(`/auth/users/${user.id}`);
+      if(res.success) {
+        showToast('Usuário excluído', 'success');
+        await loadSpUserList();
+      } else {
+        showToast(res.error || 'Erro ao excluir', 'error');
+      }
+    }
+
+    async function saveAdminUsers() {
+      const roles = Array.from(document.querySelectorAll('.user-role-select')).map(s => s.value);
+      const sectors = Array.from(document.querySelectorAll('.user-sector-select')).map(s => s.value);
+      const orgIds = Array.from(document.querySelectorAll('.user-org-select')).map(s => s.value);
+
+      let hasError = false;
+      for(let i = 0; i < localUsers.length; i++) {
+        const u = localUsers[i];
+        const res = await API.put(`/auth/users/${u.id}`, {
+          name: u.name, surname: u.surname || '',
+          role: roles[i], org_id: orgIds[i],
+          sector: sectors[i], is_active: u.is_active
+        });
+        if(!res.success) hasError = true;
+      }
+
+      if(!hasError) {
+        showToast('Permissões salvas!', 'success');
+        await loadSpUserList();
+      } else {
+        showToast('Erro ao salvar algumas permissões', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

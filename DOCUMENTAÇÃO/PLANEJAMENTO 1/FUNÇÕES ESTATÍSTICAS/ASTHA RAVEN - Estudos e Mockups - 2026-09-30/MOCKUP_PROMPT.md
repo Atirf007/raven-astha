@@ -1,0 +1,11 @@
+# Proveniência da proposta visual
+
+Data: 30/09/2026. Skill: `imagegen`. Ferramenta: geração de imagem nativa `image_gen.imagegen`, sem CLI/API externa. Tipo: `ui-mockup`. Arquivo final: `MOCKUP_RELIABILITY_STUDIO.png`, copiado para esta pasta de documentação; aplicação não modificada.
+
+## Prompt final utilizado
+
+Use case: ui-mockup. Asset type: single high fidelity concept screenshot for research report, NOT implemented product. Create one polished Portuguese desktop industrial statistics application screen titled ASTHA RAVEN — Reliability Studio. Wide landscape 1600px-style composition. Near-black and graphite surfaces, white Inter-like text, subtle green success and amber caution, no decorative sci-fi. Left narrow navigation: Visão geral, Ativos, Estoque, Fornecedores, Datasets, Relatórios. Main header: Comparar vida útil de componentes. Scope chip: Planta 2 · Rolamentos. Top stepper: Objetivo > Dados > Método > Resultado. Center column: recommendation card Kaplan–Meier, explanation 'Considera componentes ainda em operação.' Data cards '148 episódios', '37 falhas', '111 censurados'. Large step-shaped survival comparison illustration with distinct solid blue and dashed orange groups A and B, axes 'Sobrevivência' vertical 0 to 100 percent and 'Horas de operação' horizontal. Draw bands faintly, not a smooth Gaussian curve. Beneath plot a small 'População em risco' table. Right inspector column with 'Por que esta análise?', 'Censura à direita', 'Ver pressupostos', and amber 'Comparação exploratória. Contextos operacionais podem diferir.' Bottom primary control 'Executar análise', secondary 'Revisar dados'. Visible footer 'MOCKUP CONCEITUAL · DADOS FICTÍCIOS · NÃO É RESULTADO ESTATÍSTICO'. Keep Portuguese text crisp and sparse, industrial professional information architecture and generous spacing. No real supplier brand names, no fabricated p-values, no code.
+
+## Limites do artefato
+
+Imagem conceitual estática, com dados fictícios. Texto, curvas, bandas e tabela de risco não foram gerados por motor estatístico e não devem ser usados como resultados de pesquisa. A implementação deve seguir os contratos e as 15 especificações de tela, com dados reais autorizados e métodos homologados.

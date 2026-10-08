@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASTHA RAVEN - Configurações</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-body: #f8fafc;
+      --bg-card: #ffffff;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #8b5cf6;
+      --danger: #ef4444;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg-body); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+
+    #toast {
+      position: fixed; top: 20px; right: 20px; background: #10b981; color: white;
+      padding: 12px 24px; border-radius: 8px; font-weight: 500; font-size: 14px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+      transform: translateY(-100px); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 9999;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.error { background: var(--danger); }
+
+    #confirmModal, #deleteModal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.6); display: none; align-items: center; justify-content: center;
+      z-index: 9998; backdrop-filter: blur(2px);
+    }
+    .confirm-box {
+      background: #fff; width: 360px; padding: 24px; border-radius: 12px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); text-align: center;
+    }
+    .confirm-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .confirm-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+    .confirm-actions { display: flex; gap: 12px; justify-content: center; }
+    .btn-cancel { padding: 10px 16px; border: 1px solid var(--border); background: #fff; border-radius: 8px; cursor: pointer; font-weight: 500; }
+    .btn-confirm { padding: 10px 16px; border: none; background: var(--danger); color: #fff; border-radius: 8px; cursor: pointer; font-weight: 500; }
+
+    .sidebar { width: 260px; background: var(--bg-card); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px 16px; }
+    .main-content { flex: 1; overflow-y: auto; padding: 40px; }
+    
+    .top-controls { display: flex; align-items: center; margin-bottom: 32px; gap: 16px; }
+    .btn-back { display: flex; align-items: center; gap: 8px; background: transparent; border: none; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; text-decoration: none; }
+    .btn-back:hover { color: var(--text-main); }
+    .breadcrumb { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+    .breadcrumb span { color: var(--text-main); font-weight: 600; }
+
+    .nav-group { margin-bottom: 24px; }
+    .nav-title { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; padding-left: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: 0.2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-body); color: var(--text-main); }
+    .nav-item.active { background: #f1f5f9; color: var(--text-main); }
+    .nav-item svg { width: 18px; height: 18px; }
+
+    .profile-header { display: flex; align-items: center; gap: 24px; margin-bottom: 40px; }
+    .avatar-large { width: 96px; height: 96px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3); }
+    .profile-name { font-size: 28px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .verified-badge { color: #3b82f6; width: 20px; height: 20px; }
+    .profile-email { font-size: 15px; color: var(--text-muted); }
+
+    .settings-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
+    .card-header { padding: 20px 24px; border-bottom: 1px solid var(--border); font-size: 16px; font-weight: 600; background: #fafafa; display: flex; justify-content: space-between; align-items: center; }
+    .card-body { padding: 0; }
+    
+    .list-row { display: flex; padding: 20px 24px; border-bottom: 1px solid var(--border); align-items: center; }
+    .list-row:last-child { border-bottom: none; }
+    .row-label { width: 200px; font-size: 14px; color: var(--text-muted); font-weight: 500; }
+    .row-value { flex: 1; font-size: 14px; font-weight: 500; color: var(--text-main); }
+    .row-input { flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; outline: none; }
+    .row-input:focus { border-color: var(--primary); }
+    
+    .btn-edit { background: transparent; border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-save { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+    .role-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #f1f5f9; color: #475569; }
+    .role-badge.admin { background: rgba(139, 92, 246, 0.15); color: var(--primary); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body>
+
+  <div id="toast">Mensagem</div>
+
+  <div id="confirmModal">
+    <div class="confirm-box">
+      <div class="confirm-title">Encerrar Sessão</div>
+      <div class="confirm-desc">Tem certeza que deseja sair do sistema ASTHA RAVEN?</div>
+      <div class="confirm-actions">
+        <button class="btn-cancel" onclick="closeConfirm()">Cancelar</button>
+        <button class="btn-confirm" onclick="executeLogout()">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="deleteModal">
+    <div class="confirm-box" style="width:400px; text-align:left;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div style="background:#fef2f2; color:var(--danger); padding:12px; border-radius:50%;">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </div>
+        <div class="confirm-title" style="margin-bottom:0; font-size:20px;">Excluir conta</div>
+      </div>
+      <div class="confirm-desc" style="text-align:left; font-size:14px; line-height:1.5;">Esta ação <strong>não pode ser desfeita</strong>. Isso excluirá permanentemente sua conta, removerá você de todos os workspaces e apagará seus dados de nossos servidores.</div>
+      <div class="confirm-actions" style="justify-content:flex-end;">
+        <button class="btn-cancel" onclick="document.getElementById('deleteModal').style.display='none'">Cancelar</button>
+        <button class="btn-confirm" onclick="executeDeleteAccount()">Sim, excluir conta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="top-controls" style="margin-bottom: 24px; margin-top: 10px;">
+      <a href="./home.html" class="btn-back">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Launchpad
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Organização</div>
+      <div class="nav-item" onclick="switchTab('workspace', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        Workspace
+      </div>
+      <div class="nav-item" onclick="switchTab('members', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        Membros
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Minha Conta</div>
+      <div class="nav-item active" onclick="switchTab('profile', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        Perfil
+      </div>
+      <div class="nav-item" onclick="switchTab('security', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        Segurança
+      </div>
+    </div>
+
+    <div style="margin-top:auto;">
+      <div class="nav-item" onclick="showConfirm()" style="color:var(--danger);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        Sair do Sistema
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <div class="breadcrumb" style="margin-bottom: 40px;">
+      Minha Conta / <span id="currentBreadcrumb">Perfil</span>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="tab-profile" class="tab-content active">
+      <div class="profile-header">
+        <div style="position:relative;">
+          <div class="avatar-large" id="profBigAvatar" style="background-size:cover; background-position:center;">A</div>
+          <label for="avatarUpload" style="position:absolute; bottom:0; right:0; background:var(--bg-card); border:1px solid var(--border); padding:6px; border-radius:50%; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.1); color:var(--text-muted);">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          </label>
+          <input type="file" id="avatarUpload" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
+        </div>
+        <div>
+          <div class="profile-name">
+            <span id="profBigName">Usuário</span>
+            <svg class="verified-badge" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+          </div>
+          <div class="profile-email" id="profBigEmail">usuario@astah.com</div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          Detalhes Pessoais
+          <button class="btn-edit" onclick="toggleEditMode('profileForm')">Editar</button>
+        </div>
+        <div class="card-body" id="profileForm">
+          <div class="list-row">
+            <div class="row-label">Nome Completo</div>
+            <div class="row-value" id="valName">Não informado</div>
+            <input type="text" class="row-input" id="inpName" style="display:none;">
+          </div>
+          <div class="list-row">
+            <div class="row-label">Endereço de E-mail</div>
+            <div class="row-value" id="valEmail">Não informado</div>
+            <input type="email" class="row-input" id="inpEmail" style="display:none;">
+          </div>
+          <div class="list-row">
+            <div class="row-label">Data de Nascimento</div>
+            <div class="row-value" id="valDob">Não informado</div>
+            <input type="date" class="row-input" id="inpDob" style="display:none;">
+          </div>
+          <div class="list-row">
+            <div class="row-label">Gênero</div>
+            <div class="row-value" id="valGender">Não informado</div>
+            <select class="row-input" id="inpGender" style="display:none;">
+              <option value="">Selecione...</option>
+              <option value="Feminino">Feminino</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Não-binário">Não-binário</option>
+              <option value="Prefiro não dizer">Prefiro não dizer</option>
+            </select>
+          </div>
+          <div class="list-row">
+            <div class="row-label">País / Região</div>
+            <div class="row-value" id="valCountry">Não informado</div>
+            <input type="text" class="row-input" id="inpCountry" placeholder="Ex: Brasil" style="display:none;">
+          </div>
+          <div class="list-row">
+            <div class="row-label">Telefone</div>
+            <div class="row-value" id="valPhone">Não informado</div>
+            <input type="text" class="row-input" id="inpPhone" placeholder="(00) 00000-0000" style="display:none;">
+          </div>
+          <div class="list-row">
+            <div class="row-label">Tipo de Acesso</div>
+            <div class="row-value"><span class="role-badge admin" id="valRole">Admin</span></div>
+          </div>
+          <div class="list-row" id="profileSaveRow" style="display:none; justify-content:flex-end;">
+            <button class="btn-save" onclick="saveProfile()">Salvar Alterações</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORKSPACE TAB -->
+    <div id="tab-workspace" class="tab-content">
+      <h1 style="font-size:24px; margin-bottom:24px;">Workspace Corporativo</h1>
+      
+      <div class="settings-card" id="hasWorkspace">
+        <div class="card-header">Organização Atual</div>
+        <div class="card-body">
+          <div class="list-row">
+            <div class="row-label">Nome da Empresa</div>
+            <div class="row-value" style="font-weight:600;">Astah Raven Ltda.</div>
+          </div>
+          <div class="list-row">
+            <div class="row-label">Plano</div>
+            <div class="row-value"><span class="role-badge admin">Enterprise</span></div>
+          </div>
+          <div class="list-row">
+            <div class="row-label">Status do Workspace</div>
+            <div class="row-value" style="color:#10b981; display:flex; align-items:center; gap:6px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#10b981;"></div> Ativo
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card" id="noWorkspace" style="display:none; text-align:center; padding: 40px 20px;">
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--text-muted)" stroke-width="1.5" style="margin-bottom:16px; margin-left:auto; margin-right:auto;"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        <h3 style="font-size:18px; margin-bottom:8px;">Nenhum Workspace Vinculado</h3>
+        <p style="color:var(--text-muted); font-size:14px; margin-bottom:24px;">Você está usando uma conta pessoal. Crie um workspace corporativo para colaborar com sua equipe.</p>
+        <button class="btn-save" onclick="showToast('Criação de Workspace em desenvolvimento')">Criar Organização</button>
+      </div>
+    </div>
+
+    <!-- SECURITY TAB -->
+    <div id="tab-security" class="tab-content">
+      <h1 style="font-size:24px; margin-bottom:24px;">Segurança</h1>
+      
+      <div class="settings-card">
+        <div class="card-header">Alterar Senha</div>
+        <div class="card-body">
+          <div class="list-row">
+            <div class="row-label">Senha Atual</div>
+            <input type="password" class="row-input" placeholder="••••••••">
+          </div>
+          <div class="list-row">
+            <div class="row-label">Nova Senha</div>
+            <input type="password" class="row-input" placeholder="Nova senha forte">
+          </div>
+          <div class="list-row" style="justify-content:flex-end;">
+            <button class="btn-save" onclick="showToast('Senha atualizada com sucesso!')">Atualizar Senha</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card" style="border-color: #fca5a5;">
+        <div class="card-header" style="background:#fef2f2; color:var(--danger);">Zona de Risco</div>
+        <div class="card-body">
+          <div class="list-row" style="flex-direction:column; align-items:flex-start; gap:12px;">
+            <div style="font-weight:600;">Excluir Conta Permanentemente</div>
+            <div style="font-size:13px; color:var(--text-muted);">Uma vez que sua conta for excluída, todos os dados, configurações de workspace e acessos serão apagados de forma irreversível. Por favor, tenha certeza.</div>
+            <button class="btn-save" style="background:var(--danger); margin-top:8px;" onclick="showDeleteConfirm()">Excluir minha conta</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMBERS TAB -->
+    <div id="tab-members" class="tab-content">
+      <h1 style="font-size:24px; margin-bottom:24px;">Gestão de Membros</h1>
+      
+      <div class="settings-card">
+        <div class="card-header" style="justify-content:space-between;">
+          Usuários Vinculados
+          <button class="btn-save" onclick="showToast('Convite enviado!')">+ Convidar</button>
+        </div>
+        <div class="card-body">
+          <div class="list-row" style="background:#fafafa; font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">
+            <div style="flex:2;">Usuário</div>
+            <div style="flex:1;">Papel</div>
+            <div style="flex:1;">Status</div>
+          </div>
+          <div class="list-row">
+            <div style="flex:2; display:flex; align-items:center; gap:12px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;" id="listAv1">A</div>
+              <div>
+                <div style="font-weight:600;font-size:14px;" id="listName1">Admin Supremo</div>
+                <div style="font-size:12px;color:var(--text-muted);" id="listEmail1">admin@astah.com</div>
+              </div>
+            </div>
+            <div style="flex:1;"><span class="role-badge admin">Superadmin</span></div>
+            <div style="flex:1; color:#10b981; font-size:13px; font-weight:500;">Ativo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="./js/api.js?v=4"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      loadUserData();
+    });
+
+    function loadUserData() {
+      try {
+        const userStr = localStorage.getItem('astah_user');
+        if (userStr) {
+          const u = JSON.parse(userStr);
+          
+          document.getElementById('profBigName').textContent = u.name || 'Usuário';
+          document.getElementById('profBigEmail').textContent = u.email || '';
+          
+          const profAvatar = document.getElementById('profBigAvatar');
+          if(u.avatar_url) {
+            profAvatar.textContent = '';
+            profAvatar.style.backgroundImage = "url('" + u.avatar_url + "')";
+            profAvatar.style.backgroundSize = 'cover';
+          } else if(u.name) {
+            profAvatar.textContent = u.name.charAt(0).toUpperCase();
+            profAvatar.style.backgroundImage = 'none';
+          }
+          
+          document.getElementById('valName').textContent = u.name || 'Não informado';
+          document.getElementById('inpName').value = u.name || '';
+          document.getElementById('valEmail').textContent = u.email || 'Não informado';
+          document.getElementById('inpEmail').value = u.email || '';
+          
+          document.getElementById('valDob').textContent = u.dob ? new Date(u.dob).toLocaleDateString('pt-BR', {timeZone: 'UTC'}) : 'Não informado';
+          document.getElementById('inpDob').value = u.dob || '';
+          
+          document.getElementById('valGender').textContent = u.gender || 'Não informado';
+          document.getElementById('inpGender').value = u.gender || '';
+          
+          document.getElementById('valCountry').textContent = u.country || 'Não informado';
+          document.getElementById('inpCountry').value = u.country || '';
+          
+          document.getElementById('valPhone').textContent = u.phone || 'Não informado';
+          document.getElementById('inpPhone').value = u.phone || '';
+          
+          const roleMap = { 'superadmin': 'Superadmin', 'admin': 'Admin', 'manager': 'Gerente', 'operator': 'Operador', 'viewer': 'Visualizador' };
+          document.getElementById('valRole').textContent = roleMap[u.role] || u.role;
+          if(u.role !== 'admin' && u.role !== 'superadmin') {
+            document.getElementById('valRole').classList.remove('admin');
+            if(u.role === 'viewer') {
+              document.getElementById('hasWorkspace').style.display = 'none';
+              document.getElementById('noWorkspace').style.display = 'block';
+            }
+          }
+
+          document.getElementById('listName1').textContent = u.name;
+          document.getElementById('listEmail1').textContent = u.email;
+          const listAv = document.getElementById('listAv1');
+          if(u.name && !u.avatar_url) {
+            listAv.textContent = u.name.charAt(0).toUpperCase();
+            listAv.style.backgroundImage = 'none';
+          } else if (u.avatar_url) {
+            listAv.textContent = '';
+            listAv.style.backgroundImage = "url('" + u.avatar_url + "')";
+            listAv.style.backgroundSize = 'cover';
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      el.classList.add('active');
+      const titles = { 'profile': 'Perfil', 'workspace': 'Workspace', 'members': 'Membros', 'security': 'Segurança' };
+      document.getElementById('currentBreadcrumb').textContent = titles[tabId];
+    }
+
+    let isEditMode = false;
+    function toggleEditMode(formId) {
+      isEditMode = !isEditMode;
+      const form = document.getElementById(formId);
+      
+      const fields = ['Name', 'Email', 'Dob', 'Gender', 'Country', 'Phone'];
+      fields.forEach(f => {
+         const valEl = form.querySelector('#val' + f);
+         const inpEl = form.querySelector('#inp' + f);
+         if(valEl && inpEl) {
+           valEl.style.display = isEditMode ? 'none' : 'block';
+           inpEl.style.display = isEditMode ? 'block' : 'none';
+         }
+      });
+      
+      form.querySelector('#profileSaveRow').style.display = isEditMode ? 'flex' : 'none';
+    }
+
+    async function saveProfile() {
+      const btn = document.querySelector('#profileSaveRow .btn-save');
+      const originalText = btn.textContent;
+      btn.textContent = 'Salvando...';
+      
+      try {
+        const userStr = localStorage.getItem('astah_user');
+        if(userStr) {
+           const u = JSON.parse(userStr);
+           u.name = document.getElementById('inpName').value;
+           u.email = document.getElementById('inpEmail').value;
+           u.dob = document.getElementById('inpDob').value;
+           u.gender = document.getElementById('inpGender').value;
+           u.country = document.getElementById('inpCountry').value;
+           u.phone = document.getElementById('inpPhone').value;
+           
+           localStorage.setItem('astah_user', JSON.stringify(u));
+           loadUserData();
+           toggleEditMode('profileForm');
+           showToast('Perfil atualizado com sucesso!');
+        }
+      } catch(e) {
+        showToast('Erro ao salvar', true);
+      } finally {
+        btn.textContent = originalText;
+      }
+    }
+
+    function handleAvatarUpload(event) {
+      const file = event.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        const userStr = localStorage.getItem('astah_user');
+        if(userStr) {
+           const u = JSON.parse(userStr);
+           u.avatar_url = dataUrl;
+           localStorage.setItem('astah_user', JSON.stringify(u));
+           loadUserData();
+           showToast('Foto de perfil atualizada!');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function showToast(msg, isError = false) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = isError ? 'error show' : 'show';
+      setTimeout(() => t.className = '', 3000);
+    }
+
+    function showConfirm() { document.getElementById('confirmModal').style.display = 'flex'; }
+    function closeConfirm() { document.getElementById('confirmModal').style.display = 'none'; }
+    function executeLogout() {
+      localStorage.removeItem('astah_token');
+      localStorage.removeItem('astah_user');
+      window.location.href = './login.html';
+    }
+
+    function showDeleteConfirm() { document.getElementById('deleteModal').style.display = 'flex'; }
+    function executeDeleteAccount() {
+      showToast('Conta excluída com sucesso.', true);
+      setTimeout(() => { executeLogout(); }, 1500);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacidade & LGPD — EVAH OPHIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/sections.css">
+  <link rel="shorcut icon" type="imagex/png" href="../images/Evhaophim1 (2).png">
+  <style>
+    .legal-page{padding-top:calc(var(--navbar-height) + var(--space-12));padding-bottom:var(--space-16)}
+    .legal-content{max-width:800px;margin:0 auto;padding:0 var(--space-6)}
+    .legal-content h1{font-size:var(--text-4xl);font-weight:var(--font-extrabold);margin-bottom:var(--space-2)}
+    .legal-content .legal-date{font-size:var(--text-sm);color:var(--text-tertiary);margin-bottom:var(--space-10)}
+    .legal-content h2{font-size:var(--text-2xl);font-weight:var(--font-bold);margin-top:var(--space-10);margin-bottom:var(--space-4)}
+    .legal-content p{color:var(--text-secondary);line-height:var(--leading-relaxed);margin-bottom:var(--space-4)}
+    .legal-content ul{color:var(--text-secondary);line-height:var(--leading-relaxed);margin-bottom:var(--space-4);padding-left:var(--space-6)}
+    .legal-content li{margin-bottom:var(--space-2)}
+    .legal-content a{color:var(--color-primary);text-decoration:underline}
+    .legal-content strong{color:var(--text-primary)}
+    .legal-content table{width:100%;border-collapse:collapse;margin:var(--space-4) 0}
+    .legal-content th,.legal-content td{text-align:left;padding:var(--space-3);border:1px solid var(--surface-border);font-size:var(--text-sm);color:var(--text-secondary)}
+    .legal-content th{background:var(--surface-glass);color:var(--text-primary);font-weight:var(--font-semibold)}
+  </style>
+</head>
+<body>
+  <nav class="navbar scrolled" id="navbar">
+    <div class="navbar-inner">
+      <a href="../index.html" class="navbar-logo"><img src="../images/Logotipo (Alpha).png" alt="EVAH OPHIM" style="height: 32px; object-fit: contain; "></a>
+      <div class="navbar-links">
+        <a href="index.html" class="navbar-link">Produto</a>
+        <a href="contact.html" class="navbar-link">Contato</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="login.html" class="btn btn-ghost">Login</a>
+        <a href="register.html" class="btn btn-primary">Começar Grátis</a>
+      </div>
+    </div>
+  </nav>
+  <main class="legal-page">
+    <div class="legal-content">
+      <h1>Política de <span class="text-gradient">Privacidade</span></h1>
+      <p class="legal-date">Última atualização: 05/05/2026 — Conforme LGPD (Lei 13.709/2018)</p>
+
+      <h2>1. Introdução</h2>
+      <p>A Kazinho Systems valoriza sua privacidade. Esta política descreve como coletamos, usamos e protegemos seus dados pessoais na plataforma EVAH OPHIM.</p>
+
+      <h2>2. Dados Coletados</h2>
+      <table><thead><tr><th>Categoria</th><th>Dados</th><th>Finalidade</th></tr></thead>
+      <tbody>
+        <tr><td>Cadastro</td><td>Nome, email, telefone, empresa</td><td>Criação e gestão da conta</td></tr>
+        <tr><td>Autenticação</td><td>Senha (hash), tokens OAuth</td><td>Segurança e controle de acesso</td></tr>
+        <tr><td>Uso</td><td>Logs de acesso, IP, user-agent</td><td>Auditoria e segurança</td></tr>
+        <tr><td>Operacional</td><td>Materiais, movimentações</td><td>Funcionamento da plataforma</td></tr>
+        <tr><td>Contato</td><td>Nome, email, mensagem</td><td>Atendimento e suporte</td></tr>
+      </tbody></table>
+
+      <h2>3. Base Legal (Art. 7º LGPD)</h2>
+      <ul>
+        <li><strong>Consentimento</strong> — para comunicações de marketing</li>
+        <li><strong>Execução de contrato</strong> — para prestação dos serviços</li>
+        <li><strong>Legítimo interesse</strong> — para melhoria e segurança</li>
+        <li><strong>Obrigação legal</strong> — para cumprimento fiscal e regulatório</li>
+      </ul>
+
+      <h2>4. Compartilhamento</h2>
+      <p>Dados podem ser compartilhados com provedores de infraestrutura (Microsoft Azure, Google Cloud) e autoridades legais quando exigido por lei. <strong>Nunca vendemos dados pessoais.</strong></p>
+
+      <h2>5. Segurança</h2>
+      <ul>
+        <li>Criptografia TLS 1.3 em trânsito e AES-256 em repouso</li>
+        <li>Senhas com hash bcrypt (salt rounds: 10)</li>
+        <li>Tokens JWT com expiração configurável</li>
+        <li>Rate limiting e proteção CSRF</li>
+        <li>Logs de auditoria completos</li>
+      </ul>
+
+      <h2>6. Seus Direitos (Art. 18 LGPD)</h2>
+      <p>Você pode: confirmar e acessar seus dados, solicitar correção, anonimização, portabilidade, eliminação e revogar consentimento. Contate <a href="mailto:privacidade@kazinhosystems.com">privacidade@kazinhosystems.com</a>.</p>
+
+      <h2>7. Retenção</h2>
+      <ul>
+        <li><strong>Dados de conta:</strong> enquanto ativa + 90 dias</li>
+        <li><strong>Logs de auditoria:</strong> 1 ano</li>
+        <li><strong>Dados de contato:</strong> 2 anos</li>
+      </ul>
+
+      <h2>8. Cookies</h2>
+      <p>Utilizamos apenas cookies técnicos essenciais. Sem rastreamento ou publicidade.</p>
+
+      <h2>9. Encarregado (DPO)</h2>
+      <p>Contato: <a href="mailto:dpo@kazinhosystems.com">dpo@kazinhosystems.com</a></p>
+    </div>
+  </main>
+  <footer class="footer"><div class="container"><div class="footer-bottom"><span>© 2026 Kazinho Systems. Todos os direitos reservados.</span><a href="../index.html">Kazinho Systems</a></div></div></footer>
+  <script src="../js/navbar.js"></script>
+</body>
+</html>
+
+

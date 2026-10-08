@@ -1,0 +1,2605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASTAH RAVEN V1 &ndash; Sistema</title>
+  <link rel="stylesheet" href="./css/variables.css">
+  <link rel="stylesheet" href="./css/reset.css">
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/animations.css">
+  <link rel="stylesheet" href="./css/sistema.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ââ¬??ââ¬?? Global font fix (light & dark mode) ââ¬??ââ¬?? */
+    *, *::before, *::after {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    /* ââ¬??ââ¬?? Topbar layout ââ¬??ââ¬?? */
+    .eo-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+    .eo-topbar-left { min-width: 8px; }
+    #topbarOrg {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    /* ââ¬??ââ¬?? Version badge ââ¬??ââ¬?? */
+    #versionBadge {
+      position: fixed;
+      bottom: 10px;
+      right: 14px;
+      font-size: 10px;
+      letter-spacing: 0.4px;
+      color: var(--text-tertiary, #999);
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 9997;
+      user-select: none;
+    }
+    /* ââ¬??ââ¬?? Modal close via CSS (no emoji dependency) ââ¬??ââ¬?? */
+    .eo-modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      padding: 4px 8px;
+      border-radius: var(--radius-md);
+      line-height: 1;
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+    .eo-modal-close:hover { background: var(--surface-hover); color: var(--text-primary); }
+    .eo-modal-close::after { content: '\00D7'; }
+    /* ââ¬??ââ¬?? Panels ââ¬??ââ¬?? */
+    .eo-panel { display: none; }
+    .eo-panel.active { display: block; }
+    /* ââ¬??ââ¬?? Empty state ââ¬??ââ¬?? */
+    .eo-empty {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 64px 32px;
+      color: var(--text-tertiary); gap: 12px;
+    }
+    .eo-empty-icon { font-size: 2.5rem; opacity: 0.4; }
+    /* ââ¬??ââ¬?? Stat cards layout ââ¬??ââ¬?? */
+    .eo-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    .eo-stat-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5) var(--space-6);
+      display: flex; flex-direction: column; gap: var(--space-2);
+    }
+    .eo-stat-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--text-tertiary);
+    }
+    .eo-stat-value {
+      font-size: 2rem; font-weight: 800; color: var(--text-primary);
+      line-height: 1;
+    }
+    .eo-stat-value.warn { color: var(--color-warning, #f59e0b); }
+    .eo-stat-value.danger { color: var(--color-error, #ef4444); }
+    .eo-stat-value.money { font-size: 1.3rem; }
+    /* ââ¬??ââ¬?? Dashboard grid ââ¬??ââ¬?? */
+    .eo-dashboard-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: var(--space-4);
+    }
+    @media (max-width: 800px) { .eo-dashboard-grid { grid-template-columns: 1fr; } }
+    /* ââ¬??ââ¬?? Inline modal tabs ââ¬??ââ¬?? */
+    .eo-inline-tabs {
+      display: flex; gap: var(--space-2);
+      border-bottom: 1px solid var(--surface-border);
+      margin-bottom: var(--space-4); padding-bottom: var(--space-2);
+    }
+    .eo-inline-tab {
+      padding: 6px 14px; border: none; background: none;
+      border-radius: var(--radius-md); cursor: pointer;
+      font-size: var(--text-sm); font-weight: 500;
+      color: var(--text-secondary); transition: all var(--transition-fast);
+    }
+    .eo-inline-tab.active, .eo-inline-tab:hover {
+      background: var(--color-primary); color: #fff;
+    }
+    .eo-inline-panel { display: none; }
+    .eo-inline-panel.active { display: block; }
+    
+    /* ââ¬??ââ¬?? View Cube ââ¬??ââ¬?? */
+    .view-cube {
+      transform-style: preserve-3d;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .cube-face {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      user-select: none;
+      backface-visibility: hidden;
+      transition: background 0.2s, color 0.2s;
+    }
+    .cube-face:hover {
+      background: #0ea5e9;
+      color: #fff;
+    }
+    .cube-front  { transform: rotateY(  0deg) translateZ(30px); }
+    .cube-back   { transform: rotateY(180deg) translateZ(30px); }
+    .cube-right  { transform: rotateY( 90deg) translateZ(30px); }
+    .cube-left   { transform: rotateY(-90deg) translateZ(30px); }
+    .cube-top    { transform: rotateX( 90deg) translateZ(30px); }
+    .cube-bottom { transform: rotateX(-90deg) translateZ(30px); }
+
+  </style>
+</head>
+<body class="eo-app-body theme-dark">
+  <div class="eo-app">
+
+    <!-- ââ¬¢Âââ¬¢Â TOPBAR ââ¬¢Âââ¬¢Â -->
+    <header class="eo-topbar">
+      <div class="eo-topbar-left"></div>
+
+      <!-- CENTER: Pill da Organização -->
+      <div id="topbarOrg" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:50px;padding:5px 16px 5px 5px;transition:all 0.3s ease;max-width:300px;overflow:hidden;">
+        <div id="topbarOrgLogoWrap" style="width:30px;height:30px;border-radius:50%;background:var(--color-primary);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,0.18);">
+          <img id="topbarOrgLogo" src="" alt="" style="width:100%;height:100%;object-fit:contain;display:none;">
+          <span id="topbarOrgInitial" style="color:#fff;font-weight:800;font-size:13px;">K</span>
+        </div>
+        <div style="display:flex;flex-direction:column;line-height:1.25;min-width:0;">
+          <span id="topbarOrgName" style="font-weight:700;font-size:12.5px;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px;">Carregando...</span>
+          <span id="topbarOrgPlan" style="font-size:9.5px;color:var(--color-primary);font-weight:600;text-transform:uppercase;letter-spacing:0.6px;">--</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: Actions + User -->
+      <div class="eo-topbar-right">
+        <button class="btn btn-ghost btn-sm" id="themeToggle" onclick="toggleTheme()" title="Alternar tema" style="font-size:1.1rem;padding:0 8px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></button>
+        <a href="./home.html" class="btn btn-ghost btn-sm">&#8592; Launchpad</a>
+
+        <div class="eo-user" onclick="toggleDropdown(event)" style="cursor:pointer;">
+          <div class="avatar" id="headerAvatar" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--color-primary);color:var(--text-inverse);border-radius:50%;font-weight:700;background-size:cover;background-position:center;"></div>
+          <div style="display:flex;flex-direction:column;line-height:1.2;">
+            <span id="userName" style="font-weight:700;font-size:var(--text-sm);">ADMIN</span>
+            <span class="eo-role-badge admin" id="userRoleBadge" style="font-size:10px;padding:2px 6px;margin-left:0;">Admin</span>
+          </div>
+        </div>
+
+        <!-- Dropdown -->
+        <div class="eo-dropdown" id="userDropdown" style="position:absolute;top:calc(100% + 8px);right:16px;background:var(--bg-elevated);backdrop-filter:var(--liquid-blur);-webkit-backdrop-filter:var(--liquid-blur);border:1px solid var(--surface-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);min-width:300px;padding:0;display:none;flex-direction:column;z-index:9999;">
+          <div style="padding:24px;text-align:center;border-bottom:1px solid var(--surface-border);">
+            <div id="dropAvatar" style="width:80px;height:80px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;margin:0 auto 16px;background-size:cover;background-position:center;border:2px solid var(--surface-border);"></div>
+            <div id="dropName" style="font-weight:700;font-size:var(--text-lg);margin-bottom:4px;">Nome</div>
+            <div id="dropEmail" style="color:var(--text-secondary);font-size:var(--text-sm);">email</div>
+            <div style="margin-top:16px;display:inline-flex;flex-direction:column;gap:4px;background:var(--surface-border);padding:8px 12px;border-radius:var(--radius-lg);">
+              <div id="dropPlan" style="font-size:var(--text-xs);font-weight:700;color:var(--color-primary);text-transform:uppercase;">Enterprise</div>
+              <div id="dropRole" style="font-size:var(--text-xs);color:var(--text-secondary);">Cargo</div>
+            </div>
+            <div style="margin-top:16px;display:flex;align-items:center;justify-content:center;gap:8px;">
+              <img id="dropCorpLogo" style="width:24px;height:24px;object-fit:contain;display:none;">
+              <span id="dropCorpName" style="font-size:var(--text-sm);font-weight:600;">Corp</span>
+            </div>
+          </div>
+          <div style="padding:8px;">
+            <div class="eo-dropdown-item" onclick="window.location.href='./settings.html'" style="padding:10px 16px;color:var(--text-primary);font-size:var(--text-sm);border-radius:var(--radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;transition:background var(--transition-fast);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Meu Perfil</div>
+            <div class="eo-dropdown-item" onclick="toggleTheme();toggleDropdown();" style="padding:10px 16px;color:var(--text-primary);font-size:var(--text-sm);border-radius:var(--radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;transition:background var(--transition-fast);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg> Alternar Tema</div>
+            <div class="eo-dropdown-item" onclick="Auth.logout()" style="padding:10px 16px;color:var(--text-primary);font-size:var(--text-sm);border-radius:var(--radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;transition:background var(--transition-fast);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"></path><path d="M4 21v-5h5"></path><path d="M21 8l-6-6"></path><path d="M3 16l6 6"></path><path d="M19 14v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h4"></path></svg> Trocar Conta</div>
+            <div style="height:1px;background:var(--surface-border);margin:4px 0;"></div>
+            <div class="eo-dropdown-item" onclick="Auth.logout()" style="padding:10px 16px;color:var(--color-error);font-size:var(--text-sm);border-radius:var(--radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;transition:background var(--transition-fast);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> Sair do Sistema</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ââ¬¢Âââ¬¢Â MAIN CONTENT ââ¬¢Âââ¬¢Â -->
+    <main class="eo-content">
+      <div class="eo-page-header">
+        <h1 class="eo-page-title" id="pageTitle">Dashboard</h1>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary" id="btnNewMaterial" onclick="openNewMaterialModal()">+ Novo Material</button>
+          <button class="btn btn-secondary" onclick="switchTab('mapa')">Mapa</button>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="eo-tabs" id="SistemaTabs">
+        <button class="eo-tab active" data-tab="dashboard" onclick="switchTab('dashboard')"><svg style="width:14px;height:14px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> Dashboard</button>
+        <button class="eo-tab" data-tab="estoque"    onclick="switchTab('estoque')"><svg style="width:14px;height:14px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg> Estoque</button>
+        <button class="eo-tab" data-tab="entrada"    onclick="switchTab('entrada')">Entrada (+)</button>
+        <button class="eo-tab" data-tab="saida"      onclick="switchTab('saida')">Sa&iacute;da (-)</button>
+        <button class="eo-tab" data-tab="mapa"       onclick="switchTab('mapa')"><svg style="width:14px;height:14px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg> Mapa 2D</button>
+        <button class="eo-tab" data-tab="componentes" onclick="switchTab('componentes')">Componentes</button>
+        <button class="eo-tab" data-tab="relatorios" onclick="switchTab('relatorios')"><svg style="width:14px;height:14px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg> Relat&oacute;rios</button>
+        <button class="eo-tab" data-tab="usuarios"   onclick="switchTab('usuarios')">Usu&aacute;rios</button>
+      </div>
+
+      <!-- ââ¬¢Âââ¬¢Â PANEL: DASHBOARD ââ¬¢Âââ¬¢Â -->
+      <div class="eo-panel active" id="panel-dashboard">
+        <!-- Stat Cards -->
+        <div class="eo-stats">
+          <div class="eo-stat-card stat-total">
+            <div class="eo-stat-label">Materiais Base</div>
+            <div class="eo-stat-value" id="statTotal">â??â¬</div>
+          </div>
+          <div class="eo-stat-card stat-critical">
+            <div class="eo-stat-label">N&iacute;vel Cr&iacute;tico</div>
+            <div class="eo-stat-value" id="statCritical">â??â¬</div>
+          </div>
+          <div class="eo-stat-card stat-zero">
+            <div class="eo-stat-label">Estoque Zerado</div>
+            <div class="eo-stat-value" id="statZero">â??â¬</div>
+          </div>
+          <div class="eo-stat-card stat-qty">
+            <div class="eo-stat-label">Volume Total (Und)</div>
+            <div class="eo-stat-value" id="statTotalQty">â??â¬</div>
+          </div>
+          <div class="eo-stat-card stat-value">
+            <div class="eo-stat-label">Valor em Estoque</div>
+            <div class="eo-stat-value" id="statTotalValue">â??â¬</div>
+          </div>
+        </div>
+
+        <!-- Charts + Critical Table -->
+        <div class="eo-dashboard-grid">
+          <!-- Donut Chart -->
+          <div class="eo-table-card">
+            <div class="eo-table-header"><h3 class="eo-table-title">Distribui&ccedil;&atilde;o</h3></div>
+            <div style="display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:16px;">
+              <canvas id="donutChart" width="240" height="240"></canvas>
+              <div style="display:flex;gap:16px;font-size:11px;color:var(--text-secondary);">
+                <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#00FF88;margin-right:4px;"></span>Saud&aacute;vel</span>
+                <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#FFB830;margin-right:4px;"></span>Abaixo M&iacute;n.</span>
+                <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#FF4757;margin-right:4px;"></span>Zerado</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Critical Table -->
+          <div class="eo-table-card">
+            <div class="eo-table-header"><h3 class="eo-table-title">A&ccedil;&atilde;o Imediata</h3></div>
+            <div class="eo-table-scroll">
+              <table class="eo-table">
+                <thead><tr>
+                  <th>Status</th><th>Material</th><th>Descri&ccedil;&atilde;o</th><th>Saldo</th><th>Local</th>
+                </tr></thead>
+                <tbody id="criticalTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ââ¬¢Âââ¬¢Â PANEL: ESTOQUE ââ¬¢Âââ¬¢Â -->
+      <div class="eo-panel" id="panel-estoque">
+        <div class="eo-tabs" id="warehouseTabs" style="margin-bottom:16px; border-bottom:1px solid var(--surface-border); padding-bottom:8px; display:flex; gap:8px;">
+          <div style="font-size:12px; color:var(--text-tertiary); display:flex; align-items:center; margin-right:8px;">DEPOSITOS:</div>
+          <button class="eo-tab active">Armazém Principal</button>
+        </div>
+        <div class="eo-table-card">
+          <div class="eo-table-header">
+            <h3 class="eo-table-title">Estoque Completo</h3>
+            <div class="eo-table-actions">
+              <input type="text" id="stockFilter" class="eo-input" placeholder="Buscar material..." oninput="filterStock()" style="width:220px;">
+            </div>
+          </div>
+          <div class="eo-table-scroll">
+            <table class="eo-table">
+              <thead><tr>
+                <th></th><th>C&oacute;digo</th><th>Descri&ccedil;&atilde;o</th><th>Marca</th>
+                <th>Setor</th><th>Local</th><th>Qtd</th><th>Pre&ccedil;o</th><th>Status</th><th>A&ccedil;&otilde;es</th>
+              </tr></thead>
+              <tbody id="stockTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ââ¬¢Âââ¬¢Â PANEL: ENTRADA ââ¬¢Âââ¬¢Â -->
+      <div class="eo-panel" id="panel-entrada">
+        <div class="eo-form-card">
+          <h3 class="eo-form-title">Registro de Entrada (MIGO)</h3>
+          <form id="entradaForm" onsubmit="handleEntry(event)" class="eo-form-grid">
+            <div class="input-group">
+              <label class="eo-input-label">C&oacute;digo do Material</label>
+              <input type="text" id="entryCode" class="eo-input" placeholder="MERB-0000001" oninput="lookupMaterial('entry')" style="text-transform:uppercase;">
+            </div>
+            <div class="input-group">
+              <label class="eo-input-label">Descri&ccedil;&atilde;o</label>
+              <input type="text" id="entryDesc" class="eo-input" value="Aguardando c&oacute;digo..." readonly style="color:var(--text-secondary);">
+            </div>
+            <div class="input-group">
+              <label class="eo-input-label">Quantidade</label>
+              <input type="number" id="entryQty" class="eo-input" min="1" value="1">
+            </div>
+            <div class="input-group">
+              <label class="eo-input-label">Pre&ccedil;o Unit&aacute;rio</label>
+              <input type="number" id="entryPrice" class="eo-input" min="0" step="0.01" placeholder="0.00">
+            </div>
+            <div class="input-group">
+              <label class="eo-input-label">Fornecedor / NF</label>
+              <input type="text" id="entrySupplier" class="eo-input" placeholder="Nome ou NF-e">
+            </div>
+            <div style="grid-column:1/-1;margin-top:var(--space-4);">
+              <button type="submit" class="btn btn-primary btn-block btn-lg">Registrar Entrada</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+      <div class="eo-panel" id="panel-saida">
+        <div class="eo-form-card">
+          <h3 class="eo-form-title">Registro de Sa&iacute;da (MIGO)</h3>
+          <form id="saidaForm" onsubmit="handleExit(event)" class="eo-form-grid">
+            <div class="input-group">
+              <label class="eo-input-label">C&oacute;digo do Material</label>
+              <input type="text" id="exitCode" class="eo-input" placeholder="MERB-0000001" oninput="lookupMaterial('exit')" style="text-transform:uppercase;">
+            </div>
+            <div class="input-group">
+              <label class="eo-input-label">Descri&ccedil;&atilde;o</label>
+              <input type="text" id="exitDesc" class="eo-input" value="Aguardando c&oacute;digo..." readonly style="color:var(--text-secondary);">
+            </div>
+            <div class="input-group">
+              <label class="eo-input-label">Quantidade</label>
+              <input type="number" id="exitQty" class="eo-input" min="1" value="1">
+            </div>
+            <div class="input-group">
+              <label class="eo-input-label">Centro de Custo / OS</label>
+              <input type="text" id="exitCenter" class="eo-input" placeholder="CC-001 ou OS-123">
+            </div>
+            <div style="grid-column:1/-1;margin-top:var(--space-4);">
+              <button type="submit" class="btn btn-primary btn-block btn-lg">Registrar Sa&iacute;da</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ââ¬¢Âââ¬¢Â PANEL: MAPA 2D ââ¬¢Âââ¬¢Â -->
+      <div class="eo-panel" id="panel-mapa">
+        <style>
+          .fusion-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s;
+          }
+          .fusion-btn:hover { background: #e5f3ff; border-color: #cce4f7; }
+          .fusion-btn.active { background: #cce4f7; border-color: #99c9ef; }
+        </style>
+
+        <!-- ââ¬¢Âââ¬¢Â MAP VIEWER / EDITOR TOGGLE ââ¬¢Âââ¬¢Â -->
+        <style>
+          /* ââ¬??ââ¬?? Map Hub Styles ââ¬??ââ¬?? */
+          #mapHub { font-family: 'Inter', sans-serif; }
+          .maphub-sidebar { width: 260px; min-width: 220px; background: #fff; border-right: 1px solid #E8E8E8; display: flex; flex-direction: column; gap: 0; }
+          .maphub-map-card { padding: 12px 16px; border-bottom: 1px solid #F0F0F0; cursor: pointer; transition: background .15s; display: flex; align-items: center; gap: 12px; }
+          .maphub-map-card:hover { background: #F7F7F7; }
+          .maphub-map-card.active { background: #EBF5F0; border-left: 3px solid #1B7A4E; }
+          .maphub-map-card .map-thumb { width: 44px; height: 44px; border-radius: 10px; background: #F0F0EF; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+          .maphub-map-card .map-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+          .maphub-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: #E8F5EE; color: #1B7A4E; }
+          .maphub-badge.corp { background: #EEF0FF; color: #4A6CF7; }
+          .maphub-badge.stock { background: #FFF3E8; color: #F07C00; }
+          .maphub-viewer-area { flex: 1; position: relative; background: #F8F9FA; overflow: visible; height: 480px; min-height: 480px; }
+          .maphub-viewer-canvas { width: 100%; height: 100%; position: relative; }
+          .maphub-toolbar { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-radius: 30px; padding: 6px 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); max-width: 90%; overflow-x: auto; flex-wrap: nowrap; }
+          .maphub-tool-btn { white-space: nowrap; flex-shrink: 0; background: none; border: none; cursor: pointer; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #8A8A8A; transition: all .2s; display: flex; align-items: center; gap: 6px; }
+          .maphub-tool-btn:hover { background: #F0F0EF; color: #1A1A1A; }
+          .maphub-tool-btn.active { background: #1B7A4E; color: #fff; }
+          .maphub-stats-row { display: flex; gap: 12px; padding: 16px; background: #fff; border-bottom: 1px solid #E8E8E8; flex-shrink: 0; }
+          .maphub-stat { flex: 1; background: #F8F9FA; border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; }
+          .maphub-stat-val { font-size: 22px; font-weight: 700; color: #1A1A1A; }
+          .maphub-stat-lbl { font-size: 11px; color: #8A8A8A; font-weight: 500; }
+          .maphub-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 16px; color: #8A8A8A; }
+          .maphub-sector-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: rgba(255,255,255,0.8); border: 1px solid #E8E8E8; cursor: pointer; transition: all .15s; }
+          .maphub-sector-chip:hover { background: #1B7A4E; color: #fff; border-color: #1B7A4E; }
+          .maphub-item-box { position: absolute; cursor: pointer; transition: transform .15s, box-shadow .15s; }
+          .maphub-item-box:hover { transform: translateY(-2px); }
+          .maphub-item-box .box-3d { width: 40px; height: 40px; position: relative; }
+          .maphub-item-box .box-label { font-size: 9px; font-weight: 700; text-align: center; color: #1A1A1A; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60px; }
+          .maphub-floating-panel { position: absolute; right: 16px; top: 16px; width: 220px; background: rgba(255,255,255,0.95); backdrop-filter: blur(16px); border-radius: 16px; border: 1px solid #E8E8E8; box-shadow: 0 8px 32px rgba(0,0,0,0.08); padding: 16px; z-index: 20; display: none; }
+          .maphub-floating-panel.show { display: block; }
+          .maphub-upload-zone { border: 2px dashed #E8E8E8; border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; transition: all .2s; color: #8A8A8A; font-size: 12px; }
+          .maphub-upload-zone:hover { border-color: #1B7A4E; color: #1B7A4E; background: #EBF5F0; }
+          /* 3D Box SVG style */
+          .box3d-svg { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        </style>
+
+        <!-- MODE SWITCHER -->
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 20px; background:#fff; border-bottom:1px solid #E8E8E8; flex-shrink:0;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B7A4E" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>
+            <span style="font-weight:700;font-size:15px;color:#1A1A1A;font-family:Inter,sans-serif;">Central de Mapas</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button onclick="mapHubShowView('viewer')" id="btnMapViewer" style="background:#1B7A4E;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .2s;">?x?ï¸ Visualizador</button>
+            <button onclick="mapHubShowView('editor')" id="btnMapEditor" style="background:#F0F0EF;color:#1A1A1A;border:none;border-radius:20px;padding:7px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .2s;">?S?ï¸ Editor CAD</button>
+          </div>
+        </div>
+
+        <!-- ââ¬¢Âââ¬¢Â MAP HUB VIEWER ââ¬¢Âââ¬¢Â -->
+        <div id="mapHub" style="display:flex; flex-direction:column; background:#F0F0EF;">
+
+          <!-- Stats Row -->
+          <div class="maphub-stats-row">
+            <div class="maphub-stat">
+              <div class="maphub-stat-val" id="mhStatCorpMaps">0</div>
+              <div class="maphub-stat-lbl">Mapas Corporativos</div>
+            </div>
+            <div class="maphub-stat">
+              <div class="maphub-stat-val" id="mhStatStockMaps">0</div>
+              <div class="maphub-stat-lbl">Mapas de Estoque</div>
+            </div>
+            <div class="maphub-stat">
+              <div class="maphub-stat-val" id="mhStatSectors">0</div>
+              <div class="maphub-stat-lbl">Setores Definidos</div>
+            </div>
+            <div class="maphub-stat">
+              <div class="maphub-stat-val" id="mhStatItems">0</div>
+              <div class="maphub-stat-lbl">Itens Localizados</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-left:auto;">
+              <button onclick="mapHubImport()" style="background:#1A1A1A;color:#fff;border:none;border-radius:12px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;display:flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Importar Mapa
+              </button>
+              <button onclick="mapHubNewMap()" style="background:#1B7A4E;color:#fff;border:none;border-radius:12px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;display:flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Novo Mapa
+              </button>
+            </div>
+          </div>
+
+          <!-- Main Area: Sidebar + Viewer -->
+          <div style="display:flex; flex:1; min-height:480px;">
+
+            <!-- Sidebar: Map List -->
+            <div class="maphub-sidebar" id="mhSidebar">
+              <div style="padding:12px 16px 8px; font-size:11px; font-weight:700; color:#8A8A8A; text-transform:uppercase; letter-spacing:0.8px;">Corporativos</div>
+              <div id="mhCorpList">
+                <div class="maphub-empty" style="height:60px;font-size:12px;">Nenhum mapa</div>
+              </div>
+              <div style="padding:12px 16px 8px; font-size:11px; font-weight:700; color:#8A8A8A; text-transform:uppercase; letter-spacing:0.8px; border-top:1px solid #F0F0F0; margin-top:4px;">Estoques</div>
+              <div id="mhStockList">
+                <div class="maphub-empty" style="height:60px;font-size:12px;">Nenhum mapa</div>
+              </div>
+            </div>
+
+            <!-- Viewer Canvas -->
+            <div class="maphub-viewer-area" id="mhViewerArea">
+
+              <!-- Empty State -->
+              <div class="maphub-empty" id="mhEmptyState">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#C8C8C8" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>
+                <div style="font-size:15px;font-weight:600;color:#C8C8C8;">Nenhum mapa selecionado</div>
+                <div style="font-size:12px;color:#D0D0D0;">Importe ou crie um novo mapa para começar</div>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                  <button onclick="mapHubImport()" style="background:#1A1A1A;color:#fff;border:none;border-radius:12px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;">Importar</button>
+                  <button onclick="mapHubNewMap()" style="background:#1B7A4E;color:#fff;border:none;border-radius:12px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;">Criar Mapa</button>
+                </div>
+              </div>
+
+              <!-- Active Map View (hidden until a map is selected) -->
+              <div id="mhActiveView" style="display:none; width:100%; position:relative;">
+
+                <!-- Toolbar -->
+                <div class="maphub-toolbar" id="mhToolbar">
+                  <button class="maphub-tool-btn active" id="mhToolView" onclick="mapHubSetTool('view')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    Explorar
+                  </button>
+                  <button class="maphub-tool-btn" id="mhToolSector" onclick="mapHubSetTool('sector')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+                    Setor
+                  </button>
+                  <button class="maphub-tool-btn" id="mhToolItem" onclick="mapHubSetTool('item')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    + Item
+                  </button>
+                  <div style="width:1px;background:#E8E8E8;margin:0 4px;"></div>
+                  <button class="maphub-tool-btn" onclick="mapHubExport()" title="Exportar mapa">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Exportar
+                  </button>
+                  <button class="maphub-tool-btn" onclick="mapHubDeleteCurrentMap()" title="Excluir mapa" style="color:#FF4757;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                  </button>
+                </div>
+
+                <!-- Map image + overlays container -->
+                <div id="mhMapContainer" style="width:100%;height:100%;position:relative;overflow:auto;cursor:default;">
+                  <div id="mhMapInner" style="position:relative;display:inline-block;min-width:100%;min-height:100%;">
+                    <!-- Map image -->
+                    <img id="mhMapImg" src="" alt="" style="display:block;max-width:100%;max-height:calc(80vh - 160px);object-fit:contain;border-radius:0;" draggable="false"/>
+                    <!-- Grid background when no image -->
+                    <div id="mhMapGrid" style="display:none;width:800px;height:500px;background-image:linear-gradient(#E8E8E8 1px,transparent 1px),linear-gradient(90deg,#E8E8E8 1px,transparent 1px);background-size:40px 40px;background-color:#F8F9FA;border-radius:0;"></div>
+                    <!-- Sectors overlay -->
+                    <div id="mhSectorsOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></div>
+                    <!-- Items overlay -->
+                    <div id="mhItemsOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;"></div>
+                  </div>
+                </div>
+
+                <!-- Floating Info Panel -->
+                <div class="maphub-floating-panel" id="mhInfoPanel">
+                  <div style="font-size:13px;font-weight:700;color:#1A1A1A;margin-bottom:12px;" id="mhInfoTitle">Informações</div>
+                  <div id="mhInfoBody" style="font-size:12px;color:#555;line-height:1.6;"></div>
+                  <button onclick="document.getElementById('mhInfoPanel').classList.remove('show')" style="margin-top:12px;width:100%;background:#F0F0EF;border:none;border-radius:8px;padding:6px;font-size:12px;font-weight:600;cursor:pointer;">Fechar</button>
+                </div>
+
+
+                <!-- 3D Warehouse View - stock maps only -->
+                <div id="mhWarehouse3D" style="display:none;width:100%;height:480px;background:#0f172a;position:relative;overflow:hidden;">
+                  <div id="mh3DControls" style="display:none; position:absolute; bottom:12px; right:12px; flex-direction:column; gap:4px; z-index:10; background:rgba(0,0,0,0.3); padding:8px; border-radius:12px; backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,0.1); opacity:0.6; transition:opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+                    <div style="display:flex; justify-content:center; gap:4px;">
+                      <button onclick="window.mhCamMove(0,-1)" style="width:28px;height:28px;border-radius:6px;border:none;background:rgba(255,255,255,0.2);color:#fff;cursor:pointer;font-size:12px;">&uarr;</button>
+                    </div>
+                    <div style="display:flex; justify-content:center; gap:4px;">
+                      <button onclick="window.mhCamMove(-1,0)" style="width:28px;height:28px;border-radius:6px;border:none;background:rgba(255,255,255,0.2);color:#fff;cursor:pointer;font-size:12px;">&larr;</button>
+                      <button onclick="window.mhCamMove(0,1)" style="width:28px;height:28px;border-radius:6px;border:none;background:rgba(255,255,255,0.2);color:#fff;cursor:pointer;font-size:12px;">&darr;</button>
+                      <button onclick="window.mhCamMove(1,0)" style="width:28px;height:28px;border-radius:6px;border:none;background:rgba(255,255,255,0.2);color:#fff;cursor:pointer;font-size:12px;">&rarr;</button>
+                    </div>
+                    <div style="display:flex; justify-content:center; gap:4px; margin-top:4px;">
+                      <button onclick="window.mhCamZoom(-1)" style="flex:1;height:28px;border-radius:6px;border:none;background:rgba(255,255,255,0.2);color:#fff;cursor:pointer;font-weight:bold;font-size:14px;">+</button>
+                      <button onclick="window.mhCamZoom(1)" style="flex:1;height:28px;border-radius:6px;border:none;background:rgba(255,255,255,0.2);color:#fff;cursor:pointer;font-weight:bold;font-size:14px;">-</button>
+                    </div>
+                    <button onclick="window.mhCamReset()" style="margin-top:2px;border-radius:6px;border:none;background:transparent;color:#cbd5e1;padding:4px;font-size:9px;font-weight:700;cursor:pointer;text-decoration:underline;">Resetar C&acirc;mera</button>
+                  </div>
+                </div>
+              </div><!-- /mhActiveView -->
+            </div><!-- /mhViewerArea -->
+          </div><!-- /flex row -->
+
+          </div><!-- /mapHub -->
+
+          <!-- 2D Shelf Panel - outside fixed container, uses page scroll -->
+          <div id="mhShelves2D" style="display:none;width:100%;background:#f8fafc;font-family:Inter,sans-serif;border-top:3px solid #e2e8f0;"></div>
+
+        <!-- ââ¬¢Âââ¬¢Â MAP HUB: Modals ââ¬¢Âââ¬¢Â -->
+
+        <!-- New Map Modal -->
+        <div id="mhNewMapModal" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+          <div style="background:#fff;border-radius:24px;padding:32px;width:460px;max-width:90vw;box-shadow:0 40px 80px rgba(0,0,0,0.3);font-family:Inter,sans-serif;">
+            <div style="font-size:18px;font-weight:700;color:#1A1A1A;margin-bottom:6px;">Criar Novo Mapa</div>
+            <div style="font-size:13px;color:#8A8A8A;margin-bottom:24px;">Configure o mapa antes de importar ou desenhar</div>
+
+            <label style="font-size:12px;font-weight:600;color:#1A1A1A;display:block;margin-bottom:6px;">Nome do Mapa *</label>
+            <input id="mhNewMapName" type="text" placeholder="Ex.: Sede São Paulo â??â¬ Galpão A" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;font-family:Inter,sans-serif;margin-bottom:16px;outline:none;">
+
+            <label style="font-size:12px;font-weight:600;color:#1A1A1A;display:block;margin-bottom:6px;">Tipo</label>
+            <div style="display:flex;gap:8px;margin-bottom:16px;">
+              <label style="flex:1;display:flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #E8E8E8;border-radius:10px;cursor:pointer;font-size:13px;" id="mhTypeLabelCorp">
+                <input type="radio" name="mhMapType" value="corp" checked onchange="mapHubTypeChange(this)"> ?x?? Corporativo
+              </label>
+              <label style="flex:1;display:flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #E8E8E8;border-radius:10px;cursor:pointer;font-size:13px;" id="mhTypeLabelStock">
+                <input type="radio" name="mhMapType" value="stock" onchange="mapHubTypeChange(this)"> ?x? Estoque
+              </label>
+            </div>
+
+            <label style="font-size:12px;font-weight:600;color:#1A1A1A;display:block;margin-bottom:6px;">Imagem do Mapa (opcional)</label>
+            <div class="maphub-upload-zone" onclick="document.getElementById('mhMapFileInput').click()" id="mhUploadZone">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 8px;display:block;color:#C8C8C8;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Clique para selecionar PNG, JPG ou SVG
+            </div>
+            <input type="file" id="mhMapFileInput" accept="image/*" style="display:none" onchange="mapHubPreviewImage(this)">
+            <div id="mhImgPreview" style="display:none;margin-top:8px;border-radius:10px;overflow:hidden;max-height:120px;"><img id="mhImgPreviewImg" style="width:100%;object-fit:cover;" /></div>
+
+            <div style="display:flex;gap:8px;margin-top:24px;">
+              <button onclick="mapHubCloseNewMap()" style="flex:1;background:#F0F0EF;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+              <button onclick="mapHubCreateMap()" style="flex:2;background:#1B7A4E;color:#fff;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;">Criar Mapa</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Sector Modal -->
+        <div id="mhSectorModal" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+          <div style="background:#fff;border-radius:24px;padding:32px;width:380px;max-width:90vw;box-shadow:0 40px 80px rgba(0,0,0,0.3);font-family:Inter,sans-serif;">
+            <div style="font-size:17px;font-weight:700;color:#1A1A1A;margin-bottom:20px;">Adicionar Setor</div>
+            <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Nome do Setor *</label>
+            <input id="mhSectorName" type="text" placeholder="Ex.: Almoxarifado â??â¬ Prateleiras A-E" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;font-family:Inter,sans-serif;margin-bottom:12px;outline:none;">
+            <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Cor de Identificação</label>
+            <div style="display:flex;gap:8px;margin-bottom:16px;" id="mhColorPicker">
+              <div class="mh-color-dot" data-color="#1B7A4E" onclick="mhPickColor(this)" style="width:28px;height:28px;border-radius:50%;background:#1B7A4E;cursor:pointer;border:2px solid transparent;transition:.15s;"></div>
+              <div class="mh-color-dot" data-color="#4A6CF7" onclick="mhPickColor(this)" style="width:28px;height:28px;border-radius:50%;background:#4A6CF7;cursor:pointer;border:2px solid transparent;transition:.15s;"></div>
+              <div class="mh-color-dot" data-color="#F07C00" onclick="mhPickColor(this)" style="width:28px;height:28px;border-radius:50%;background:#F07C00;cursor:pointer;border:2px solid transparent;transition:.15s;"></div>
+              <div class="mh-color-dot" data-color="#FF4757" onclick="mhPickColor(this)" style="width:28px;height:28px;border-radius:50%;background:#FF4757;cursor:pointer;border:2px solid transparent;transition:.15s;"></div>
+              <div class="mh-color-dot" data-color="#9B59B6" onclick="mhPickColor(this)" style="width:28px;height:28px;border-radius:50%;background:#9B59B6;cursor:pointer;border:2px solid transparent;transition:.15s;"></div>
+              <div class="mh-color-dot" data-color="#E67E22" onclick="mhPickColor(this)" style="width:28px;height:28px;border-radius:50%;background:#E67E22;cursor:pointer;border:2px solid transparent;transition:.15s;"></div>
+            </div>
+            <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Posição no mapa (% X, % Y)</label>
+            <div style="display:flex;gap:8px;margin-bottom:16px;">
+              <input id="mhSectorX" type="number" min="0" max="90" value="20" placeholder="X%" style="flex:1;padding:10px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;outline:none;">
+              <input id="mhSectorY" type="number" min="0" max="90" value="20" placeholder="Y%" style="flex:1;padding:10px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;outline:none;">
+              <input id="mhSectorW" type="number" min="5" max="80" value="25" placeholder="Largura%" style="flex:1;padding:10px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;outline:none;">
+              <input id="mhSectorH" type="number" min="5" max="80" value="20" placeholder="Altura%" style="flex:1;padding:10px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;outline:none;">
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button onclick="mapHubCloseSectorModal()" style="flex:1;background:#F0F0EF;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+              <button onclick="mapHubAddSector()" style="flex:2;background:#1B7A4E;color:#fff;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;">Adicionar Setor</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Item Modal -->
+        <div id="mhItemModal" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+          <div style="background:#fff;border-radius:24px;padding:32px;width:400px;max-width:90vw;box-shadow:0 40px 80px rgba(0,0,0,0.3);font-family:Inter,sans-serif;">
+            <div style="font-size:17px;font-weight:700;color:#1A1A1A;margin-bottom:6px;">?x? Localizar Item no Mapa</div>
+            <div style="font-size:12px;color:#8A8A8A;margin-bottom:20px;">Uma caixa 3D representará o item no mapa de estoque</div>
+            <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Material</label>
+            <select id="mhItemMaterial" style="width:100%;padding:10px 14px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;font-family:Inter,sans-serif;margin-bottom:12px;outline:none;"></select>
+            <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Setor / Localização</label>
+            <input id="mhItemLocation" type="text" placeholder="Ex.: Prateleira A3, Galpão Norte" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;font-family:Inter,sans-serif;margin-bottom:12px;outline:none;">
+            <label id="mhItemCoordLabel" style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Posição no mapa (% X, % Y)</label>
+            <div style="display:flex;gap:8px;margin-bottom:16px;">
+              <input id="mhItemX" type="number" min="0" max="95" value="50" style="flex:1;padding:10px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;outline:none;">
+              <input id="mhItemY" type="number" min="0" max="95" value="50" style="flex:1;padding:10px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;outline:none;">
+            </div>
+            <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Cor da caixa</label>
+            <div style="display:flex;gap:8px;margin-bottom:20px;" id="mhItemColorPicker">
+              <div class="mh-icolor-dot" data-color="#4A6CF7" onclick="mhPickItemColor(this)" style="width:26px;height:26px;border-radius:50%;background:#4A6CF7;cursor:pointer;border:2px solid transparent;transition:.15s;"></div>
+              <div class="mh-icolor-dot" data-color="#1B7A4E" onclick="mhPickItemColor(this)" style="width:26px;height:26px;border-radius:50%;background:#1B7A4E;cursor:pointer;border:2px solid transparent;transition:.15s;"></div>
+              <div class="mh-icolor-dot" data-color="#F07C00" onclick="mhPickItemColor(this)" style="width:26px;height:26px;border-radius:50%;background:#F07C00;cursor:pointer;border:2px solid transparent;transition:.15s;"></div>
+              <div class="mh-icolor-dot" data-color="#FF4757" onclick="mhPickItemColor(this)" style="width:26px;height:26px;border-radius:50%;background:#FF4757;cursor:pointer;border:2px solid transparent;transition:.15s;"></div>
+              <div class="mh-icolor-dot" data-color="#9B59B6" onclick="mhPickItemColor(this)" style="width:26px;height:26px;border-radius:50%;background:#9B59B6;cursor:pointer;border:2px solid transparent;transition:.15s;"></div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button onclick="mapHubCloseItemModal()" style="flex:1;background:#F0F0EF;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+              <button onclick="mapHubAddItem()" style="flex:2;background:#1B7A4E;color:#fff;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;">Posicionar no Mapa</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Import Map Modal -->
+        <div id="mhImportModal" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+          <div style="background:#fff;border-radius:24px;padding:32px;width:420px;max-width:90vw;box-shadow:0 40px 80px rgba(0,0,0,0.3);font-family:Inter,sans-serif;">
+            <div style="font-size:17px;font-weight:700;color:#1A1A1A;margin-bottom:6px;">Importar Mapa</div>
+            <div style="font-size:12px;color:#8A8A8A;margin-bottom:20px;">Importe uma planta baixa ou esquema de mapa pronto</div>
+            <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Nome *</label>
+            <input id="mhImportName" type="text" placeholder="Nome do mapa" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;font-family:Inter,sans-serif;margin-bottom:12px;outline:none;">
+            <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Tipo</label>
+            <div style="display:flex;gap:8px;margin-bottom:16px;">
+              <label style="flex:1;display:flex;align-items:center;gap:8px;padding:10px;border:1px solid #E8E8E8;border-radius:10px;cursor:pointer;font-size:13px;">
+                <input type="radio" name="mhImportType" value="corp" checked> ?x?? Corporativo
+              </label>
+              <label style="flex:1;display:flex;align-items:center;gap:8px;padding:10px;border:1px solid #E8E8E8;border-radius:10px;cursor:pointer;font-size:13px;">
+                <input type="radio" name="mhImportType" value="stock"> ?x? Estoque
+              </label>
+            </div>
+            <div class="maphub-upload-zone" onclick="document.getElementById('mhImportFile').click()">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 8px;display:block;color:#C8C8C8;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Clique: PNG, JPG, SVG ou JSON (mapa salvo)
+            </div>
+            <input type="file" id="mhImportFile" accept="image/*,.json" style="display:none" onchange="mapHubLoadImport(this)">
+            <div id="mhImportPreview" style="display:none;margin-top:8px;border-radius:10px;overflow:hidden;max-height:100px;"><img id="mhImportPreviewImg" style="width:100%;object-fit:cover;"/></div>
+            <div style="display:flex;gap:8px;margin-top:20px;">
+              <button onclick="document.getElementById('mhImportModal').style.display='none'" style="flex:1;background:#F0F0EF;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+              <button onclick="mapHubDoImport()" style="flex:2;background:#1A1A1A;color:#fff;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;">Importar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ââ¬¢Âââ¬¢Â MAP HUB JAVASCRIPT ââ¬¢Âââ¬¢Â -->
+        <script>
+        (function() {
+          // ââ¬??ââ¬?? State ââ¬??ââ¬??
+          var MH = window._mapHub = {
+            maps: JSON.parse(localStorage.getItem('ASTAH_maphub_maps') || '[]'),
+            currentMapId: null,
+            currentTool: 'view',
+            selectedColor: '#1B7A4E',
+            selectedItemColor: '#4A6CF7',
+            importDataUrl: null,
+            importFileJson: null
+          };
+
+          function save() { localStorage.setItem('ASTAH_maphub_maps', JSON.stringify(MH.maps)); updateStats(); }
+
+          function currentMap() { return MH.maps.find(function(m) { return m.id === MH.currentMapId; }); }
+
+          function generateId() { return 'map_' + Date.now() + '_' + Math.random().toString(36).substr(2,5); }
+
+          // ââ¬??ââ¬?? Stats ââ¬??ââ¬??
+          function updateStats() {
+            var corp = MH.maps.filter(function(m) { return m.type === 'corp'; });
+            var stock = MH.maps.filter(function(m) { return m.type === 'stock'; });
+            var sectors = MH.maps.reduce(function(a,m) { return a + (m.sectors||[]).length; }, 0);
+            var items = MH.maps.reduce(function(a,m) { return a + (m.items||[]).length; }, 0);
+            document.getElementById('mhStatCorpMaps').textContent = corp.length;
+            document.getElementById('mhStatStockMaps').textContent = stock.length;
+            document.getElementById('mhStatSectors').textContent = sectors;
+            document.getElementById('mhStatItems').textContent = items;
+          }
+
+          // ââ¬??ââ¬?? Sidebar ââ¬??ââ¬??
+          function renderSidebar() {
+            var corpEl = document.getElementById('mhCorpList');
+            var stockEl = document.getElementById('mhStockList');
+            var corp = MH.maps.filter(function(m) { return m.type === 'corp'; });
+            var stock = MH.maps.filter(function(m) { return m.type === 'stock'; });
+
+            function renderList(arr, el) {
+              if (!arr.length) { el.innerHTML = '<div class="maphub-empty" style="height:60px;font-size:12px;">Nenhum mapa</div>'; return; }
+              el.innerHTML = arr.map(function(m) {
+                var badgeType = m.type === 'corp' ? 'corp' : 'stock';
+                var badgeTxt = m.type === 'corp' ? '?x?? Corp' : '?x? Estoque';
+                var thumb = m.imageUrl ? '<img src="' + m.imageUrl + '">' : '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C8C8C8" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>';
+                return '<div class="maphub-map-card' + (m.id === MH.currentMapId ? ' active' : '') + '" onclick="mapHubSelectMap(\'' + m.id + '\')">' +
+                  '<div class="map-thumb">' + thumb + '</div>' +
+                  '<div style="flex:1;min-width:0;">' +
+                    '<div style="font-size:13px;font-weight:600;color:#1A1A1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + m.name + '</div>' +
+                    '<div style="margin-top:3px;"><span class="maphub-badge ' + badgeType + '">' + badgeTxt + '</span></div>' +
+                  '</div>' +
+                '</div>';
+              }).join('');
+            }
+
+            renderList(corp, corpEl);
+            renderList(stock, stockEl);
+          }
+
+          // ââ¬??ââ¬?? Select Map ââ¬??ââ¬??
+          window.mapHubSelectMap = function(id) {
+            MH.currentMapId = id;
+            renderSidebar();
+            renderActiveView();
+          };
+
+          // ââ¬??ââ¬?? Active View ââ¬??ââ¬??
+          function renderActiveView() {
+            var map = currentMap();
+            var emptyEl = document.getElementById('mhEmptyState');
+            var activeEl = document.getElementById('mhActiveView');
+            var imgEl = document.getElementById('mhMapImg');
+            var gridEl = document.getElementById('mhMapGrid');
+
+            if (!map) { emptyEl.style.display = 'flex'; activeEl.style.display = 'none'; return; }
+            emptyEl.style.display = 'none';
+            activeEl.style.display = 'block';
+
+            if (map.imageUrl) {
+              imgEl.src = map.imageUrl;
+              imgEl.style.display = 'block';
+              gridEl.style.display = 'none';
+            } else {
+              imgEl.style.display = 'none';
+              gridEl.style.display = 'block';
+            }
+
+            renderSectors();
+            renderItems();
+
+            // Adjust toolbar - hide Item tool for corp maps
+            document.getElementById('mhToolItem').style.display = (map.type === 'stock') ? 'flex' : 'none';
+          }
+
+          // ââ¬??ââ¬?? Sectors ââ¬??ââ¬??
+          function renderSectors() {
+            var map = currentMap();
+            var overlay = document.getElementById('mhSectorsOverlay');
+            if (!map) { overlay.innerHTML = ''; return; }
+            overlay.innerHTML = (map.sectors || []).map(function(s) {
+              return '<div style="position:absolute;left:' + s.x + '%;top:' + s.y + '%;width:' + s.w + '%;height:' + s.h + '%;border:2px solid ' + s.color + ';background:' + s.color + '22;border-radius:6px;pointer-events:auto;cursor:pointer;display:flex;align-items:flex-start;padding:4px 8px;box-sizing:border-box;" onclick="mhShowSectorInfo(\'' + s.id + '\')">' +
+                '<span style="font-size:11px;font-weight:700;color:' + s.color + ';background:rgba(255,255,255,0.9);padding:2px 6px;border-radius:4px;">' + s.name + '</span>' +
+              '</div>';
+            }).join('');
+          }
+
+          window.mhShowSectorInfo = function(sectorId) {
+            var map = currentMap();
+            if (!map) return;
+            var sector = (map.sectors||[]).find(function(s) { return s.id === sectorId; });
+            if (!sector) return;
+            var panel = document.getElementById('mhInfoPanel');
+            var items = (map.items||[]).filter(function(i) { return i.location && i.location.toLowerCase().indexOf(sector.name.toLowerCase()) >= 0; });
+            document.getElementById('mhInfoTitle').textContent = '?S ' + sector.name;
+            document.getElementById('mhInfoBody').innerHTML =
+              '<div style="margin-bottom:6px;"><strong>Itens neste setor:</strong> ' + items.length + '</div>' +
+              (items.length ? items.map(function(i) { return '<div style="padding:4px 0;border-bottom:1px solid #F0F0F0;">?x? ' + i.material + '</div>'; }).join('') : '<div style="color:#C8C8C8;">Nenhum item indexado</div>') +
+              '<button onclick="mhDeleteSector(\'' + sectorId + '\')" style="margin-top:10px;width:100%;background:#FFF0F0;border:none;border-radius:8px;padding:6px;font-size:11px;font-weight:600;cursor:pointer;color:#FF4757;">??? Excluir Setor</button>';
+            panel.classList.add('show');
+          };
+
+          window.mhDeleteSector = function(sectorId) {
+            var map = currentMap();
+            if (!map) return;
+            map.sectors = (map.sectors||[]).filter(function(s) { return s.id !== sectorId; });
+            save();
+            document.getElementById('mhInfoPanel').classList.remove('show');
+            renderSectors();
+          };
+
+          // ââ¬??ââ¬?? Items (3D Boxes) ââ¬??ââ¬??
+          function render3DBox(color, size) {
+            size = size || 36;
+            var s = size, h = Math.round(s * 0.55), d = Math.round(s * 0.3);
+            var c = color, dark = 'rgba(0,0,0,0.25)', light = 'rgba(255,255,255,0.15)';
+            return '<svg class="box3d-svg" width="' + (s + d) + '" height="' + (h + d) + '" viewBox="0 0 ' + (s+d) + ' ' + (h+d) + '" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+              // Front face
+              '<rect x="0" y="' + d + '" width="' + s + '" height="' + h + '" fill="' + c + '" rx="2"/>' +
+              '<rect x="0" y="' + d + '" width="' + s + '" height="' + h + '" fill="' + light + '" rx="2"/>' +
+              // Top face
+              '<polygon points="0,' + d + ' ' + d + ',0 ' + (s+d) + ',0 ' + s + ',' + d + '" fill="' + c + '"/>' +
+              '<polygon points="0,' + d + ' ' + d + ',0 ' + (s+d) + ',0 ' + s + ',' + d + '" fill="' + light + '" opacity="0.5"/>' +
+              // Right face
+              '<polygon points="' + s + ',' + d + ' ' + (s+d) + ',0 ' + (s+d) + ',' + h + ' ' + s + ',' + (h+d) + '" fill="' + c + '"/>' +
+              '<polygon points="' + s + ',' + d + ' ' + (s+d) + ',0 ' + (s+d) + ',' + h + ' ' + s + ',' + (h+d) + '" fill="' + dark + '"/>' +
+              // Border lines
+              '<rect x="0" y="' + d + '" width="' + s + '" height="' + h + '" stroke="rgba(0,0,0,0.15)" stroke-width="0.5" rx="2" fill="none"/>' +
+            '</svg>';
+          }
+
+          function renderItems() {
+            var map = currentMap();
+            var overlay = document.getElementById('mhItemsOverlay');
+            if (!map) { overlay.innerHTML = ''; return; }
+            overlay.innerHTML = (map.items || []).map(function(item) {
+              return '<div class="maphub-item-box" style="position:absolute;left:' + item.x + '%;top:' + item.y + '%;text-align:center;z-index:5;" onclick="mhShowItemInfo(\'' + item.id + '\')" title="' + item.material + '">' +
+                render3DBox(item.color || '#4A6CF7', 36) +
+                '<div class="box-label" style="font-size:9px;font-weight:700;color:#1A1A1A;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60px;font-family:Inter,sans-serif;">' + (item.material.length > 10 ? item.material.substr(0,9)+'â??Â¦' : item.material) + '</div>' +
+              '</div>';
+            }).join('');
+          }
+
+          window.mhShowItemInfo = function(itemId) {
+            var map = currentMap();
+            if (!map) return;
+            var item = (map.items||[]).find(function(i) { return i.id === itemId; });
+            if (!item) return;
+            var panel = document.getElementById('mhInfoPanel');
+            document.getElementById('mhInfoTitle').textContent = '?x? ' + item.material;
+            document.getElementById('mhInfoBody').innerHTML =
+              '<div style="margin-bottom:4px;"><strong>Localização:</strong> ' + (item.location || 'â??â¬') + '</div>' +
+              '<div style="margin-bottom:4px;"><strong>Posição:</strong> X:' + item.x + '% Y:' + item.y + '%</div>' +
+              '<button onclick="mhDeleteItem(\'' + itemId + '\')" style="margin-top:10px;width:100%;background:#FFF0F0;border:none;border-radius:8px;padding:6px;font-size:11px;font-weight:600;cursor:pointer;color:#FF4757;">??? Remover do Mapa</button>';
+            panel.classList.add('show');
+          };
+
+          window.mhDeleteItem = function(itemId) {
+            var map = currentMap();
+            if (!map) return;
+            map.items = (map.items||[]).filter(function(i) { return i.id !== itemId; });
+            save();
+            document.getElementById('mhInfoPanel').classList.remove('show');
+            renderItems();
+          };
+
+          // ââ¬??ââ¬?? Tools ââ¬??ââ¬??
+          window.mapHubSetTool = function(tool) {
+            MH.currentTool = tool;
+            ['view','sector','item'].forEach(function(t) {
+              var btn = document.getElementById('mhTool' + t.charAt(0).toUpperCase() + t.slice(1));
+              if (btn) btn.classList.toggle('active', t === tool);
+            });
+            var container = document.getElementById('mhMapContainer');
+            if (tool === 'view') container.style.cursor = 'default';
+            else if (tool === 'sector') { container.style.cursor = 'crosshair'; mapHubOpenSectorModal(); }
+            else if (tool === 'item') { container.style.cursor = 'crosshair'; mapHubOpenItemModal(); }
+          };
+
+          // ââ¬??ââ¬?? New Map ââ¬??ââ¬??
+          window.mapHubNewMap = function() {
+            document.getElementById('mhNewMapName').value = '';
+            document.getElementById('mhImgPreview').style.display = 'none';
+            document.getElementById('mhMapFileInput').value = '';
+            MH.importDataUrl = null;
+            document.getElementById('mhNewMapModal').style.display = 'flex';
+          };
+          window.mapHubCloseNewMap = function() { document.getElementById('mhNewMapModal').style.display = 'none'; };
+
+          window.mapHubTypeChange = function(radio) { /* visual only */ };
+
+          window.mapHubPreviewImage = function(input) {
+            if (!input.files[0]) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              MH.importDataUrl = e.target.result;
+              document.getElementById('mhImgPreviewImg').src = e.target.result;
+              document.getElementById('mhImgPreview').style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+          };
+
+          window.mapHubCreateMap = function() {
+            var name = document.getElementById('mhNewMapName').value.trim();
+            if (!name) { alert('Informe o nome do mapa.'); return; }
+            var type = document.querySelector('input[name="mhMapType"]:checked').value;
+            var map = { id: generateId(), name: name, type: type, imageUrl: MH.importDataUrl || null, sectors: [], items: [], createdAt: Date.now() };
+            MH.maps.push(map);
+            MH.currentMapId = map.id;
+            save();
+            renderSidebar();
+            renderActiveView();
+            mapHubCloseNewMap();
+          };
+
+          // ââ¬??ââ¬?? Import ââ¬??ââ¬??
+          window.mapHubImport = function() {
+            document.getElementById('mhImportName').value = '';
+            document.getElementById('mhImportPreview').style.display = 'none';
+            document.getElementById('mhImportFile').value = '';
+            MH.importDataUrl = null;
+            MH.importFileJson = null;
+            document.getElementById('mhImportModal').style.display = 'flex';
+          };
+
+          window.mapHubLoadImport = function(input) {
+            if (!input.files[0]) return;
+            var file = input.files[0];
+            if (file.name.endsWith('.json')) {
+              var reader = new FileReader();
+              reader.onload = function(e) {
+                try { MH.importFileJson = JSON.parse(e.target.result); } catch(err) { alert('JSON inválido.'); }
+              };
+              reader.readAsText(file);
+            } else {
+              var reader = new FileReader();
+              reader.onload = function(e) {
+                MH.importDataUrl = e.target.result;
+                document.getElementById('mhImportPreviewImg').src = e.target.result;
+                document.getElementById('mhImportPreview').style.display = 'block';
+              };
+              reader.readAsDataURL(file);
+            }
+          };
+
+          window.mapHubDoImport = function() {
+            var name = document.getElementById('mhImportName').value.trim();
+            if (!name) { alert('Informe um nome para o mapa.'); return; }
+            var type = document.querySelector('input[name="mhImportType"]:checked').value;
+            var map;
+            if (MH.importFileJson) {
+              map = Object.assign({}, MH.importFileJson, { id: generateId(), name: name, type: type });
+            } else {
+              map = { id: generateId(), name: name, type: type, imageUrl: MH.importDataUrl || null, sectors: [], items: [], createdAt: Date.now() };
+            }
+            MH.maps.push(map);
+            MH.currentMapId = map.id;
+            save();
+            renderSidebar();
+            renderActiveView();
+            document.getElementById('mhImportModal').style.display = 'none';
+          };
+
+          // ââ¬??ââ¬?? Export ââ¬??ââ¬??
+          window.mapHubExport = function() {
+            var map = currentMap();
+            if (!map) return;
+            var json = JSON.stringify(map, null, 2);
+            var blob = new Blob([json], { type: 'application/json' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = map.name.replace(/[^a-zA-Z0-9]/g,'_') + '.json';
+            a.click();
+          };
+
+          // ââ¬??ââ¬?? Delete Map ââ¬??ââ¬??
+          window.mapHubDeleteCurrentMap = function() {
+            var map = currentMap();
+            if (!map) return;
+            if (!confirm('Excluir o mapa "' + map.name + '"? Esta ação não pode ser desfeita.')) return;
+            MH.maps = MH.maps.filter(function(m) { return m.id !== MH.currentMapId; });
+            MH.currentMapId = null;
+            save();
+            renderSidebar();
+            renderActiveView();
+          };
+
+          // ââ¬??ââ¬?? Sector Modal ââ¬??ââ¬??
+          window.mapHubOpenSectorModal = function() {
+            document.getElementById('mhSectorName').value = '';
+            document.getElementById('mhSectorModal').style.display = 'flex';
+          };
+          window.mapHubCloseSectorModal = function() {
+            document.getElementById('mhSectorModal').style.display = 'none';
+            MH.currentTool = 'view';
+            document.getElementById('mhToolView').classList.add('active');
+            document.getElementById('mhToolSector').classList.remove('active');
+          };
+
+          window.mhPickColor = function(dot) {
+            document.querySelectorAll('.mh-color-dot').forEach(function(d) { d.style.borderColor = 'transparent'; d.style.transform = 'scale(1)'; });
+            dot.style.borderColor = '#1A1A1A';
+            dot.style.transform = 'scale(1.15)';
+            MH.selectedColor = dot.getAttribute('data-color');
+          };
+
+          window.mapHubAddSector = function() {
+            var map = currentMap();
+            if (!map) return;
+            var name = document.getElementById('mhSectorName').value.trim();
+            if (!name) { alert('Informe o nome do setor.'); return; }
+            var sector = {
+              id: generateId(),
+              name: name,
+              color: MH.selectedColor,
+              x: parseFloat(document.getElementById('mhSectorX').value)||20,
+              y: parseFloat(document.getElementById('mhSectorY').value)||20,
+              w: parseFloat(document.getElementById('mhSectorW').value)||25,
+              h: parseFloat(document.getElementById('mhSectorH').value)||20
+            };
+            if (!map.sectors) map.sectors = [];
+            map.sectors.push(sector);
+            save();
+            renderSectors();
+            mapHubCloseSectorModal();
+          };
+
+          // ââ¬??ââ¬?? Item Modal ââ¬??ââ¬??
+          window.mapHubOpenItemModal = function(shelfId, level, position) {
+            // Populate material select
+            var map = currentMap();
+            var sel = document.getElementById('mhItemMaterial');
+            sel.innerHTML = '';
+            if (typeof materials !== 'undefined' && materials.length) {
+              materials.forEach(function(m) {
+                var opt = document.createElement('option');
+                opt.value = m.code + ' â??â¬ ' + (m.desc || '');
+                opt.textContent = m.code + ' â??â¬ ' + (m.desc || '');
+                sel.appendChild(opt);
+              });
+            } else {
+              sel.innerHTML = '<option>Nenhum material cadastrado</option>';
+            }
+
+            var oldLoc = document.getElementById('mhItemLocation');
+            var bp = typeof window.getCadBlueprint === 'function' ? window.getCadBlueprint() : null;
+            var shelves = (bp && bp.floors && bp.floors[0] && bp.floors[0].shelves) ? bp.floors[0].shelves : [];
+            
+            if (map && map.type === 'stock' && shelves.length > 0) {
+              var html = '<select id="mhItemLocation" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;font-family:Inter,sans-serif;margin-bottom:12px;outline:none;" onchange="window.mhUpdateShelfCoords()">';
+              shelves.forEach(function(s) {
+                var sid = s.id || 'Sem Nome';
+                html += '<option value="' + sid + '">' + sid + '</option>';
+              });
+              html += '</select>';
+              oldLoc.outerHTML = html;
+
+              var label = document.getElementById('mhItemCoordLabel');
+              if (label) label.textContent = 'Nível e Posição (Ex: Nível 1, Pos 1)';
+
+              window.mhUpdateShelfCoords = function() {
+                var selId = document.getElementById('mhItemLocation').value;
+                var sh = shelves.find(function(x) { return (x.id || 'Sem Nome') === selId; });
+                if(sh) {
+                  var ix = document.getElementById('mhItemX');
+                  var iy = document.getElementById('mhItemY');
+                  ix.min = 1; ix.max = sh.levels || 3;
+                  iy.min = 1; iy.max = sh.positions || 4;
+                  if (shelfId && selId === shelfId && typeof level !== 'undefined' && typeof position !== 'undefined') {
+                    ix.value = level + 1;
+                    iy.value = position + 1;
+                  } else {
+                    if (!ix.value || parseInt(ix.value) > ix.max) ix.value = 1;
+                    if (!iy.value || parseInt(iy.value) > iy.max) iy.value = 1;
+                  }
+                }
+              };
+              if (shelfId) document.getElementById('mhItemLocation').value = shelfId;
+              setTimeout(window.mhUpdateShelfCoords, 10);
+
+            } else {
+              oldLoc.outerHTML = '<input id="mhItemLocation" type="text" placeholder="Ex.: Prateleira A3, Galpão Norte" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1px solid #E8E8E8;border-radius:10px;font-size:13px;font-family:Inter,sans-serif;margin-bottom:12px;outline:none;">';
+              document.getElementById('mhItemLocation').value = '';
+              var label = document.getElementById('mhItemCoordLabel');
+              if (label) label.textContent = 'Posição no mapa (% X, % Y)';
+              var ix = document.getElementById('mhItemX'), iy = document.getElementById('mhItemY');
+              ix.min = 0; ix.max = 95; ix.value = 50;
+              iy.min = 0; iy.max = 95; iy.value = 50;
+            }
+
+            document.getElementById('mhItemModal').style.display = 'flex';
+          };
+          window.mapHubCloseItemModal = function() {
+            document.getElementById('mhItemModal').style.display = 'none';
+            MH.currentTool = 'view';
+            document.getElementById('mhToolView').classList.add('active');
+            document.getElementById('mhToolItem').classList.remove('active');
+          };
+
+          window.mhPickItemColor = function(dot) {
+            document.querySelectorAll('.mh-icolor-dot').forEach(function(d) { d.style.borderColor = 'transparent'; d.style.transform = 'scale(1)'; });
+            dot.style.borderColor = '#1A1A1A';
+            dot.style.transform = 'scale(1.15)';
+            MH.selectedItemColor = dot.getAttribute('data-color');
+          };
+
+          window.mapHubAddItem = function() {
+            var map = currentMap();
+            if (!map) return;
+            var material = document.getElementById('mhItemMaterial').value;
+            var location = document.getElementById('mhItemLocation').value.trim();
+            var isStock = map.type === 'stock';
+            
+            var item = {
+              id: generateId(),
+              material: material,
+              location: location,
+              color: MH.selectedItemColor || '#4A6CF7'
+            };
+            
+            if (isStock) {
+              item.level = parseInt(document.getElementById('mhItemX').value) - 1; // 0-indexed internally
+              item.position = parseInt(document.getElementById('mhItemY').value) - 1; // 0-indexed internally
+              item.x = 50; item.y = 50;
+            } else {
+              item.x = parseFloat(document.getElementById('mhItemX').value)||50;
+              item.y = parseFloat(document.getElementById('mhItemY').value)||50;
+            }
+
+            if (!map.items) map.items = [];
+            map.items.push(item);
+            save();
+            renderItems();
+            mapHubCloseItemModal();
+          };
+
+          // ââ¬??ââ¬?? Mode Toggle (Viewer vs Editor) ââ¬??ââ¬??
+          window.mapHubShowView = function(mode) {
+            var hub = document.getElementById('mapHub');
+            var cad = document.querySelector('.eo-cad-container');
+            var btnV = document.getElementById('btnMapViewer');
+            var btnE = document.getElementById('btnMapEditor');
+            if (mode === 'viewer') {
+              hub.style.display = 'flex';
+              if (cad) cad.style.display = 'none';
+              btnV.style.background = '#1B7A4E'; btnV.style.color = '#fff';
+              btnE.style.background = '#F0F0EF'; btnE.style.color = '#1A1A1A';
+            } else {
+              hub.style.display = 'none';
+              if (cad) cad.style.display = 'flex';
+              btnE.style.background = '#1A1A1A'; btnE.style.color = '#fff';
+              btnV.style.background = '#F0F0EF'; btnV.style.color = '#1A1A1A';
+            }
+          };
+          // ââ¬??ââ¬?? Init ââ¬??ââ¬??
+          updateStats();
+          renderSidebar();
+          // Start in viewer mode
+          mapHubShowView('viewer');
+        })();
+            
+
+    
+  </script>
+
+        <!-- ââ¬¢Âââ¬¢Â WAREHOUSE 3D + SHELF 2D ENHANCEMENT ââ¬¢Âââ¬¢Â -->
+        <script>
+        (function(){
+          var _w3d = null; // { renderer, scene, camera, controls, animFrame, resizeObs }
+
+          // ââ¬??ââ¬?? 3D Camera Helpers ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??
+          window.mhCamMove = function(dx, dy) {
+            if (!window._mh_w3d_controls || !window._mh_w3d_camera) return;
+            var c = window._mh_w3d_controls;
+            var cam = window._mh_w3d_camera;
+            var right = new THREE.Vector3().setFromMatrixColumn(cam.matrix, 0);
+            right.y = 0; right.normalize();
+            var forward = new THREE.Vector3().setFromMatrixColumn(cam.matrix, 0);
+            forward.crossVectors(cam.up, right).normalize();
+            var speed = 12;
+            var mv = new THREE.Vector3();
+            if (dx) mv.addScaledVector(right, dx * speed);
+            if (dy) mv.addScaledVector(forward, -dy * speed);
+            cam.position.add(mv);
+            c.target.add(mv);
+            c.update();
+          };
+          window.mhCamZoom = function(dz) {
+            if (!window._mh_w3d_controls || !window._mh_w3d_camera) return;
+            var cam = window._mh_w3d_camera;
+            var c = window._mh_w3d_controls;
+            var dir = new THREE.Vector3().subVectors(c.target, cam.position).normalize();
+            var speed = 15;
+            cam.position.addScaledVector(dir, -dz * speed);
+            c.update();
+          };
+          window.mhCamReset = function() {
+            if (!window._mh_w3d_controls || !window._mh_w3d_camera) return;
+            var c = window._mh_w3d_controls;
+            var cam = window._mh_w3d_camera;
+            var cx = window._mh_w3d_cx, cz = window._mh_w3d_cz, ch = window._mh_w3d_ch;
+            cam.position.set(cx, ch * 1.5, cz + 100);
+            c.target.set(cx, ch * 0.4, cz);
+            c.update();
+          };
+
+          // ââ¬??ââ¬?? Helpers ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??
+          function hexToInt(hex) {
+            return parseInt((hex || '#4A6CF7').replace('#',''), 16);
+          }
+
+          function groupByLocation(items) {
+            var g = {};
+            (items || []).forEach(function(item) {
+              var loc = (item.location || 'Sem Localização').trim();
+              if (!g[loc]) g[loc] = [];
+              g[loc].push(item);
+            });
+            return g;
+          }
+
+          // ââ¬??ââ¬?? 3D Warehouse ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??
+          function disposeW3D() {
+            if (!_w3d) return;
+            cancelAnimationFrame(_w3d.animFrame);
+            if (_w3d.resizeObs) _w3d.resizeObs.disconnect();
+            try { _w3d.renderer.dispose(); } catch(e) {}
+            var c = document.getElementById('mhWarehouse3D');
+            if (c) c.innerHTML = '';
+            _w3d = null;
+          }
+
+          function buildWarehouse3D(items) {
+            disposeW3D();
+            var container = document.getElementById('mhWarehouse3D');
+            if (!container || typeof THREE === 'undefined') return;
+
+            var groups = groupByLocation(items);
+            
+            // Get CAD Shelves
+            var bp = typeof window.getCadBlueprint === 'function' ? window.getCadBlueprint() : null;
+            var cadShelves = (bp && bp.floors && bp.floors[0] && bp.floors[0].shelves) ? bp.floors[0].shelves : [];
+
+            var scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0f172a);
+            scene.fog = new THREE.FogExp2(0x0f172a, 0.018);
+
+            // Lighting
+            scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+            var sun = new THREE.DirectionalLight(0xffffff, 0.9);
+            sun.position.set(20, 40, 20);
+            sun.castShadow = true;
+            sun.shadow.mapSize.width = 2048;
+            sun.shadow.mapSize.height = 2048;
+            scene.add(sun);
+            var fill = new THREE.DirectionalLight(0x6ee7ff, 0.3);
+            fill.position.set(-20, 20, -20);
+            scene.add(fill);
+
+            // Floor
+            var floor = new THREE.Mesh(
+              new THREE.PlaneGeometry(200, 200),
+              new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.9 })
+            );
+            floor.rotation.x = -Math.PI / 2;
+            floor.receiveShadow = true;
+            scene.add(floor);
+
+            // Grid
+            var grid = new THREE.GridHelper(200, 100, 0x334155, 0x1e293b);
+            grid.material.opacity = 0.6;
+            grid.material.transparent = true;
+            scene.add(grid);
+
+            var postMat  = new THREE.MeshStandardMaterial({ color: 0x1d4ed8, metalness: 0.8, roughness: 0.2 });
+            var beamMat  = new THREE.MeshStandardMaterial({ color: 0xf97316, metalness: 0.6, roughness: 0.3 });
+            var boardMat = new THREE.MeshStandardMaterial({ color: 0xd1d5db, roughness: 0.6 });
+            
+            var minX=0, maxX=0, minZ=0, maxZ=0, maxH=3;
+            var scale = 0.06;
+
+            if (cadShelves.length > 0) {
+              minX = Infinity; maxX = -Infinity; minZ = Infinity; maxZ = -Infinity;
+              
+              cadShelves.forEach(function(sh) {
+                var rx = sh.x * scale;
+                var rz = sh.y * scale;
+                var RW = sh.w * scale;
+                var RD = sh.h * scale;
+                var NS = sh.levels || 3;
+                var SH = 1.4;
+                var loc = sh.id || 'Sem Nome';
+                
+                // Adjust bounding box
+                if(rx < minX) minX = rx;
+                if(rx + RW > maxX) maxX = rx + RW;
+                if(rz < minZ) minZ = rz;
+                if(rz + RD > maxZ) maxZ = rz + RD;
+                if(NS * SH > maxH) maxH = NS * SH;
+
+                // 4 vertical posts
+                var postH = NS * SH + 0.5;
+                [[rx+.08, rz+.08],[rx+RW-.08,rz+.08],[rx+.08,rz+RD-.08],[rx+RW-.08,rz+RD-.08]].forEach(function(p) {
+                  var post = new THREE.Mesh(new THREE.BoxGeometry(0.12, postH, 0.12), postMat);
+                  post.position.set(p[0], postH/2, p[1]);
+                  post.castShadow = true;
+                  scene.add(post);
+                });
+
+                // Horizontal orange beams + shelf boards
+                for (var s = 0; s <= NS; s++) {
+                  var by = s * SH;
+                  [rz+.08, rz+RD-.08].forEach(function(bz) {
+                    var beam = new THREE.Mesh(new THREE.BoxGeometry(RW, 0.1, 0.1), beamMat);
+                    beam.position.set(rx + RW/2, by + 0.05, bz);
+                    scene.add(beam);
+                  });
+                  if (s < NS) {
+                    var board = new THREE.Mesh(new THREE.BoxGeometry(RW-0.1, 0.07, RD-0.1), boardMat);
+                    board.position.set(rx + RW/2, by + 0.08, rz + RD/2);
+                    board.receiveShadow = true;
+                    scene.add(board);
+                  }
+                }
+
+                // Rack label (canvas texture)
+                var lc = document.createElement('canvas');
+                lc.width = 256; lc.height = 56;
+                var lx = lc.getContext('2d');
+                lx.fillStyle = 'rgba(15,23,42,0.85)';
+                lx.roundRect(0,0,256,56,10); lx.fill();
+                lx.fillStyle = '#f8fafc';
+                lx.font = 'bold 16px Inter,sans-serif';
+                lx.textAlign = 'center'; lx.textBaseline = 'middle';
+                lx.fillText(loc.length > 20 ? loc.substring(0,19)+'â??Â¦' : loc, 128, 28);
+                var ltex = new THREE.CanvasTexture(lc);
+                var lbl = new THREE.Mesh(
+                  new THREE.PlaneGeometry(RW*0.6, (RW*0.6) * 56/256),
+                  new THREE.MeshBasicMaterial({ map: ltex, transparent: true, side: THREE.DoubleSide })
+                );
+                lbl.position.set(rx + RW/2, NS * SH + 0.6, rz + RD/2);
+                scene.add(lbl);
+
+                // Items on shelves
+                var itemsInLoc = groups[loc] || [];
+                var cols = sh.positions || 4;
+                var perShelf = Math.max(1, cols);
+                var slotW = (RW - 0.3) / perShelf;
+                var boxW = Math.min(slotW * 0.78, 1.1);
+                var boxH = SH * 0.45;
+                var boxD = RD * 0.55;
+
+                itemsInLoc.forEach(function(item, ii) {
+                  var shelf = typeof item.level === 'number' && !isNaN(item.level) ? item.level : Math.floor(ii / perShelf);
+                  var col = typeof item.position === 'number' && !isNaN(item.position) ? item.position : ii % perShelf;
+                  if (shelf >= NS) shelf = NS - 1; // overflow
+                  if (col >= perShelf) col = perShelf - 1; // overflow
+
+                  var bx = rx + 0.15 + slotW * (col + 0.5);
+                  var by2 = shelf * SH + 0.08 + boxH / 2;
+                  var bz2 = rz + RD/2;
+
+                  var color = hexToInt(item.color);
+                  var imat = new THREE.MeshStandardMaterial({ color: color, metalness: 0.15, roughness: 0.55 });
+                  var box = new THREE.Mesh(new THREE.BoxGeometry(boxW, boxH, boxD), imat);
+                  box.position.set(bx, by2, bz2);
+                  box.castShadow = true;
+                  box.userData = { item: item };
+                  scene.add(box);
+
+                  // Item label
+                  var ic = document.createElement('canvas');
+                  ic.width = 128; ic.height = 32;
+                  var ix = ic.getContext('2d');
+                  ix.fillStyle = 'rgba(255,255,255,0.92)';
+                  ix.roundRect(0,0,128,32,4); ix.fill();
+                  ix.fillStyle = '#1e293b';
+                  ix.font = 'bold 12px Inter,sans-serif';
+                  ix.textAlign = 'center'; ix.textBaseline = 'middle';
+                  var code = (item.material || '').split('â??â¬')[0].trim().substring(0,11);
+                  ix.fillText(code, 64, 16);
+                  var itex = new THREE.CanvasTexture(ic);
+                  var ilbl = new THREE.Mesh(
+                    new THREE.PlaneGeometry(boxW * 0.9, boxH * 0.4),
+                    new THREE.MeshBasicMaterial({ map: itex, transparent: true, side: THREE.DoubleSide, depthTest: false })
+                  );
+                  ilbl.position.set(bx, by2 + boxH/2 + boxH*0.22, bz2 + boxD/2 + 0.01);
+                  scene.add(ilbl);
+                });
+              });
+            } else {
+              // NO CAD SHELVES - empty warehouse state
+              minX = -10; maxX = 10; minZ = -10; maxZ = 10; maxH = 3;
+            }
+
+            var centerX = (minX + maxX) / 2;
+            var centerZ = (minZ + maxZ) / 2;
+            var span = Math.max(maxX - minX, maxZ - minZ, 10);
+
+            // Camera
+            var w = container.clientWidth || 600;
+            var h = container.clientHeight || 260;
+            var camera = new THREE.PerspectiveCamera(48, w/h, 0.1, 600);
+            camera.position.set(centerX, maxH * 1.5, centerZ + span * 0.8);
+            camera.lookAt(centerX, maxH * 0.4, centerZ);
+
+            // Renderer
+            var renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(w, h);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            try { renderer.outputEncoding = THREE.sRGBEncoding; } catch(e) {}
+            // Remove old canvas instead of full innerHTML wipe to preserve UI overlay
+            var oldCanvas = container.querySelector('canvas');
+            if (oldCanvas) container.removeChild(oldCanvas);
+            container.appendChild(renderer.domElement);
+            
+            var ctlUI = document.getElementById('mh3DControls');
+            if (ctlUI) ctlUI.style.display = 'flex';
+
+            // Controls
+            var controls = null;
+            if (THREE.OrbitControls) {
+              controls = new THREE.OrbitControls(camera, renderer.domElement);
+              controls.enableDamping = true;
+              controls.dampingFactor = 0.06;
+              controls.target.set(centerX, maxH * 0.4, centerZ);
+              controls.minDistance = 3;
+              controls.maxDistance = 120;
+              controls.update();
+            }
+            
+            // Export globals for UI buttons
+            window._mh_w3d_controls = controls;
+            window._mh_w3d_camera = camera;
+            window._mh_w3d_cx = centerX;
+            window._mh_w3d_cz = centerZ;
+            window._mh_w3d_ch = maxH;
+
+            // Resize observer
+            var resizeObs = null;
+            if (window.ResizeObserver) {
+              resizeObs = new ResizeObserver(function() {
+                var nw = container.clientWidth, nh = container.clientHeight;
+                if (nw && nh) { camera.aspect = nw/nh; camera.updateProjectionMatrix(); renderer.setSize(nw, nh); }
+              });
+              resizeObs.observe(container);
+            }
+
+            var af;
+            function animate() {
+              af = requestAnimationFrame(animate);
+              if (controls) controls.update();
+              renderer.render(scene, camera);
+            }
+            animate();
+
+            _w3d = { renderer: renderer, animFrame: af, resizeObs: resizeObs,
+              dispose: function() { cancelAnimationFrame(af); if (resizeObs) resizeObs.disconnect(); renderer.dispose(); container.innerHTML = ''; } };
+          }
+
+          // ââ¬??ââ¬?? 2D Shelf Layout ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??
+          window.mhSelectedShelf2D = "";
+          window.mhSelectShelf2D = function(id) {
+            window.mhSelectedShelf2D = id;
+            var activeId = window.MH && window.MH.currentMapId;
+            if (!activeId) return;
+            var map = window.MH.maps.find(function(m) { return m.id === activeId; });
+            if (map) build2DShelves(map);
+          };
+
+          function build2DShelves(map) {
+            var container = document.getElementById('mhShelves2D');
+            if (!container) return;
+            var groups = groupByLocation(map.items || []);
+            
+            var bp = typeof window.getCadBlueprint === 'function' ? window.getCadBlueprint() : null;
+            var cadShelves = (bp && bp.floors && bp.floors[0] && bp.floors[0].shelves) ? bp.floors[0].shelves : [];
+            
+            var locs = [];
+            if (cadShelves.length > 0) {
+              locs = cadShelves.map(function(s) { return s.id || 'Sem Nome'; });
+            } else {
+              locs = Object.keys(groups); // fallback
+            }
+
+            if (!locs.length) {
+              container.innerHTML = '<div style="padding:40px;text-align:center;color:#94a3b8;font-size:13px;font-family:Inter,sans-serif;">Nenhuma prateleira cadastrada no Editor CAD.</div>';
+              return;
+            }
+
+            if (!window.mhSelectedShelf2D || locs.indexOf(window.mhSelectedShelf2D) === -1) {
+              window.mhSelectedShelf2D = locs[0];
+            }
+
+            container.style.display = 'block';
+
+            var activeLoc = window.mhSelectedShelf2D;
+            var items = groups[activeLoc] || [];
+            var sh = cadShelves.find(function(s) { return (s.id || 'Sem Nome') === activeLoc; });
+            var levels = sh ? (sh.levels || 3) : 1;
+            var positions = sh ? (sh.positions || 4) : Math.max(1, items.length);
+
+            var gridItems = {};
+            items.forEach(function(item, idx) {
+              var itL = typeof item.level === 'number' && !isNaN(item.level) ? item.level : Math.floor(idx / positions);
+              var itP = typeof item.position === 'number' && !isNaN(item.position) ? item.position : idx % positions;
+              gridItems[itL + '_' + itP] = item;
+            });
+
+            locs.forEach(function(loc) {
+              var sel = loc === activeLoc ? ' selected' : '';
+              headerHtml += '<option value="' + loc + '"' + sel + '>' + loc + '</option>';
+            });
+            headerHtml += '</select></div>' +
+              '<button onclick="window.mapHubOpenItemModal(\''+activeLoc+'\')" style="background:#10b981;color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 2px 4px rgba(16,185,129,0.2);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Adicionar Item</button>' +
+              '</div>';
+
+            var shelfHtml = '<div style="flex:1;padding:16px;display:flex;flex-direction:column-reverse;gap:8px;background:#f8fafc;overflow-y:auto;min-height:150px;">';
+            for(var l = 0; l < levels; l++) {
+              shelfHtml += '<div style="display:flex;gap:6px;border-bottom:3px solid #cbd5e1;padding-bottom:4px;min-height:50px;">';
+              for(var p = 0; p < positions; p++) {
+                var item = gridItems[l + '_' + p];
+                if (item) {
+                   shelfHtml += '<div style="flex:1;background:rgba(255,255,255,0.7);border:1px dashed #cbd5e1;border-radius:4px;display:flex;align-items:flex-end;justify-content:center;position:relative;">';
+                   var shortCode = (item.material||'').split('â??â¬')[0].trim();
+                   shortCode = shortCode.length > 8 ? shortCode.substring(0,7)+'â??Â¦' : shortCode;
+                   shelfHtml += '<div onclick="mhShowItemInfo(\'' + item.id + '\')" title="Nível '+(l+1)+', Pos '+(p+1)+' â??â¬ ' + item.material + '" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;width:100%;transition:transform .1s;z-index:2;margin-bottom:4px;" onmouseover="this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.transform=\'translateY(0)\'">' +
+                     '<svg width="32" height="26" viewBox="0 0 46 38" fill="none"><polygon points="0,12 12,0 46,0 34,12" fill="' + (item.color||'#4A6CF7') + '" opacity="0.85"/><rect x="0" y="12" width="34" height="22" rx="2" fill="' + (item.color||'#4A6CF7') + '"/><polygon points="34,12 46,0 46,22 34,34" fill="' + (item.color||'#4A6CF7') + '" opacity="0.6"/><rect x="0" y="12" width="34" height="22" rx="2" fill="rgba(255,255,255,0.12)"/></svg>' +
+                     '<div style="font-size:9px;font-weight:700;color:#334155;margin-top:2px;">'+shortCode+'</div></div>';
+                   shelfHtml += '</div>';
+                } else {
+                   shelfHtml += '<div onclick="window.mapHubOpenItemModal(\''+activeLoc+'\','+l+','+p+')" title="Adicionar item neste espaço" style="flex:1;background:rgba(255,255,255,0.4);border:1px dashed #cbd5e1;border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor=\'#10b981\';this.style.background=\'#ecfdf5\';" onmouseout="this.style.borderColor=\'#cbd5e1\';this.style.background=\'rgba(255,255,255,0.4)\';">';
+                   shelfHtml += '<span style="font-size:10px;font-weight:600;color:#94a3b8;">Livre</span>';
+                   shelfHtml += '</div>';
+                }
+              }
+              shelfHtml += '</div>';
+            }
+            shelfHtml += '</div>';
+
+            container.innerHTML = '<div style="display:flex;flex-direction:column;height:100%;border-top:1px solid #e2e8f0;">' + headerHtml + shelfHtml + '</div>';
+          }
+
+          // ââ¬??ââ¬?? Toggle layout for map type ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??
+          function applyStockLayout(map) {
+            var mapContainer = document.getElementById('mhMapContainer');
+            var w3d = document.getElementById('mhWarehouse3D');
+            var s2d = document.getElementById('mhShelves2D');
+            var floating = document.getElementById('mhInfoPanel');
+            var toolbar = document.getElementById('mhToolbar');
+            var activeEl = document.getElementById('mhActiveView');
+
+            if (!map || map.type !== 'stock') {
+              // Corp map â??â¬ standard view
+              if (mapContainer) mapContainer.style.display = 'block';
+              if (w3d) { w3d.style.display = 'none'; disposeW3D(); }
+              if (s2d) s2d.style.display = 'none';
+              if (activeEl) { activeEl.style.flexDirection = ''; activeEl.style.height = '100%'; }
+              return;
+            }
+
+            // Stock map â??â¬ 3D fixed, 2D below in page scroll
+            if (mapContainer) mapContainer.style.display = 'none';
+            if (w3d) { w3d.style.display = 'block'; }
+            if (s2d) { s2d.style.display = 'block'; }
+            if (activeEl) { activeEl.style.flexDirection = ''; activeEl.style.height = 'auto'; activeEl.style.display = 'block'; }
+
+            // Floating panel
+            if (floating) floating.style.top = '60px';
+
+            buildWarehouse3D(map.items || []);
+            build2DShelves(map);
+          }
+
+          // ââ¬??ââ¬?? Hook into existing map hub functions ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??ââ¬??
+          var _origSelect = window.mapHubSelectMap;
+          window.mapHubSelectMap = function(id) {
+            _origSelect(id);
+            var mh = window._mapHub;
+            if (!mh) return;
+            var map = mh.maps.find(function(m) { return m.id === id; });
+            setTimeout(function() { applyStockLayout(map); }, 80);
+          };
+
+          var _origAddItem = window.mapHubAddItem;
+          window.mapHubAddItem = function() {
+            _origAddItem();
+            var mh = window._mapHub;
+            if (!mh || !mh.currentMapId) return;
+            var map = mh.maps.find(function(m) { return m.id === mh.currentMapId; });
+            if (map && map.type === 'stock') {
+              setTimeout(function() {
+                buildWarehouse3D(map.items || []);
+                build2DShelves(map);
+              }, 120);
+            }
+          };
+
+          var _origDeleteItem = window.mhDeleteItem;
+          window.mhDeleteItem = function(itemId) {
+            _origDeleteItem(itemId);
+            var mh = window._mapHub;
+            if (!mh || !mh.currentMapId) return;
+            var map = mh.maps.find(function(m) { return m.id === mh.currentMapId; });
+            if (map && map.type === 'stock') {
+              setTimeout(function() {
+                buildWarehouse3D(map.items || []);
+                build2DShelves(map);
+              }, 120);
+            }
+          };
+
+          // Hide 3D warehouse when switching to editor mode
+          var _origShowView = window.mapHubShowView;
+          window.mapHubShowView = function(mode) {
+            _origShowView(mode);
+            if (mode === 'editor') {
+              disposeW3D();
+              if (typeof resizeCadCanvas === 'function') setTimeout(resizeCadCanvas, 50);
+            }
+          };
+        })();
+            
+
+    
+  </script>
+
+        <!-- ââ¬¢Âââ¬¢Â EXISTING CAD EDITOR (unchanged) ââ¬¢Âââ¬¢Â -->
+        <div class="eo-cad-container" style="display:none; flex-direction: column; height: 80vh; border: 1px solid var(--surface-border); border-radius: 12px; overflow: hidden; background: #0f111a;">
+          
+          <!-- Fusion 360 Top Ribbon -->
+          <div class="eo-cad-ribbon" style="background: #f4f5f6; border-bottom: 1px solid #c8c8c8; display: flex; flex-direction: column; color: #333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none;">
+            <!-- Tabs -->
+            <div id="cad-ribbon-tabs" style="display: flex; background: #e8e8e8; border-bottom: 1px solid #d4d4d4; padding: 0 10px;">
+              <div class="ribbon-tab active" data-tab="architecture" onclick="switchCadTab('architecture')" style="padding: 6px 16px; border-bottom: 2px solid #0696D7; color: #0696D7; font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase;">Architecture</div>
+              <div class="ribbon-tab" data-tab="logistics" onclick="switchCadTab('logistics')" style="padding: 6px 16px; color: #555; border-bottom: 2px solid transparent; font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase;">Logistics</div>
+              <div class="ribbon-tab" data-tab="inspect" onclick="switchCadTab('inspect')" style="padding: 6px 16px; color: #555; border-bottom: 2px solid transparent; font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase;">Inspect</div>
+              <div class="ribbon-tab" data-tab="addons" onclick="switchCadTab('addons')" style="padding: 6px 16px; color: #555; border-bottom: 2px solid transparent; font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase;">Addons</div>
+              <div style="margin-left:auto; padding: 6px 16px;">
+                 <label style="font-size:11px; font-weight:600; display:flex; align-items:center; gap:6px; cursor:pointer; color:#333;">
+                   <input type="checkbox" id="cadAutoScaleToggle" checked onchange="if(typeof toggle3DAutoScale === 'function') toggle3DAutoScale(this.checked)"> Auto-Scale 3D
+                 </label>
+              </div>
+            </div>
+            
+            <!-- Tool Groups -->
+            <div style="display: flex; padding: 4px 8px; gap: 4px; background: #f4f5f6; align-items: stretch; overflow-x: auto;">
+              
+              <!-- Group: DESIGN / SELECT -->
+              <div style="display: flex; align-items: stretch; border-right: 1px solid #d4d4d4; padding-right: 8px;">
+                <button class="fusion-btn active cad-tool" data-tool="select" onclick="setCadTool('select')" style="flex-direction:column; padding: 4px 8px; justify-content:center;">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><path d="M5 4l15 9-6.5 2L10 21l-5-17z"/></svg>
+                  <span style="font-size: 9px; font-weight: 600; margin-top:2px;">SELECT</span>
+                </button>
+              </div>
+
+              <!-- Group: CREATE (Architecture) -->
+              <div id="cad-group-architecture" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #d4d4d4; padding-right: 8px;">
+                <div style="display: flex; gap: 2px;">
+                  <!-- Large Button: Wall -->
+                  <button class="fusion-btn cad-tool" data-tool="wall" onclick="setCadTool('wall')" title="Wall" style="flex-direction:column; padding: 4px 8px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0696D7" stroke-width="2"><rect x="3" y="8" width="18" height="8" rx="1"/></svg>
+                    <span style="font-size: 9px; font-weight: 600; margin-top:2px;">WALL</span>
+                  </button>
+                  
+                  <!-- Small Buttons Stack 1 -->
+                  <div style="display: flex; flex-direction: column; justify-content: center; gap:2px;">
+                    <button class="fusion-btn cad-tool" data-tool="door" onclick="setCadTool('door')" title="Door" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0696D7" stroke-width="1.5"><path d="M4 22V6C4 4.89543 4.89543 4 6 4H12M12 4V22M12 4H18C19.1046 4 20 4.89543 20 6V22M16 12H18"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Door</span>
+                    </button>
+                    <button class="fusion-btn cad-tool" data-tool="window" onclick="setCadTool('window')" title="Window" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0696D7" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3V21M3 12H21"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Window</span>
+                    </button>
+                  </div>
+                  
+                  <!-- Small Buttons Stack 2 -->
+                  <div style="display: flex; flex-direction: column; justify-content: center; gap:2px;">
+                    <button class="fusion-btn cad-tool" data-tool="pillar" onclick="setCadTool('pillar')" title="Pillar" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#0696D7"><rect x="9" y="4" width="6" height="16" rx="1"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Pillar</span>
+                    </button>
+                    <button class="fusion-btn cad-tool" data-tool="stairs" onclick="setCadTool('stairs')" title="Stairs" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0696D7" stroke-width="1.5"><path d="M3 21h6v-6h6v-6h6V3"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Stairs</span>
+                    </button>
+                  </div>
+                </div>
+                <div style="font-size: 9px; color: #555; font-weight: 600; letter-spacing: 0.5px; display:flex; align-items:center; gap:2px; margin-top:2px;">CREATE <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+              </div>
+
+              <!-- Group: LOGISTICS -->
+              <div id="cad-group-logistics" style="display: none; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #d4d4d4; padding-right: 8px;">
+                <div style="display: flex; gap: 2px;">
+                  <!-- Large Button: Shelf -->
+                  <button class="fusion-btn cad-tool" data-tool="shelf" onclick="setCadTool('shelf')" title="Pallet Rack" style="flex-direction:column; padding: 4px 8px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16M4 22V2m16 20V2"/></svg>
+                    <span style="font-size: 9px; font-weight: 600; margin-top:2px;">RACK</span>
+                  </button>
+                  
+                  <!-- Small Buttons Stack -->
+                  <div style="display: flex; flex-direction: column; justify-content: center; gap:2px;">
+                    <button class="fusion-btn cad-tool" data-tool="zone" onclick="setCadTool('zone')" title="Storage Zone" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="1.5" stroke-dasharray="2 2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Zone</span>
+                    </button>
+                    <button class="fusion-btn cad-tool" data-tool="path" onclick="setCadTool('path')" title="Forklift Path" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="1.5"><path d="M3 12h18 M15 6l6 6-6 6"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Path</span>
+                    </button>
+                  </div>
+                </div>
+                <div style="font-size: 9px; color: #555; font-weight: 600; letter-spacing: 0.5px; display:flex; align-items:center; gap:2px; margin-top:2px;">LOGISTICS <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+              </div>
+              
+              <!-- Group: MODIFY -->
+              <div id="cad-group-modify" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #d4d4d4; padding-right: 8px;">
+                <div style="display: flex; gap: 2px;">
+                  <button class="fusion-btn cad-tool" data-tool="erase" onclick="setCadTool('erase')" title="Erase" style="flex-direction:column; padding: 4px 8px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E74C3C" stroke-width="1.5"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    <span style="font-size: 9px; font-weight: 600; margin-top:2px;">ERASE</span>
+                  </button>
+                  
+                  <div style="display: flex; flex-direction: column; justify-content: center; gap:2px;">
+                    <div style="display: flex; gap: 2px;">
+                      <button class="fusion-btn cad-tool" data-tool="move" onclick="setCadTool('move')" title="Move" style="padding: 2px 6px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><path d="M12 2L12 22 M8 6l4-4 4 4 M8 18l4 4 4-4 M2 12h20 M6 8l-4 4 4 4 M18 8l4 4-4 4"/></svg>
+                        <span style="font-size: 9px; margin-left:4px;">Move</span>
+                      </button>
+                      <button class="fusion-btn cad-tool" data-tool="trim" onclick="setCadTool('trim')" title="Trim / Cut" style="padding: 2px 6px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+                        <span style="font-size: 9px; margin-left:4px;">Trim</span>
+                      </button>
+                    </div>
+                    <button class="fusion-btn cad-tool" data-tool="rotate" onclick="setCadTool('rotate')" title="Rotate" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Rotate</span>
+                    </button>
+                  </div>
+                </div>
+                <div style="font-size: 9px; color: #555; margin-top: 2px; font-weight: 600; letter-spacing: 0.5px; display:flex; align-items:center; gap:2px;">MODIFY <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+              </div>
+
+              <!-- Group: INSPECT -->
+              <div id="cad-group-inspect" style="display: none; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #d4d4d4; padding-right: 8px;">
+                <div style="display: flex; gap: 2px;">
+                  <button class="fusion-btn cad-tool" data-tool="measure" onclick="setCadTool('measure')" title="Measure" style="flex-direction:column; padding: 4px 8px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8E44AD" stroke-width="1.5"><path d="M3 12h18 M6 9v6 M12 9v6 M18 9v6"/></svg>
+                    <span style="font-size: 9px; font-weight: 600; margin-top:2px;">MEASURE</span>
+                  </button>
+                  <button class="fusion-btn cad-tool" data-tool="inspect" onclick="setCadTool('inspect')" title="Inspect Rack" style="flex-direction:column; padding: 4px 8px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2980B9" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M11 8v6M8 11h6"/></svg>
+                    <span style="font-size: 9px; font-weight: 600; margin-top:2px;">INSPECT RACK</span>
+                  </button>
+                </div>
+                <div style="font-size: 9px; color: #555; margin-top: 2px; font-weight: 600; letter-spacing: 0.5px; display:flex; align-items:center; gap:2px;">INSPECT <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+              </div>
+              
+              <!-- Group: ADDONS -->
+              <div id="cad-group-addons" style="display: none; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #d4d4d4; padding-right: 8px;">
+                <div style="display: flex; gap: 2px;">
+                  <button class="fusion-btn cad-tool" data-tool="addon3d" onclick="openAddonModal()" title="Importar Modelo 3D" style="flex-direction:column; padding: 4px 8px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    <span style="font-size: 9px; font-weight: 600; margin-top:2px;">IMPORT 3D</span>
+                  </button>
+                </div>
+                <div style="font-size: 9px; color: #555; font-weight: 600; letter-spacing: 0.5px; display:flex; align-items:center; gap:2px; margin-top:2px;">ADDONS <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+              </div>
+
+              <!-- Group: DOCUMENT / LEVELS -->
+              <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; padding-left: 8px; margin-left: auto;">
+                <div style="display: flex; gap: 6px;">
+                  <button class="fusion-btn" onclick="window.openSaveModal()" title="Save Document" style="padding: 2px 6px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="1.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2zM17 21v-8H7v8M7 3v5h8"/></svg>
+                    <span style="font-size: 9px; margin-left:4px; font-weight:600;">Save</span>
+                  </button>
+                  <button class="fusion-btn" onclick="undoCad()" title="Undo (Ctrl+Z)" style="padding: 2px 6px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3l-3 2.7"/></svg>
+                    <span style="font-size: 9px; margin-left:4px;">Undo</span>
+                  </button>
+                  <button class="fusion-btn" onclick="redoCad()" title="Redo (Ctrl+Y)" style="padding: 2px 6px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/></svg>
+                    <span style="font-size: 9px; margin-left:4px;">Redo</span>
+                  </button>
+                  <button class="fusion-btn" onclick="clearBlueprint()" title="Clear Document" style="padding: 2px 6px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM18 9l-6 6M12 9l6 6"/></svg>
+                  </button>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px;">
+                  <span style="font-size: 10px; font-weight: 600; color: #555;">LEVEL:</span>
+                  <select id="cadFloorSelect" style="padding: 2px 4px; border: 1px solid #ccc; border-radius: 4px; font-size: 10px; outline: none; background: #fff;" onchange="changeCadFloor(this.value)">
+                    <option value="0">0 - T?rreo</option>
+                    <option value="1">1 - 1?Âº Andar</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Workspace (Split Screen) -->
+          <div class="eo-cad-workspace" style="flex: 1; position: relative; background: #0f111a; overflow: hidden; display: flex;" id="cadWorkspace">
+            <!-- 2D Canvas (Left Half) -->
+            <div style="flex: 1; border-right: 2px solid #1e2130; position:relative; overflow:hidden;">
+               <canvas id="cadCanvas2d" style="display:block; width:100%; height:100%; touch-action: none; cursor: crosshair;"></canvas>
+            </div>
+            <!-- CAD 3D Canvas -->
+            <div class="eo-cad-3d" style="width: 50%; height: 100%; position: relative; background: #f4f5f6;">
+              <div id="cadContainer3d" style="width: 100%; height: 100%;"></div>
+              
+              <!-- View Cube 3D & Tools -->
+              <div style="position: absolute; top: 16px; right: 16px; display: flex; flex-direction: column; align-items: flex-end; gap: 16px; pointer-events: none;">
+                
+                <!-- Maximize Button -->
+                <button class="fusion-btn" id="btn-maximize-3d" style="pointer-events: auto; background: var(--surface-default); border: 1px solid var(--surface-border); box-shadow: 0 2px 8px rgba(0,0,0,0.1); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);" title="Maximizar/Restaurar 3D" onclick="toggleMaximize3D()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                </button>
+
+                <!-- CSS 3D View Cube -->
+                <div class="view-cube-wrapper" style="pointer-events: auto; perspective: 400px; width: 60px; height: 60px; margin-top: 10px;">
+                  <div class="view-cube" id="view-cube" style="width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: rotateX(-35deg) rotateY(45deg); transition: transform 0.3s ease;">
+                    <!-- Cube Faces -->
+                    <div class="cube-face cube-front" onclick="setCameraView('front')">FRONT</div>
+                    <div class="cube-face cube-back" onclick="setCameraView('back')">BACK</div>
+                    <div class="cube-face cube-right" onclick="setCameraView('right')">RIGHT</div>
+                    <div class="cube-face cube-left" onclick="setCameraView('left')">LEFT</div>
+                    <div class="cube-face cube-top" onclick="setCameraView('top')">TOP</div>
+                    <div class="cube-face cube-bottom" onclick="setCameraView('bottom')">BOT</div>
+                  </div>
+                </div>
+
+                <!-- Overlay Info (Coordinates) -->
+                <div id="cadOverlay" style="background: var(--surface-default); border: 1px solid var(--surface-border); border-radius: 20px; padding: 4px 12px; color: var(--text-secondary); font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; margin-top: 10px; pointer-events: none;">
+                  X: <span id="cadCoordX">0</span> &nbsp; Y: <span id="cadCoordY">0</span>
+                </div>
+
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- ââ¬¢Âââ¬¢Â PANEL: COMPONENTES ââ¬¢Âââ¬¢Â -->
+      <div class="eo-panel" id="panel-componentes">
+        <div class="eo-table-card">
+          <div class="eo-table-header">
+            <h3 class="eo-table-title">Componentes Personalizados</h3>
+            <button class="btn btn-primary btn-sm" onclick="openNewComponentModal()">+ Novo Componente</button>
+          </div>
+          <div id="componentsGrid" class="eo-components-grid"></div>
+          <div id="componentsEmpty" class="eo-empty" style="display:none;">
+            <div class="eo-empty-icon">&#9881;</div>
+            <span>Nenhum componente cadastrado</span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="eo-panel" id="panel-relatorios">
+        <div class="eo-table-card">
+          <div class="eo-table-header">
+            <h3 class="eo-table-title">Hist&oacute;rico de Movimenta&ccedil;&otilde;es</h3>
+            <input type="text" id="reportFilter" class="eo-input" placeholder="Filtrar..." oninput="filterReports()" style="width:220px;">
+          </div>
+          <div class="eo-table-scroll">
+            <table class="eo-table">
+              <thead><tr>
+                <th>Data</th><th>Material</th><th>Descri&ccedil;&atilde;o</th><th>Op</th><th>Qtd</th><th>Resp/NF</th>
+              </tr></thead>
+              <tbody id="reportsTableBody"></tbody>
+            </table>
+          </div>
+          <div id="reportsEmpty" class="eo-empty" style="display:none;">
+            <div class="eo-empty-icon">&#128203;</div>
+            <span>Nenhuma movimenta&ccedil;&atilde;o</span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="eo-panel" id="panel-usuarios">
+        <div class="eo-table-card">
+          <div class="eo-table-header">
+            <h3 class="eo-table-title">Gerenciamento de Usu&aacute;rios</h3>
+            <button class="btn btn-primary btn-sm" id="btnAddUser" onclick="openAddUserModal()">+ Adicionar Usu&aacute;rio</button>
+          </div>
+          <div id="usersGrid"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ââ¬¢Âââ¬¢Â MODAL: Novo / Editar Material ââ¬¢Âââ¬¢Â -->
+    <div class="eo-modal-overlay" id="materialModal">
+      <div class="eo-modal wide">
+        <div class="eo-modal-header">
+          <h3 class="eo-modal-title" id="materialModalTitle">+ Novo Material (MM01)</h3>
+          <button class="eo-modal-close" onclick="closeMaterialModal()"></button>
+        </div>
+        <input type="hidden" id="matEditCode">
+        <div class="eo-inline-tabs">
+          <button class="eo-inline-tab active" onclick="switchModalTab(this,'mtab-basico')">B&aacute;sico</button>
+          <button class="eo-inline-tab" onclick="switchModalTab(this,'mtab-imagem')">Imagem &amp; 3D</button>
+          <button class="eo-inline-tab" onclick="switchModalTab(this,'mtab-maquinario')">Maquin&aacute;rio</button>
+          <button class="eo-inline-tab" onclick="switchModalTab(this,'mtab-docs')">Documentos</button>
+        </div>
+        <form id="materialForm" onsubmit="handleMaterialSubmit(event)">
+
+          <!-- TAB: BASICO -->
+          <div class="eo-inline-panel active" id="mtab-basico">
+            <div class="eo-form-grid">
+              <div class="input-group"><label class="eo-input-label">Descri&ccedil;&atilde;o*</label>
+                <input type="text" id="matDesc" class="eo-input" required placeholder="Ex: Rolamento FAG 6205">
+              </div>
+              <div class="input-group"><label class="eo-input-label">Marca</label>
+                <input type="text" id="matBrand" class="eo-input" placeholder="FAG, SKF, WEG...">
+              </div>
+              <div class="input-group"><label class="eo-input-label">Modelo</label>
+                <input type="text" id="matModel" class="eo-input" placeholder="6205-2RS">
+              </div>
+              <div class="input-group"><label class="eo-input-label">Setor</label>
+                <select id="matSector" class="eo-input">
+                  <option>Eletric</option><option>Mec&acirc;nica</option><option>Pneum&aacute;tica</option>
+                  <option>Hidr&aacute;ulica</option><option>Automa&ccedil;&atilde;o</option>
+                  <option>EPI</option><option>Consumo</option><option>Lubrifica&ccedil;&atilde;o</option>
+                </select>
+              </div>
+              <div class="input-group"><label class="eo-input-label">Local / Posi&ccedil;&atilde;o</label>
+                <input type="text" id="matLocation" class="eo-input" placeholder="Ex: A1-N2-P3">
+              </div>
+              <div class="input-group"><label class="eo-input-label">Quantidade Inicial</label>
+                <input type="number" id="matInitQty" class="eo-input" min="0" value="0">
+              </div>
+              <div class="input-group"><label class="eo-input-label">Qtd M&iacute;nima</label>
+                <input type="number" id="matMin" class="eo-input" min="0" value="1">
+              </div>
+              <div class="input-group"><label class="eo-input-label">Qtd M&aacute;xima</label>
+                <input type="number" id="matMax" class="eo-input" min="0" value="100">
+              </div>
+              <div class="input-group"><label class="eo-input-label">Pre&ccedil;o Unit&aacute;rio</label>
+                <input type="number" id="matPrice" class="eo-input" min="0" step="0.01" placeholder="0.00">
+              </div>
+              <div class="input-group" style="grid-column:1/-1;margin-top:4px;">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:var(--text-sm);color:var(--text-primary);">
+                  <input type="checkbox" id="matInterchangeable" style="width:16px;height:16px;accent-color:var(--color-primary);"> Este item &eacute; intercambi&aacute;vel
+                </label>
+              </div>
+              <div class="input-group" style="grid-column:1/-1;"><label class="eo-input-label">Itens substitutos</label>
+                <input type="text" id="matInterchangeWith" class="eo-input" placeholder="Ex: SKF 22210, FAG 22210">
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: IMAGEM & 3D -->
+          <div class="eo-inline-panel" id="mtab-imagem">
+            <div class="eo-file-section">
+              <div class="eo-file-section-header">
+                <span class="eo-file-section-icon">&#128444;</span>
+                <div>
+                  <div class="eo-file-section-title">Foto do Produto</div>
+                  <div class="eo-file-section-sub">JPG, PNG, WEBP &mdash; imagem principal do item</div>
+                </div>
+              </div>
+              <div class="eo-image-upload">
+                <span>Clique ou arraste a foto do produto</span>
+                <input type="file" accept="image/*" onchange="previewImage(this,'matImagePreview','matImageData')">
+              </div>
+              <img id="matImagePreview" style="max-height:100px;margin-top:8px;border-radius:8px;display:none;">
+              <input type="hidden" id="matImageData">
+            </div>
+            <div class="eo-file-section" style="margin-top:20px;">
+              <div class="eo-file-section-header">
+                <span class="eo-file-section-icon">&#127918;</span>
+                <div>
+                  <div class="eo-file-section-title">Modelo 3D do Produto</div>
+                  <div class="eo-file-section-sub">STL, OBJ, GLTF, GLB, 3DS, STEP, IGES</div>
+                </div>
+              </div>
+              <div class="eo-drop-zone" id="dropzone-product_3d" ondragover="event.preventDefault()" ondrop="handleFileDrop(event,'product_3d')">
+                <div class="eo-drop-zone-icon">&#9881;</div>
+                <div class="eo-drop-zone-text">Arraste o modelo 3D ou <span class="eo-drop-zone-link" onclick="document.getElementById('input-product_3d').click()">clique aqui</span></div>
+                <input type="file" id="input-product_3d" accept=".stl,.obj,.gltf,.glb,.3ds,.step,.stp,.iges,.igs" style="display:none;" onchange="handleFileInput(this,'product_3d')">
+              </div>
+              <div id="filelist-product_3d" class="eo-file-list"></div>
+            </div>
+          </div>
+
+          <!-- TAB: MAQUINARIO -->
+          <div class="eo-inline-panel" id="mtab-maquinario">
+            <div class="eo-form-grid" style="margin-bottom:20px;">
+              <div class="input-group"><label class="eo-input-label">Equipamento / Maquin&aacute;rio</label>
+                <input type="text" id="matMachineryName" class="eo-input" placeholder="Ex: Torno CNC, Prensa Hidr&aacute;ulica">
+              </div>
+              <div class="input-group"><label class="eo-input-label">URL do Fabricante</label>
+                <input type="url" id="matManufacturerUrl" class="eo-input" placeholder="https://fabricante.com.br">
+              </div>
+              <div class="input-group" style="grid-column:1/-1;"><label class="eo-input-label">Descri&ccedil;&atilde;o do Maquin&aacute;rio</label>
+                <textarea id="matMachineryDesc" class="eo-input" rows="2" placeholder="Detalhes sobre o equipamento..."></textarea>
+              </div>
+              <div class="input-group" style="grid-column:1/-1;"><label class="eo-input-label">Descri&ccedil;&atilde;o de Uso do Item</label>
+                <textarea id="matUsageDesc" class="eo-input" rows="2" placeholder="Como este item &eacute; utilizado neste maquin&aacute;rio..."></textarea>
+              </div>
+            </div>
+            <div class="eo-file-section">
+              <div class="eo-file-section-header">
+                <span class="eo-file-section-icon">&#128444;</span>
+                <div>
+                  <div class="eo-file-section-title">Foto do Maquin&aacute;rio</div>
+                  <div class="eo-file-section-sub">JPG, PNG, WEBP</div>
+                </div>
+              </div>
+              <div class="eo-image-upload">
+                <span>Clique ou arraste a foto do maquin&aacute;rio</span>
+                <input type="file" accept="image/*" onchange="previewImage(this,'matMachImagePreview','matMachImageData')">
+              </div>
+              <img id="matMachImagePreview" style="max-height:100px;margin-top:8px;border-radius:8px;display:none;">
+              <input type="hidden" id="matMachImageData">
+            </div>
+            <div class="eo-file-section" style="margin-top:20px;">
+              <div class="eo-file-section-header">
+                <span class="eo-file-section-icon">&#127918;</span>
+                <div>
+                  <div class="eo-file-section-title">Modelo 3D do Maquin&aacute;rio</div>
+                  <div class="eo-file-section-sub">STL, OBJ, GLTF, GLB, 3DS, STEP, IGES</div>
+                </div>
+              </div>
+              <div class="eo-drop-zone" id="dropzone-machinery_3d" ondragover="event.preventDefault()" ondrop="handleFileDrop(event,'machinery_3d')">
+                <div class="eo-drop-zone-icon">&#9881;</div>
+                <div class="eo-drop-zone-text">Arraste o modelo 3D ou <span class="eo-drop-zone-link" onclick="document.getElementById('input-machinery_3d').click()">clique aqui</span></div>
+                <input type="file" id="input-machinery_3d" accept=".stl,.obj,.gltf,.glb,.3ds,.step,.stp,.iges,.igs" style="display:none;" onchange="handleFileInput(this,'machinery_3d')">
+              </div>
+              <div id="filelist-machinery_3d" class="eo-file-list"></div>
+            </div>
+          </div>
+
+          <!-- TAB: DOCUMENTOS -->
+          <div class="eo-inline-panel" id="mtab-docs">
+            <!-- Observacoes -->
+            <div class="eo-file-section" style="margin-bottom:20px;">
+              <div class="eo-file-section-header">
+                <span class="eo-file-section-icon">&#128221;</span>
+                <div>
+                  <div class="eo-file-section-title">Observa&ccedil;&otilde;es T&eacute;cnicas</div>
+                  <div class="eo-file-section-sub">Notas, alertas, condi&ccedil;&otilde;es especiais de uso</div>
+                </div>
+              </div>
+              <textarea id="matNotes" class="eo-input" rows="3" placeholder="Ex: Substituir a cada 2000h. Verificar alinhamento antes da instala&ccedil;&atilde;o."></textarea>
+            </div>
+            <!-- Manuais PDF -->
+            <div class="eo-file-section" style="margin-bottom:20px;">
+              <div class="eo-file-section-header">
+                <span class="eo-file-section-icon">&#128218;</span>
+                <div>
+                  <div class="eo-file-section-title">Manuais (PDF)</div>
+                  <div class="eo-file-section-sub">M&uacute;ltiplos manuais do fabricante &mdash; PDFs</div>
+                </div>
+              </div>
+              <div class="eo-drop-zone" id="dropzone-manual" ondragover="event.preventDefault()" ondrop="handleFileDrop(event,'manual')">
+                <div class="eo-drop-zone-icon">&#128196;</div>
+                <div class="eo-drop-zone-text">Arraste PDFs ou <span class="eo-drop-zone-link" onclick="document.getElementById('input-manual').click()">clique para selecionar</span></div>
+                <input type="file" id="input-manual" accept=".pdf" multiple style="display:none;" onchange="handleFileInput(this,'manual')">
+              </div>
+              <div id="filelist-manual" class="eo-file-list"></div>
+              <input type="hidden" id="matManualData">
+              <input type="hidden" id="matManualUrl">
+              <span id="matManualName" style="display:none;"></span>
+            </div>
+            <!-- Diagramas Eletricos -->
+            <div class="eo-file-section" style="margin-bottom:20px;">
+              <div class="eo-file-section-header">
+                <span class="eo-file-section-icon">&#9889;</span>
+                <div>
+                  <div class="eo-file-section-title">Diagramas El&eacute;tricos</div>
+                  <div class="eo-file-section-sub">DWG, DXF, PDF, SVG &mdash; Esquem&aacute;ticos e circuitos</div>
+                </div>
+              </div>
+              <div class="eo-drop-zone" id="dropzone-electrical" ondragover="event.preventDefault()" ondrop="handleFileDrop(event,'electrical')">
+                <div class="eo-drop-zone-icon">&#128396;</div>
+                <div class="eo-drop-zone-text">Arraste arquivos ou <span class="eo-drop-zone-link" onclick="document.getElementById('input-electrical').click()">clique para selecionar</span></div>
+                <input type="file" id="input-electrical" accept=".dwg,.dxf,.pdf,.svg,.jpg,.png" multiple style="display:none;" onchange="handleFileInput(this,'electrical')">
+              </div>
+              <div id="filelist-electrical" class="eo-file-list"></div>
+            </div>
+            <!-- Diagramas Mecanicos -->
+            <div class="eo-file-section">
+              <div class="eo-file-section-header">
+                <span class="eo-file-section-icon">&#9881;</span>
+                <div>
+                  <div class="eo-file-section-title">Diagramas Mec&acirc;nicos</div>
+                  <div class="eo-file-section-sub">DWG, DXF, PDF, STEP &mdash; Cortes, vistas, montagens</div>
+                </div>
+              </div>
+              <div class="eo-drop-zone" id="dropzone-mechanical" ondragover="event.preventDefault()" ondrop="handleFileDrop(event,'mechanical')">
+                <div class="eo-drop-zone-icon">&#128302;</div>
+                <div class="eo-drop-zone-text">Arraste arquivos ou <span class="eo-drop-zone-link" onclick="document.getElementById('input-mechanical').click()">clique para selecionar</span></div>
+                <input type="file" id="input-mechanical" accept=".dwg,.dxf,.pdf,.svg,.jpg,.png,.step,.stp" multiple style="display:none;" onchange="handleFileInput(this,'mechanical')">
+              </div>
+              <div id="filelist-mechanical" class="eo-file-list"></div>
+            </div>
+          </div>
+
+          <div style="margin-top:24px;">
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="materialSubmitBtn">Criar Material</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- ââ¬¢Âââ¬¢Â MODAL: Mais Info ââ¬¢Âââ¬¢Â -->
+    <div class="eo-modal-overlay" id="moreInfoModal">
+      <div class="eo-modal extra-wide">
+        <div class="eo-modal-header">
+          <h3 class="eo-modal-title" id="infoModalTitle">Detalhes do Material</h3>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-sm btn-secondary" onclick="comparePrices()">Comparar Pre&ccedil;os</button>
+            <button class="eo-modal-close" onclick="closeMoreInfoModal()"></button>
+          </div>
+        </div>
+        <div class="eo-info-grid" id="infoContent"></div>
+      </div>
+    </div>
+
+    <!-- ââ¬¢Âââ¬¢Â MODAL: PDF Viewer ââ¬¢Âââ¬¢Â -->
+    <div class="eo-modal-overlay" id="pdfViewerModal">
+      <div class="eo-modal extra-wide">
+        <div class="eo-modal-header">
+          <h3 class="eo-modal-title" id="pdfTitle">Visualizador de Manual</h3>
+          <button class="eo-modal-close" onclick="closePdfViewer()"></button>
+        </div>
+        <div class="eo-pdf-viewer"><iframe id="pdfFrame" src=""></iframe></div>
+      </div>
+    </div>
+
+    <!-- ââ¬¢Âââ¬¢Â MODAL: Novo Componente ââ¬¢Âââ¬¢Â -->
+    <div class="eo-modal-overlay" id="componentModal">
+      <div class="eo-modal wide">
+        <div class="eo-modal-header">
+          <h3 class="eo-modal-title">Novo Componente Personalizado</h3>
+          <button class="eo-modal-close" onclick="closeComponentModal()"></button>
+        </div>
+        <form id="componentForm" onsubmit="handleNewComponent(event)">
+          <div class="input-group" style="margin-bottom:16px;"><label class="eo-input-label">Nome</label>
+            <input type="text" id="compName" class="eo-input" required>
+          </div>
+          <div class="input-group" style="margin-bottom:16px;"><label class="eo-input-label">Descri&ccedil;&atilde;o</label>
+            <textarea id="compDesc" class="eo-input" rows="2"></textarea>
+          </div>
+          <h4 style="margin-bottom:12px;font-size:var(--text-sm);">Materiais do Componente</h4>
+          <div id="compMaterialsList"></div>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="addCompMaterialRow()" style="margin:12px 0;">+ Adicionar Material</button>
+          <div style="margin-top:16px;"><button type="submit" class="btn btn-primary btn-block btn-lg">Criar Componente</button></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ââ¬¢Âââ¬¢Â MODAL: Indexar no Mapa ââ¬¢Âââ¬¢Â -->
+    <div class="eo-modal-overlay" id="assignModal">
+      <div class="eo-modal">
+        <div class="eo-modal-header">
+          <h3 class="eo-modal-title">Indexar Item no Mapa</h3>
+          <button class="eo-modal-close" onclick="closeAssignModal()"></button>
+        </div>
+        <form onsubmit="handleAssignToMap(event)">
+          <div class="input-group" style="margin-bottom:16px;"><label class="eo-input-label">Material</label>
+            <select id="assignMaterial" class="eo-input"></select>
+          </div>
+          <div class="eo-form-grid">
+            <div class="input-group"><label class="eo-input-label">Prateleira</label>
+              <input type="text" id="assignShelf" class="eo-input" placeholder="A, B, C...">
+            </div>
+            <div class="input-group"><label class="eo-input-label">N&iacute;vel</label>
+              <input type="number" id="assignLevel" class="eo-input" min="1" max="10" value="1">
+            </div>
+            <div class="input-group"><label class="eo-input-label">Posi&ccedil;&atilde;o</label>
+              <input type="number" id="assignPosition" class="eo-input" min="1" max="10" value="1">
+            </div>
+          </div>
+          <p style="font-size:11px;color:var(--text-tertiary);margin:8px 0;">Selecione uma prateleira no mapa antes de indexar.</p>
+          <div style="margin-top:16px;"><button type="submit" class="btn btn-primary btn-block">Indexar no Mapa</button></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ââ¬¢Âââ¬¢Â MODAL: Adicionar Usuário ââ¬¢Âââ¬¢Â -->
+    <div class="eo-modal-overlay" id="addUserModal">
+      <div class="eo-modal">
+        <div class="eo-modal-header">
+          <h3 class="eo-modal-title">Adicionar Usu&aacute;rio</h3>
+          <button class="eo-modal-close" onclick="closeAddUserModal()"></button>
+        </div>
+        <form onsubmit="handleAddUser(event)">
+          <div class="input-group" style="margin-bottom:16px;"><label class="eo-input-label">Nome</label>
+            <input type="text" id="newUserName" class="eo-input" required>
+          </div>
+          <div class="input-group" style="margin-bottom:16px;"><label class="eo-input-label">Email</label>
+            <input type="email" id="newUserEmail" class="eo-input" required>
+          </div>
+          <div class="input-group" style="margin-bottom:16px;"><label class="eo-input-label">Senha Inicial</label>
+            <input type="text" id="newUserPassword" class="eo-input" required placeholder="Defina a senha do usuário">
+          </div>
+          <div class="input-group" style="margin-bottom:16px;"><label class="eo-input-label">Permiss&atilde;o</label>
+            <select id="newUserRole" class="eo-input">
+              <option value="admin">Admin</option>
+              <option value="manager">Gerente</option>
+              <option value="operator">Operador</option>
+              <option value="viewer">Visualizador</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Adicionar</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ââ¬¢Âââ¬¢Â MODAL: 3D Viewer ââ¬¢Âââ¬¢Â -->
+    <div class="eo-modal-overlay" id="viewer3DModal" style="z-index: 9999;">
+      <div class="eo-modal extra-wide" style="display:flex;flex-direction:column;height:80vh;max-width:1200px;">
+        <div class="eo-modal-header">
+          <h3 class="eo-modal-title" id="viewer3DTitle">Visualizador 3D</h3>
+          <button class="eo-modal-close" onclick="close3DViewer()"></button>
+        </div>
+        <div id="viewer3DContainer" style="flex:1;width:100%;background:#1a1a1a;border-radius:8px;position:relative;overflow:hidden;margin-top:10px;">
+           <!-- Canvas goes here -->
+           <div id="viewer3DLoading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-family:monospace;display:none;">Carregando modelo 3D...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Shelf Creation -->
+    <div id="modal-cad-shelf" class="eo-modal-overlay" style="display: none; align-items: center; justify-content: center;">
+      <div class="eo-modal" style="width: 400px; max-width: 90%; background: var(--surface-default); border-radius: 12px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border: 1px solid var(--surface-border);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 style="margin: 0; font-size: 18px; color: var(--text-primary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px; color: #f97316;"><path d="M4 6h16M4 12h16M4 18h16M4 6v12M20 6v12"/></svg>Configuração da Prateleira</h3>
+          <button class="eo-modal-close" onclick="document.getElementById('modal-cad-shelf').style.display='none'" style="font-size: 24px; color: var(--text-tertiary);"></button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div>
+            <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Identificação (ID/Código)</label>
+            <input type="text" id="shelf-id" class="eo-input" style="width: 100%; box-sizing: border-box;" placeholder="Ex: SH-A01">
+          </div>
+          <div style="display: flex; gap: 16px;">
+            <div style="flex: 1;">
+              <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Qtd. de Níveis</label>
+              <input type="number" id="shelf-levels" class="eo-input" style="width: 100%; box-sizing: border-box;" value="3" min="1" max="10">
+            </div>
+            <div style="flex: 1;">
+              <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Posições p/ Nível</label>
+              <input type="number" id="shelf-positions" class="eo-input" style="width: 100%; box-sizing: border-box;" value="4" min="1" max="20">
+            </div>
+          </div>
+          <div style="display: flex; gap: 16px;">
+            <div style="flex: 1;">
+              <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Largura (px)</label>
+              <input type="number" id="shelf-width" class="eo-input" style="width: 100%; box-sizing: border-box;" value="100" min="50" max="1000">
+            </div>
+            <div style="flex: 1;">
+              <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Profundidade (px)</label>
+              <input type="number" id="shelf-depth" class="eo-input" style="width: 100%; box-sizing: border-box;" value="40" min="20" max="200">
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+            <button class="eo-btn eo-btn-outline" onclick="document.getElementById('modal-cad-shelf').style.display='none'">Cancelar</button>
+            <button class="eo-btn eo-btn-primary" id="btn-save-shelf">Criar Prateleira</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Inspect Shelf -->
+    <div id="modal-cad-inspect-shelf" class="eo-modal-overlay" style="display: none; align-items: center; justify-content: center;">
+      <div class="eo-modal" style="width: 500px; max-width: 90vw;">
+        <div class="eo-modal-header" style="background: var(--surface-default); border-bottom: 1px solid var(--surface-border);">
+          <h2>Gestão de Estoque - <span id="inspect-shelf-id-display">RACK</span></h2>
+          <button class="eo-modal-close" onclick="document.getElementById('modal-cad-inspect-shelf').style.display='none'"></button>
+        </div>
+        <div class="eo-modal-body">
+          <div style="background: var(--surface-hover); padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Adicionar Novo Palete/Carga:</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div>
+                <label class="eo-label">Nome da Carga</label>
+                <input type="text" id="inspect-item-name" class="eo-input" placeholder="Ex: Motores V8" />
+              </div>
+              <div>
+                <label class="eo-label">Cor no 3D</label>
+                <select id="inspect-item-color" class="eo-select">
+                  <option value="#ef4444">Vermelho (Crítico)</option>
+                  <option value="#3b82f6" selected>Azul (Padrão)</option>
+                  <option value="#10b981">Verde (Liberado)</option>
+                  <option value="#f59e0b">Amarelo (Atenção)</option>
+                  <option value="#8b5cf6">Roxo (Especial)</option>
+                  <option value="#64748b">Cinza (Obsoleto)</option>
+                </select>
+              </div>
+              <div>
+                <label class="eo-label">Nível (Andar)</label>
+                <input type="number" id="inspect-item-level" class="eo-input" value="1" min="1" />
+              </div>
+              <div>
+                <label class="eo-label">Posição (Coluna)</label>
+                <input type="number" id="inspect-item-position" class="eo-input" value="1" min="1" />
+              </div>
+            </div>
+            <button id="btn-add-inspect-item" class="eo-btn eo-btn-primary" style="width: 100%; margin-top: 10px;">Adicionar ao Rack</button>
+          </div>
+          
+          <div>
+            <p style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Cargas Atuais:</p>
+            <div id="inspect-items-list" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--surface-border); border-radius: 8px; background: var(--surface-default);">
+              <!-- Items list injected via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Addon 3D -->
+    <div id="modal-cad-addon" class="eo-modal-overlay" style="display: none; align-items: center; justify-content: center;">
+      <div class="eo-modal" style="width: 500px; max-width: 90vw;">
+        <div class="eo-modal-header" style="background: var(--surface-default); border-bottom: 1px solid var(--surface-border);">
+          <h2>Importar Modelo 3D (Addon)</h2>
+          <button class="eo-modal-close" onclick="document.getElementById('modal-cad-addon').style.display='none'"></button>
+        </div>
+        <div class="eo-modal-body" style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
+          <div>
+            <label class="eo-label">Nome do Addon</label>
+            <input type="text" id="addon-name" class="eo-input" placeholder="Ex: Empilhadeira El?trica" style="width: 100%; box-sizing: border-box;" />
+          </div>
+          <div>
+            <label class="eo-label">Selecione o Arquivo 3D (.glb, .gltf, .obj, .stl)</label>
+            <input type="file" id="addon-file" class="eo-input" accept=".glb,.gltf,.obj,.stl" style="width: 100%; box-sizing: border-box;" />
+          </div>
+          <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+            <button class="eo-btn eo-btn-secondary" onclick="document.getElementById('modal-cad-addon').style.display='none'" style="margin-right: 10px;">Cancelar</button>
+            <button class="eo-btn eo-btn-primary" onclick="confirmAddonImport()">Importar e Posicionar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Save CAD -->
+    <div id="modal-cad-save" class="eo-modal-overlay" style="display: none; align-items: center; justify-content: center;">
+      <div class="eo-modal" style="width: 600px; max-width: 90vw;">
+        <div class="eo-modal-header" style="background: var(--surface-default); border-bottom: 1px solid var(--surface-border);">
+          <h2>Salvar Projeto e Configurações</h2>
+          <button class="eo-modal-close" onclick="document.getElementById('modal-cad-save').style.display='none'"></button>
+        </div>
+        <div class="eo-modal-body" style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
+          <div>
+            <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Nome do Projeto</label>
+            <input type="text" id="save-proj-name" class="eo-input" style="width: 100%; box-sizing: border-box;" placeholder="Ex: Armazém Central">
+          </div>
+          <div style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+              <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Setor</label>
+              <input type="text" id="save-proj-sector" class="eo-input" style="width: 100%; box-sizing: border-box;" placeholder="Ex: Logística">
+            </div>
+            <div style="flex: 1;">
+              <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Maquinários Atendidos</label>
+              <input type="text" id="save-proj-machinery" class="eo-input" style="width: 100%; box-sizing: border-box;" placeholder="Ex: Empilhadeiras, Esteiras">
+            </div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Localidade</label>
+            <input type="text" id="save-proj-location" class="eo-input" style="width: 100%; box-sizing: border-box;" placeholder="Ex: Galpão Interno, Externo Sul">
+          </div>
+          <div>
+            <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Altura das Paredes (3D) <span style="font-size:11px;color:#8A8A8A;">? padrão: 120 | min: 60 | max: 400</span></label>
+            <input type="number" id="save-proj-wall-height" class="eo-input" style="width: 140px; box-sizing: border-box;" min="60" max="400" step="10" value="120" placeholder="120">
+          </div>
+          <div>
+            <label style="display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Indexação de Itens</label>
+            <textarea id="save-proj-index" class="eo-input" style="width: 100%; height: 120px; resize: none; font-family: monospace; font-size: 11px; box-sizing: border-box;" readonly></textarea>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 15px; border-top: 1px solid var(--surface-border);">
+            <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); padding: 6px 8px; border-radius: 6px; border: 1px solid var(--surface-border);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <select id="export-format-select" class="eo-input" style="border: none; background: transparent; padding: 0 4px; font-size: 13px; color: var(--text-primary); cursor: pointer; outline: none; height: 24px;">
+                <option value="stl" style="color: #000;">STL</option>
+                <option value="obj" style="color: #000;">OBJ</option>
+              </select>
+              <button class="btn btn-outline btn-sm" onclick="window.exportCAD(document.getElementById('export-format-select').value)" style="padding: 4px 10px; font-size: 12px; border-radius: 4px; border-color: var(--text-secondary); color: var(--text-secondary); transition: all 0.2s;">Baixar 3D</button>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-outline" onclick="document.getElementById('modal-cad-save').style.display='none'">Cancelar</button>
+              <button class="btn btn-primary" onclick="window.saveBlueprint()">Confirmar Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.eo-app -->
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Version badge - bottom right corner -->
+  <div id="versionBadge">Alpha 0.02</div>
+
+  <!-- 3D Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">    
+
+    
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js">    
+
+    
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js">    
+
+    
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js">    
+
+    
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js">    
+
+    
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js">    
+
+    
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js">    
+
+    
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/STLExporter.js">    
+
+    
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/OBJExporter.js">    
+
+    
+  </script>
+
+  <!-- Scripts -->
+  <script src="./js/security.js">    
+
+    
+  </script>
+  <script src="./js/auth.js">    
+
+    
+  </script>
+  <script src="./js/api.js">    
+
+    
+  </script>
+  <script src="./js/sistema-core.js">    
+
+    
+  </script>
+  <script src="./js/sistema-features.js">    
+
+    
+  </script>
+  <script>
+    // Remove old scripts
+    const old2d = document.getElementById('script-2d');
+    const old3d = document.getElementById('script-3d');
+    if (old2d) old2d.remove();
+    if (old3d) old3d.remove();
+
+    // Dinamicamente carrega os scripts para garantir que não haja cache!
+    const ts = new Date().getTime();
+    
+    const script2d = document.createElement('script');
+    script2d.src = `./js/sistema-builder-2d.js?t=${ts}`;
+    script2d.defer = true;
+    document.head.appendChild(script2d);
+    
+    const script3d = document.createElement('script');
+    script3d.src = `./js/sistema-builder-3d.js?t=${ts}`;
+    script3d.defer = true;
+    document.head.appendChild(script3d);
+      
+
+    
+  </script>
+  <script src="./js/sistema-3d-viewer.js">    
+
+    
+  </script>
+  <script>
+    // Theme Toggle
+    function toggleTheme() {
+      const isLight = document.documentElement.classList.toggle('light-mode');
+      localStorage.setItem('astah_theme', isLight ? 'light' : 'dark');
+      const btn = document.getElementById('themeToggle');
+      if (btn) btn.innerHTML = isLight ? '&#127769;' : '&#9728;';
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('astah_theme');
+      if (saved === 'light') {
+        document.documentElement.classList.add('light-mode');
+        const btn = document.getElementById('themeToggle');
+        if (btn) btn.innerHTML = '&#127769;';
+      }
+    });
+      
+
+    
+  </script>
+<script>
+  function switchCadTab(tabName) {
+    document.querySelectorAll('#cad-ribbon-tabs .ribbon-tab').forEach(t => {
+      t.classList.remove('active');
+      t.style.borderBottom = '2px solid transparent';
+      t.style.color = '#555';
+    });
+    const activeTab = document.querySelector('#cad-ribbon-tabs .ribbon-tab[data-tab="'+tabName+'"]');
+    if(activeTab) {
+      activeTab.classList.add('active');
+      activeTab.style.borderBottom = '2px solid #0696D7';
+      activeTab.style.color = '#0696D7';
+    }
+    
+    document.getElementById('cad-group-architecture').style.display = (tabName === 'architecture') ? 'flex' : 'none';
+    document.getElementById('cad-group-logistics').style.display = (tabName === 'logistics') ? 'flex' : 'none';
+    document.getElementById('cad-group-inspect').style.display = (tabName === 'inspect') ? 'flex' : 'none';
+    document.getElementById('cad-group-addons').style.display = (tabName === 'addons') ? 'flex' : 'none';
+    document.getElementById('cad-group-modify').style.display = (tabName === 'architecture' || tabName === 'logistics') ? 'flex' : 'none';
+    
+    // Reset tool selection when switching tabs to avoid using tools from hidden tabs
+    if(typeof setCadTool === 'function') setCadTool('select');
+  }
+    
+
+    
+  </script>
+
+<script>
+  function openAddonModal() {
+    document.getElementById('addon-name').value = '';
+    document.getElementById('addon-file').value = '';
+    document.getElementById('modal-cad-addon').style.display = 'flex';
+  }
+
+  function confirmAddonImport() {
+    const name = document.getElementById('addon-name').value;
+    const fileInput = document.getElementById('addon-file');
+    
+    if (!name || !fileInput.files.length) {
+      alert("Preencha o nome e selecione um arquivo.");
+      return;
+    }
+    
+    const fileUrl = URL.createObjectURL(fileInput.files[0]);
+    const fileExt = fileInput.files[0].name.split('.').pop().toLowerCase();
+    
+    if (typeof window.addCustomAddonToBlueprint === 'function') {
+      window.addCustomAddonToBlueprint(name, fileUrl, fileExt);
+      document.getElementById('modal-cad-addon').style.display = 'none';
+      if (typeof showToast === 'function') showToast("Addon carregado! Posicionado no centro.", "success");
+    } else {
+      alert("Função 3D não encontada para addons.");
+    }
+  }
+    
+
+    
+  </script>
+  
+</body>
+</html>
+
+
+
+
+
+
+
+

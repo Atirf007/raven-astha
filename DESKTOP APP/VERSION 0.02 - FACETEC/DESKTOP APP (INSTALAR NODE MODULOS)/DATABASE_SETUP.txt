@@ -1,0 +1,95 @@
+================================================================================
+                    GUIA DE CONFIGURAÇÃO DO BANCO DE DADOS
+                           EVAH OPHIM ALPHA
+================================================================================
+
+Este arquivo contém as instruções e os comandos SQL para criar a estrutura do
+banco de dados MySQL do sistema Evah Ophim.
+
+--------------------------------------------------------------------------------
+1. CONFIGURAÇÃO INICIAL DA CONEXÃO
+--------------------------------------------------------------------------------
+Não conecte o frontend (HTML/JS) diretamente ao MySQL. A arquitetura correta é:
+Frontend (Fetch/HTTPS) -> Backend (Node.js API em http://localhost:3000) -> MySQL
+
+Abra seu SGBD (ex: phpMyAdmin, MySQL Workbench, DBeaver) e conecte-se com o usuário root do MySQL local.
+
+Dentro do diretório "api", crie um arquivo chamado ".env" com os seguintes dados:
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD="AdminRoot#2026"
+DB_NAME=evah_ophim_db
+PORT=3000
+
+--------------------------------------------------------------------------------
+2. CRIAÇÃO DO BANCO E DAS TABELAS
+--------------------------------------------------------------------------------
+Execute os comandos SQL abaixo para criar o banco de dados e as tabelas:
+
+CREATE DATABASE IF NOT EXISTS evah_ophim_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE evah_ophim_db;
+
+-- Tabela de Organizações (Locatários)
+CREATE TABLE IF NOT EXISTS organizations (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    plan VARCHAR(50) DEFAULT 'Enterprise',
+    logo_url VARCHAR(255),
+    policies JSON
+);
+
+-- Tabela de Usuários
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    name VARCHAR(150) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) DEFAULT 'viewer',
+    sector VARCHAR(50),
+    avatar_url VARCHAR(255),
+    org_id VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE SET NULL
+);
+
+-- Tabela de Materiais (Estoque)
+CREATE TABLE IF NOT EXISTS materials (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(50) UNIQUE NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    balance INT DEFAULT 0,
+    min_limit INT DEFAULT 0,
+    image_url VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de Anexos (PDFs, Imagens)
+CREATE TABLE IF NOT EXISTS attachments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    material_id INT,
+    file_type VARCHAR(50) NOT NULL, -- 'pdf', 'image', 'document'
+    file_url VARCHAR(255) NOT NULL,
+    file_name VARCHAR(150) NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (material_id) REFERENCES materials(id) ON DELETE CASCADE
+);
+
+--------------------------------------------------------------------------------
+3. INSERÇÃO DOS DADOS INICIAIS (SEED)
+--------------------------------------------------------------------------------
+Execute este código para criar a organização inicial e o usuário administrador:
+
+INSERT INTO organizations (id, name, plan, policies) 
+VALUES ('org_1', 'Evah Ophim Ltda.', 'Enterprise', '{"allowEdit": true, "advancedAudit": true}');
+
+-- A senha padrão gerada pelo bcrypt abaixo equivale a "admin123"
+INSERT INTO users (email, name, password_hash, role, sector, org_id) 
+VALUES ('root@evah.local', 'Root Admin', '$2a$10$X8C5b3bN4x2Vq.kE7.n7ueTj6vU/s9y7W4u5b3bN4x2Vq.kE7.n7u', 'admin', 'TI', 'org_1');
+
+================================================================================
+                          COMO INICIAR O SERVIDOR
+================================================================================
+1. Abra um terminal na pasta "api"
+2. Instale as dependências: npm install multer express mysql2 dotenv cors helmet bcryptjs jsonwebtoken
+3. Inicie a API: npm start
+4. A API estará ouvindo na porta 3000 e lidando com segurança entre o Frontend e o MySQL.
