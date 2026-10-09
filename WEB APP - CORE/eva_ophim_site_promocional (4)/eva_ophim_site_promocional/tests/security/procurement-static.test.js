@@ -1,0 +1,16 @@
+const fs = require('fs');
+const assert = require('assert');
+const route = fs.readFileSync('api/routes/procurement.js', 'utf8');
+const migration = fs.readFileSync('api/database/migrate_eam.js', 'utf8');
+assert(route.includes("router.use(authMiddleware)"));
+assert(route.includes("router.patch('/materials/:id/mro'"));
+assert(route.includes("router.post('/sources'"));
+assert(route.includes("router.post('/suppliers'"));
+assert(route.includes("router.get('/planning/replenishment'"));
+assert(route.includes("status='active'"));
+assert(route.includes('supplier_price_history'));
+assert(route.includes('SELECT id FROM material_sources WHERE org_id=? AND material_id=? AND supplier_id=?'));
+assert(route.includes('WHERE id=? AND org_id=?'));
+assert(migration.includes('material_sources'));
+assert(migration.includes('supplier_price_history'));
+console.log('PROCUREMENT_STATIC_PASS');

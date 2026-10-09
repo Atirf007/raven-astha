@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EVAH OPHIM — Serviço inteligente para sua gestão">
+  <title>EVAH OPHIM — Gestão Inteligente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/hero.css">
+  <link rel="stylesheet" href="../css/sections.css">
+  <link rel="stylesheet" href="../css/forms.css">
+  <link rel="shorcut icon" type="imagex/png" href="../images/Evhaophim1 (2).png">
+</head>
+
+<body>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="../index.html" class="navbar-logo">
+        <!-- [IMAGEM] Logo EVAH OPHIM -->
+        <img src="../images/Logotipo (Alpha).png" alt="EVAH OPHIM" style="height: 32px; object-fit: contain; ">
+      </a>
+      <div class="navbar-links">
+        <a href="#features" class="navbar-link">Features</a>
+        <a href="#pricing" class="navbar-link">Preços</a>
+        <a href="contact.html" class="navbar-link">Contato</a>
+        <a href="sistema/index.html" class="navbar-link">Sistema Beta</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="login.html" class="btn btn-ghost">Login</a>
+        <a href="register.html" class="btn btn-primary">Começar Grátis</a>
+      </div>
+      <button class="navbar-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="navbar-mobile" id="navMobile">
+      <a href="#features" class="navbar-link">Features</a>
+      <a href="#pricing" class="navbar-link">Preços</a>
+      <a href="contact.html" class="navbar-link">Contato</a>
+      <a href="sistema/index.html" class="navbar-link">Sistema Beta</a>
+      <div class="navbar-actions">
+        <a href="login.html" class="btn btn-secondary btn-block">Login</a>
+        <a href="register.html" class="btn btn-primary btn-block">Começar Grátis</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <canvas class="hero-particles" id="particlesCanvas"></canvas>
+    <div class="hero-mesh"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <!-- [TEXTO] Badge -->
+        <span>Beta Disponível — Teste Agora</span>
+      </div>
+      <!-- [TEXTO] Título principal -->
+      <h1 class="hero-title">
+        Gestão de estoque <span class="highlight" id="typingTarget">inteligente</span><span class="cursor"></span>
+      </h1>
+      <!-- [TEXTO] Subtítulo -->
+      <p class="hero-subtitle">
+        Plataforma inteligente com integração Azure. Controle total de materiais, movimentações e relatórios em tempo
+        real.
+      </p>
+      <div class="hero-actions">
+        <a href="register.html" class="btn btn-primary btn-lg">Começar Grátis →</a>
+        <a href="sistema/index.html" class="btn btn-secondary btn-lg">Acessar EVAH OPHIM Beta</a>
+      </div>
+    </div>
+    <div class="hero-scroll"><span>Scroll</span>
+      <div class="hero-scroll-indicator"></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Funcionalidades</span>
+        <h2>Tudo que você <span class="text-gradient">precisa</span></h2>
+        <p>Ferramentas poderosas para gestão de sua empresa.</p>
+      </div>
+      <div class="features-grid stagger">
+        <!-- [FEATURE 1] -->
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </div>
+          <h3 class="feature-title">Gestão de Materiais</h3>
+          <p class="feature-desc">Cadastro completo com código, descrição, setor, localização, valores e limites min/max.</p>
+        </div>
+        <!-- [FEATURE 2] -->
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </div>
+          <h3 class="feature-title">Dashboard Analítico</h3>
+          <p class="feature-desc">Visão em tempo real do estoque com gráficos de distribuição e alertas de nível crítico.</p>
+        </div>
+        <!-- [FEATURE 3] -->
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          </div>
+          <h3 class="feature-title">Entradas & Saídas</h3>
+          <p class="feature-desc">Registro MIGO completo para movimentações com rastreabilidade total por NF e responsável.</p>
+        </div>
+        <!-- [FEATURE 4] -->
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg>
+          </div>
+          <h3 class="feature-title">Azure Integrado</h3>
+          <p class="feature-desc">Infraestrutura cloud-native com banco de dados Azure SQL e autenticação via Azure AD.</p>
+        </div>
+        <!-- [FEATURE 5] -->
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+          <h3 class="feature-title">100% Responsivo</h3>
+          <p class="feature-desc">Acesse de qualquer dispositivo — desktop, tablet ou smartphone, sempre com experiência premium.</p>
+        </div>
+        <!-- [FEATURE 6] -->
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="feature-title">Segurança Avançada</h3>
+          <p class="feature-desc">JWT, CSRF protection, rate limiting, sanitização de inputs e criptografia ponta-a-ponta.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="section stats-section">
+    <div class="container">
+      <div class="stats-grid reveal">
+        <div class="stat-item">
+          <div class="stat-number" data-target="10000">0</div>
+          <div class="stat-label">Itens Gerenciados</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="99.9">0</div>
+          <div class="stat-label">% Uptime Azure</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="500">0</div>
+          <div class="stat-label">Movimentações/Dia</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="3">0</div>
+          <div class="stat-label">Segundos Resposta</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Preços</span>
+        <h2>Planos para cada <span class="text-gradient">necessidade</span></h2>
+        <p>Comece grátis e escale conforme sua operação cresce.</p>
+      </div>
+      <div class="pricing-toggle reveal">
+        <span class="active" id="toggleMonthly">Mensal</span>
+        <label class="toggle"><input type="checkbox" id="pricingToggle"><span class="toggle-track"></span></label>
+        <span id="toggleAnnual">Anual <span class="badge badge-success">-58%</span></span>
+      </div>
+      <div class="pricing-grid">
+        <!-- [PLANO 1] Starter -->
+        <div class="pricing-card reveal">
+          <h3 class="pricing-name">Starter</h3>
+          <p class="pricing-desc">Para pequenas operações</p>
+          <div class="pricing-price">
+            <span class="pricing-currency">R$</span>
+            <span class="pricing-amount" data-monthly="0" data-annual="0">0</span>
+            <span class="pricing-period">/mês</span>
+          </div>
+          <div class="pricing-features">
+            <div class="pricing-feature"><span class="check">✓</span>Até 100 materiais</div>
+            <div class="pricing-feature"><span class="check">✓</span>Dashboard básico</div>
+            <div class="pricing-feature"><span class="check">✓</span>1 usuário</div>
+            <div class="pricing-feature"><span class="check">✓</span>Suporte por email</div>
+          </div>
+          <a href="register.html" class="btn btn-outline btn-block">Começar Grátis</a>
+        </div>
+        <!-- [PLANO 2] Pro (destaque) — Em Breve -->
+        <div class="pricing-card featured reveal" style="position:relative">
+          <span class="pricing-popular">Em Breve</span>
+          <h3 class="pricing-name">Pro</h3>
+          <p class="pricing-desc">Para operações em crescimento</p>
+          <div class="pricing-price">
+            <span class="pricing-currency">R$</span>
+            <!-- [TEXTO] Preço Pro: R$19,90/mês ou R$8,33/mês (R$99,90/ano) -->
+            <span class="pricing-amount" data-monthly="19" data-annual="8">19</span>
+            <span class="pricing-period">,90/mês</span>
+          </div>
+          <p style="font-size:var(--text-xs);color:var(--color-success);margin-bottom:var(--space-4)">ou R$ 99,90/ano
+            (R$ 8,33/mês)</p>
+          <div class="pricing-features">
+            <div class="pricing-feature"><span class="check">✓</span>Materiais ilimitados</div>
+            <div class="pricing-feature"><span class="check">✓</span>Dashboard completo</div>
+            <div class="pricing-feature"><span class="check">✓</span>5 usuários</div>
+            <div class="pricing-feature"><span class="check">✓</span>Azure integrado</div>
+            <div class="pricing-feature"><span class="check">✓</span>Mapa de estoque 2D</div>
+            <div class="pricing-feature"><span class="check">✓</span>Suporte prioritário</div>
+          </div>
+          <button class="btn btn-primary btn-block" disabled style="opacity:0.6;cursor:not-allowed">Em Breve</button>
+        </div>
+        <!-- [PLANO 3] Personalizado — Em Breve -->
+        <div class="pricing-card reveal" style="position:relative">
+          <span class="pricing-popular"
+            style="background:var(--surface-glass);color:var(--text-secondary);border:1px solid var(--surface-border)">Em
+            Breve</span>
+          <h3 class="pricing-name">Personalizado</h3>
+          <p class="pricing-desc">Sob medida para sua operação</p>
+          <div class="pricing-price">
+            <!-- [TEXTO] Preço Personalizado: Sob consulta -->
+            <span class="pricing-amount" style="font-size:var(--text-3xl)">Sob consulta</span>
+          </div>
+          <div class="pricing-features">
+            <div class="pricing-feature"><span class="check">✓</span>Tudo do Pro</div>
+            <div class="pricing-feature"><span class="check">✓</span>Usuários ilimitados</div>
+            <div class="pricing-feature"><span class="check">✓</span>API dedicada</div>
+            <div class="pricing-feature"><span class="check">✓</span>SLA personalizado</div>
+            <div class="pricing-feature"><span class="check">✓</span>Componentes personalizados</div>
+            <div class="pricing-feature"><span class="check">✓</span>Suporte prioritário</div>
+          </div>
+          <button class="btn btn-outline btn-block" disabled style="opacity:0.6;cursor:not-allowed">Em Breve</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-box reveal-scale">
+        <h2>Pronto para revolucionar sua gestão?</h2>
+        <p>Comece gratuitamente e veja a diferença em minutos.</p>
+        <a href="register.html" class="btn btn-lg">Criar Conta Grátis →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="navbar-logo"><img src="../images/Logotipo (Alpha).png" alt="EVAH OPHIM" style="height: 32px; object-fit: contain; "></a>
+          <p>Serviço inteligente para gestão da sua empresa</p>
+          <div class="footer-social">
+            <a href="https://wa.me/SEUNUMERO" target="_blank" aria-label="WhatsApp">💬</a>
+            <a href="https://instagram.com/kazinhosystems" target="_blank" aria-label="Instagram">📷</a>
+            <a href="https://linkedin.com/company/kazinhosystems" target="_blank" aria-label="LinkedIn">💼</a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h4>Produto</h4>
+          <a href="#features">Features</a>
+          <a href="#pricing">Preços</a>
+          <a href="sistema/index.html">EVAH OPHIM Beta</a>
+        </div>
+        <div class="footer-column">
+          <h4>Empresa</h4>
+          <a href="../index.html">Kazinho Systems</a>
+          <a href="sobre.html">Quem Somos</a>
+          <a href="contact.html">Contato</a>
+        </div>
+        <div class="footer-column">
+          <h4>Legal</h4>
+          <a href="termos.html">Termos de Uso</a>
+          <a href="privacidade.html">Privacidade & LGPD</a>
+          <a href="eula.html">EULA</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Kazinho Systems. Todos os direitos reservados.</span>
+        <a href="../index.html">Kazinho Systems</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="../js/animations.js"></script>
+  <script src="../js/navbar.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+
+</html>
+

@@ -1,0 +1,247 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>ASTHA · Verificação do editor industrial</title><link rel="stylesheet" href="../../app/css/variables.css"><link rel="stylesheet" href="../../app/css/sistema.css"><link rel="stylesheet" href="../../app/css/industrial-library.css?v=20261008e"><style>body{margin:0;padding:12px;font-family:Inter,Arial;background:#edf1f5;color:#182230}header{height:50px;display:flex;align-items:center;gap:18px}header p{font-size:12px}#testResult{white-space:pre-wrap;font-size:12px}.eo-cad-container{height:calc(100dvh - 90px)!important}</style><header><strong>ASTHA / FACTORY DESIGN 3D</strong><p>Verificação visual dos módulos reais · dados locais de teste · sem publicação no banco</p><button id="runChecks">Verificar edição / Undo / cópia</button></header><output id="testResult" role="status"></output><div class="eo-cad-container" style="display:flex; flex-direction: column; height: calc(100dvh - 96px); border: 1px solid var(--surface-border); border-radius: 12px; overflow: hidden; background: #f8fafc;">
+          
+          <!-- Fusion 360 Top Ribbon -->
+          <div class="eo-cad-ribbon" style="background: #f4f5f6; border-bottom: 1px solid #c8c8c8; display: flex; flex-direction: column; color: #333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none;">
+            <!-- Tabs -->
+            <div id="cad-ribbon-tabs" style="display: flex; background: #e8e8e8; border-bottom: 1px solid #d4d4d4; padding: 0 10px;">
+              <button type="button" class="ribbon-tab active" data-tab="architecture" onclick="switchCadTab('architecture')" style="padding: 6px 16px; border-bottom: 2px solid #0696D7; color: #0696D7; font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase;" aria-pressed="true">Arquitetura</button>
+              <button type="button" class="ribbon-tab" data-tab="logistics" onclick="switchCadTab('logistics')" style="padding: 6px 16px; color: #555; border-bottom: 2px solid transparent; font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase;" aria-pressed="false">Logística</button>
+              <button type="button" class="ribbon-tab" data-tab="industrial" onclick="switchCadTab('industrial')" style="padding: 6px 16px; color: #555; border-bottom: 2px solid transparent; font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase;" aria-pressed="false">Industrial</button>
+              <button type="button" class="ribbon-tab" data-tab="inspect" onclick="switchCadTab('inspect')" style="padding: 6px 16px; color: #555; border-bottom: 2px solid transparent; font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase;" aria-pressed="false">Inspeção</button>
+              <button type="button" class="ribbon-tab" data-tab="addons" onclick="switchCadTab('addons')" style="padding: 6px 16px; color: #555; border-bottom: 2px solid transparent; font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase;" aria-pressed="false">Biblioteca 3D</button>
+              <div style="margin-left:auto; padding: 6px 16px;">
+                 <label style="font-size:11px; font-weight:600; display:flex; align-items:center; gap:6px; cursor:pointer; color:#333;">
+                   <input type="checkbox" id="cadAutoScaleToggle" checked onchange="if(typeof toggle3DAutoScale === 'function') toggle3DAutoScale(this.checked)"> Ajustar escala 3D
+                 </label>
+              </div>
+            </div>
+            
+            <!-- Tool Groups -->
+            <div style="display: flex; padding: 4px 8px; gap: 4px; background: #f4f5f6; align-items: stretch; overflow-x: auto;">
+              
+              <!-- Group: DESIGN / SELECT -->
+              <div style="display: flex; align-items: stretch; border-right: 1px solid #d4d4d4; padding-right: 8px;">
+                <button class="fusion-btn active cad-tool" data-tool="select" onclick="setCadTool('select')" style="flex-direction:column; padding: 4px 8px; justify-content:center;">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><path d="M5 4l15 9-6.5 2L10 21l-5-17z"/></svg>
+                  <span style="font-size: 9px; font-weight: 600; margin-top:2px;">SELECIONAR</span>
+                </button>
+              </div>
+
+              <!-- Group: CREATE (Architecture) -->
+              <div id="cad-group-architecture" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #d4d4d4; padding-right: 8px;">
+                <div style="display: flex; gap: 2px;">
+                  <!-- Large Button: Wall -->
+                  <button class="fusion-btn cad-tool" data-tool="wall" onclick="setCadTool('wall')" title="Parede" style="flex-direction:column; padding: 4px 8px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0696D7" stroke-width="2"><rect x="3" y="8" width="18" height="8" rx="1"/></svg>
+                    <span style="font-size: 9px; font-weight: 600; margin-top:2px;">PAREDE</span>
+                  </button>
+                  
+                  <!-- Small Buttons Stack 1 -->
+                  <div style="display: flex; flex-direction: column; justify-content: center; gap:2px;">
+                    <button class="fusion-btn cad-tool" data-tool="door" onclick="setCadTool('door')" title="Porta" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0696D7" stroke-width="1.5"><path d="M4 22V6C4 4.89543 4.89543 4 6 4H12M12 4V22M12 4H18C19.1046 4 20 4.89543 20 6V22M16 12H18"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Porta</span>
+                    </button>
+                    <button class="fusion-btn cad-tool" data-tool="window" onclick="setCadTool('window')" title="Janela" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0696D7" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3V21M3 12H21"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Janela</span>
+                    </button>
+                  </div>
+                  
+                  <!-- Small Buttons Stack 2 -->
+                  <div style="display: flex; flex-direction: column; justify-content: center; gap:2px;">
+                    <button class="fusion-btn cad-tool" data-tool="pillar" onclick="setCadTool('pillar')" title="Pilar" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#0696D7"><rect x="9" y="4" width="6" height="16" rx="1"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Pilar</span>
+                    </button>
+                    <button class="fusion-btn cad-tool" data-tool="stairs" onclick="setCadTool('stairs')" title="Escada" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0696D7" stroke-width="1.5"><path d="M3 21h6v-6h6v-6h6V3"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Escada</span>
+                    </button>
+                  </div>
+                </div>
+                <div style="font-size: 9px; color: #555; font-weight: 600; letter-spacing: 0.5px; display:flex; align-items:center; gap:2px; margin-top:2px;">CRIAR <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+              </div>
+
+              <!-- Group: LOGISTICS -->
+              <div id="cad-group-logistics" style="display: none; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #d4d4d4; padding-right: 8px;">
+                <div style="display: flex; gap: 2px;">
+                  <!-- Large Button: Shelf -->
+                  <button class="fusion-btn cad-tool" data-tool="shelf" onclick="setCadTool('shelf')" title="Pallet Rack" style="flex-direction:column; padding: 4px 8px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16M4 22V2m16 20V2"/></svg>
+                    <span style="font-size: 9px; font-weight: 600; margin-top:2px;">RACK</span>
+                  </button>
+                  
+                  <!-- Small Buttons Stack -->
+                  <div style="display: flex; flex-direction: column; justify-content: center; gap:2px;">
+                    <button class="fusion-btn cad-tool" data-tool="zone" onclick="setCadTool('zone')" title="Storage Zone" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="1.5" stroke-dasharray="2 2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Zona</span>
+                    </button>
+                    <button class="fusion-btn cad-tool" data-tool="path" onclick="setCadTool('path')" title="Forklift Path" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="1.5"><path d="M3 12h18 M15 6l6 6-6 6"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Caminho</span>
+                    </button>
+                  </div>
+                </div>
+                <div style="font-size: 9px; color: #555; font-weight: 600; letter-spacing: 0.5px; display:flex; align-items:center; gap:2px; margin-top:2px;">LOGÍSTICA <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+              </div>
+
+              <div id="cad-group-industrial" style="display:none;align-items:center;gap:3px;border-right:1px solid #d4d4d4;padding-right:8px;">
+                <button class="fusion-btn cad-tool" data-tool="machine" onclick="setCadTool('machine')" title="Máquina industrial"><span>▣</span><span style="font-size:9px;margin-left:4px;">Máquina</span></button>
+                <button class="fusion-btn cad-tool" data-tool="forklift" onclick="setCadTool('forklift')" title="Empilhadeira"><span>▰</span><span style="font-size:9px;margin-left:4px;">Empilhadeira</span></button>
+                <button class="fusion-btn cad-tool" data-tool="dock" onclick="setCadTool('dock')" title="Doca"><span>⊓</span><span style="font-size:9px;margin-left:4px;">Doca</span></button>
+              </div>
+              
+              <!-- Group: MODIFY -->
+              <div id="cad-group-modify" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #d4d4d4; padding-right: 8px;">
+                <div style="display: flex; gap: 2px;">
+                  <button class="fusion-btn cad-tool" data-tool="erase" onclick="setCadTool('erase')" title="Apagar" style="flex-direction:column; padding: 4px 8px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E74C3C" stroke-width="1.5"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    <span style="font-size: 9px; font-weight: 600; margin-top:2px;">APAGAR</span>
+                  </button>
+                  
+                  <div style="display: flex; flex-direction: column; justify-content: center; gap:2px;">
+                    <div style="display: flex; gap: 2px;">
+                      <button class="fusion-btn cad-tool" data-tool="move" onclick="setCadTool('move')" title="Mover" style="padding: 2px 6px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><path d="M12 2L12 22 M8 6l4-4 4 4 M8 18l4 4 4-4 M2 12h20 M6 8l-4 4 4 4 M18 8l4 4-4 4"/></svg>
+                        <span style="font-size: 9px; margin-left:4px;">Mover</span>
+                      </button>
+                      <button class="fusion-btn cad-tool" data-tool="trim" onclick="setCadTool('trim')" title="Aparar" style="padding: 2px 6px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+                        <span style="font-size: 9px; margin-left:4px;">Aparar</span>
+                      </button>
+                    </div>
+                    <button class="fusion-btn cad-tool" data-tool="rotate" onclick="setCadTool('rotate')" title="Girar" style="padding: 2px 6px;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                      <span style="font-size: 9px; margin-left:4px;">Girar</span>
+                    </button>
+                  </div>
+                </div>
+                <div style="font-size: 9px; color: #555; margin-top: 2px; font-weight: 600; letter-spacing: 0.5px; display:flex; align-items:center; gap:2px;">EDITAR <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+              </div>
+
+              <!-- Group: INSPECT -->
+              <div id="cad-group-inspect" style="display: none; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #d4d4d4; padding-right: 8px;">
+                <div style="display: flex; gap: 2px;">
+                  <button class="fusion-btn cad-tool" data-tool="measure" onclick="setCadTool('measure')" title="Measure" style="flex-direction:column; padding: 4px 8px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8E44AD" stroke-width="1.5"><path d="M3 12h18 M6 9v6 M12 9v6 M18 9v6"/></svg>
+                    <span style="font-size: 9px; font-weight: 600; margin-top:2px;">MEASURE</span>
+                  </button>
+                  <button class="fusion-btn cad-tool" data-tool="inspect" onclick="setCadTool('inspect')" title="Inspect Rack" style="flex-direction:column; padding: 4px 8px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2980B9" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M11 8v6M8 11h6"/></svg>
+                    <span style="font-size: 9px; font-weight: 600; margin-top:2px;">INSPECIONAR</span>
+                  </button>
+                </div>
+                <div style="font-size: 9px; color: #555; margin-top: 2px; font-weight: 600; letter-spacing: 0.5px; display:flex; align-items:center; gap:2px;">INSPECIONAR <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+              </div>
+              
+              <!-- Group: ADDONS -->
+              <div id="cad-group-addons" style="display: none; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #d4d4d4; padding-right: 8px;">
+                <div style="display: flex; gap: 2px;">
+                  <button class="fusion-btn cad-tool" data-tool="addon3d" onclick="openAddonModal()" title="Importar Modelo 3D" style="flex-direction:column; padding: 4px 8px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    <span style="font-size: 9px; font-weight: 600; margin-top:2px;">IMPORTAR 3D</span>
+                  </button>
+                </div>
+                <div style="font-size: 9px; color: #555; font-weight: 600; letter-spacing: 0.5px; display:flex; align-items:center; gap:2px; margin-top:2px;">ADDONS <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+              </div>
+
+              <!-- Group: DOCUMENT / LEVELS -->
+              <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; padding-left: 8px; margin-left: auto;">
+                <div style="display: flex; gap: 6px;">
+                  <button class="fusion-btn" onclick="window.openSaveModal()" title="Publicar desenho" style="padding: 2px 6px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="1.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2zM17 21v-8H7v8M7 3v5h8"/></svg>
+                    <span style="font-size: 9px; margin-left:4px; font-weight:600;">Salvar</span>
+                  </button>
+                  <button class="fusion-btn" onclick="undoCad()" title="Desfazer (Ctrl+Z)" style="padding: 2px 6px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3l-3 2.7"/></svg>
+                    <span style="font-size: 9px; margin-left:4px;">Desfazer</span>
+                  </button>
+                  <button class="fusion-btn" onclick="redoCad()" title="Refazer (Ctrl+Y)" style="padding: 2px 6px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/></svg>
+                    <span style="font-size: 9px; margin-left:4px;">Refazer</span>
+                  </button>
+                  <button class="fusion-btn" onclick="clearBlueprint()" title="Limpar desenho" style="padding: 2px 6px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM18 9l-6 6M12 9l6 6"/></svg>
+                  </button>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px;">
+                  <span style="font-size: 10px; font-weight: 600; color: #555;">PAVIMENTO:</span>
+                  <select id="cadFloorSelect" style="padding: 2px 4px; border: 1px solid #ccc; border-radius: 4px; font-size: 10px; outline: none; background: #fff;" onchange="changeCadFloor(this.value)">
+                    <option value="0">0 - Térreo</option>
+                    <option value="1">1 - 1º Andar</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Workspace (Split Screen) -->
+          <div class="eo-cad-workspace" style="flex: 1; position: relative; background: #f8fafc; overflow: hidden; display: flex;" id="cadWorkspace">
+            <!-- 2D Canvas (Left Half) -->
+            <div style="flex: 1; border-right: 2px solid #1e2130; position:relative; overflow:hidden;">
+               <canvas id="cadCanvas2d" style="display:block; width:100%; height:100%; touch-action: none; cursor: crosshair;"></canvas>
+            </div>
+            <!-- CAD 3D Canvas -->
+            <div class="eo-cad-3d" style="width: 50%; height: 100%; position: relative; background: #f4f5f6;">
+              <div id="cadContainer3d" style="width: 100%; height: 100%;"></div>
+              
+              <!-- View Cube 3D & Tools -->
+              <div style="position: absolute; top: 16px; right: 16px; display: flex; flex-direction: column; align-items: flex-end; gap: 16px; pointer-events: none;">
+                
+                <!-- Maximize Button -->
+                <button class="fusion-btn" id="btn-maximize-3d" style="pointer-events: auto; background: var(--surface-default); border: 1px solid var(--surface-border); box-shadow: 0 2px 8px rgba(0,0,0,0.1); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);" title="Maximizar/Restaurar 3D" onclick="toggleMaximize3D()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                </button>
+
+                <!-- CSS 3D View Cube -->
+                <div class="view-cube-wrapper" style="pointer-events: auto; perspective: 400px; width: 60px; height: 60px; margin-top: 10px;">
+                  <div class="view-cube" id="view-cube" style="width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: rotateX(-35deg) rotateY(45deg); transition: transform 0.3s ease;">
+                    <!-- Cube Faces -->
+                    <div class="cube-face cube-front" onclick="setCameraView('front')">FRENTE</div>
+                    <div class="cube-face cube-back" onclick="setCameraView('back')">TRÁS</div>
+                    <div class="cube-face cube-right" onclick="setCameraView('right')">DIREITA</div>
+                    <div class="cube-face cube-left" onclick="setCameraView('left')">ESQUERDA</div>
+                    <div class="cube-face cube-top" onclick="setCameraView('top')">TOPO</div>
+                    <div class="cube-face cube-bottom" onclick="setCameraView('bottom')">BASE</div>
+                  </div>
+                </div>
+
+                <!-- Overlay Info (Coordinates) -->
+                <div id="cadOverlay" style="background: var(--surface-default); border: 1px solid var(--surface-border); border-radius: 20px; padding: 4px 12px; color: var(--text-secondary); font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; margin-top: 10px; pointer-events: none;">
+                  X: <span id="cadCoordX">0</span> &nbsp; Y: <span id="cadCoordY">0</span>
+                </div>
+
+              </div>
+            </div>
+            
+          </div>
+        </div><script>var currentWarehouseId=1;window.showToast=(text)=>{document.getElementById('testResult').textContent=text;};window.openSaveModal=()=>showToast('Página de verificação: publicação exige a API autenticada.');const fixture={schemaVersion:2,units:'cm',floors:{0:{machines:[{id:'DEMO-MILL',modelId:'ASTHA-3D-001',machineType:'ASTHA-3D-001',x:400,y:280,w:200,h:160,height3d:220},{id:'DEMO-RACK',modelId:'ASTHA-3D-092',machineType:'ASTHA-3D-092',x:400,y:580,w:300,h:110,height3d:400}],shelves:[{id:'SH-1',x:0,y:250,w:300,h:90,levels:4,positions:5,shelfHeight:260}]}}};window.API={get:async url=>({success:true,data:url.startsWith('/warehouse/layout')?{blueprint_data:fixture,revision:0,industrialSchemaVersion:1,industrialSchemaReady:false}:[]}),put:async()=>({success:false,error:'Verificação visual: sem conexão ao banco.'})};</script><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script><script src="../../app/js/sistema-map-model.js?v=20261008e"></script><script src="../../app/js/sistema-industrial-catalog.js?v=20261008e"></script><script src="../../app/js/sistema-industrial-generators.js?v=20261008e"></script><script src="../../app/js/sistema-industrial-rules.js?v=20261008e"></script><script src="../../app/js/sistema-object-library.js?v=20261008e"></script><script src="../../app/js/sistema-industrial-library-ui.js?v=20261008e"></script><script src="../../app/js/sistema-industrial-editor.js?v=20261008e"></script><script src="../../app/js/sistema-map-persistence.js?v=20261008e"></script><script src="../../app/js/sistema-model-imports.js?v=20261008e"></script><script src="../../app/js/sistema-cad-object-editor.js?v=20261008e"></script><script src="../../app/js/sistema-builder-2d.js?v=20261008e"></script><script src="../../app/js/sistema-builder-3d.js?v=20261008e"></script><script>  function switchCadTab(tabName) {
+    document.querySelectorAll('#cad-ribbon-tabs .ribbon-tab').forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-pressed','false');
+      t.style.borderBottom = '2px solid transparent';
+      t.style.color = '#555';
+    });
+    const activeTab = document.querySelector('#cad-ribbon-tabs .ribbon-tab[data-tab="'+tabName+'"]');
+    if(activeTab) {
+      activeTab.classList.add('active');activeTab.setAttribute('aria-pressed','true');
+      activeTab.style.borderBottom = '2px solid #0696D7';
+      activeTab.style.color = '#0696D7';
+    }
+    
+    document.getElementById('cad-group-architecture').style.display = (tabName === 'architecture') ? 'flex' : 'none';
+    document.getElementById('cad-group-logistics').style.display = (tabName === 'logistics') ? 'flex' : 'none';
+    document.getElementById('cad-group-industrial').style.display = (tabName === 'industrial') ? 'flex' : 'none';
+    document.getElementById('cad-group-inspect').style.display = (tabName === 'inspect') ? 'flex' : 'none';
+    document.getElementById('cad-group-addons').style.display = (tabName === 'addons') ? 'flex' : 'none';
+    document.getElementById('cad-group-modify').style.display = (tabName === 'architecture' || tabName === 'logistics' || tabName === 'industrial') ? 'flex' : 'none';
+    
+    // Reset tool selection when switching tabs to avoid using tools from hidden tabs
+    if(typeof setCadTool === 'function') setCadTool('select');
+  }
+    
+
+    
+initWarehouseMap().then(()=>{document.querySelector('.cad-persistence-toolbar input').checked=false;window.dispatchEvent(new Event('resize'));});document.getElementById('runChecks').onclick=async()=>{try{selectedItem={type:'machine',index:1};renderCad();const item=blueprint.floors[0].machines[1];Object.assign(item,ASTHAIndustrialRules.validate({...item,parameters:{levels:7,modules:3},w:450,angle:Math.PI/2,elevation:25}));saveHistory();renderCad();update3DScene();undoCad();if(blueprint.floors[0].machines[1].w!==300)throw Error('Undo');redoCad();if(blueprint.floors[0].machines[1].w!==450)throw Error('Redo');selectedItem={type:'machine',index:1};copyCadItem();await pasteCadItem();if(blueprint.floors[0].machines.length!==3)throw Error('Colagem');const copy=blueprint.floors[0].machines[2];if(copy.parameters.levels!==7||copy.modelId!=='ASTHA-3D-092')throw Error('Tipo / parâmetros da cópia');if(new Set(blueprint.floors[0].machines.map(e=>e.id)).size!==3)throw Error('IDs');selectedItem={type:'machine',index:1};renderCad();update3DScene();document.getElementById('testResult').textContent='PASSOU · parâmetros, dimensões, rotação, elevação, Undo/Redo e cópia independente';}catch(e){document.getElementById('testResult').textContent='FALHOU: '+e.message;}};</script></html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contato — EVAH OPHIM por Kazinho Systems">
+  <title>Contato — EVAH OPHIM</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/forms.css">
+  <link rel="stylesheet" href="../css/sections.css">
+  <link rel="stylesheet" href="../css/kazinho.css">
+  <link rel="shorcut icon" type="imagex/png" href="../images/Evhaophim1 (2).png">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="navbar-inner">
+      <a href="../index.html" class="navbar-logo"><img src="../images/Logotipo (Alpha).png" alt="EVAH OPHIM" style="height: 32px; object-fit: contain; "></a>
+      <div class="navbar-links">
+        <a href="index.html" class="navbar-link">Produto</a>
+        <a href="index.html#pricing" class="navbar-link">Preços</a>
+        <a href="contact.html" class="navbar-link active">Contato</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="login.html" class="btn btn-ghost">Login</a>
+        <a href="register.html" class="btn btn-primary">Começar Grátis</a>
+      </div>
+      <button class="navbar-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <main style="padding-top:calc(var(--navbar-height) + var(--space-12))">
+    <div class="container">
+      <div class="section-header" style="margin-bottom:var(--space-12)">
+        <span class="section-label">Contato</span>
+        <h1>Fale <span class="text-gradient">conosco</span></h1>
+        <p>Escolha o canal que preferir ou envie uma mensagem diretamente.</p>
+      </div>
+
+      <!-- Canais de contato -->
+      <div class="contact-methods" style="margin-bottom:var(--space-12)">
+        <!-- [CONTATO] WhatsApp -->
+        <a href="https://wa.me/SEUNUMERO" target="_blank" class="contact-method">
+          <div class="contact-method-icon whatsapp">💬</div>
+          <div class="contact-method-text">
+            <h4>WhatsApp</h4>
+            <p>+55 (XX) XXXXX-XXXX</p>
+          </div>
+        </a>
+        <!-- [CONTATO] Email -->
+        <a href="mailto:contato@kazinhosystems.com" class="contact-method">
+          <div class="contact-method-icon email">✉️</div>
+          <div class="contact-method-text">
+            <h4>Email</h4>
+            <p>contato@kazinhosystems.com</p>
+          </div>
+        </a>
+        <!-- [CONTATO] Telefone -->
+        <a href="tel:+55XXXXXXXXXX" class="contact-method">
+          <div class="contact-method-icon phone">📞</div>
+          <div class="contact-method-text">
+            <h4>Telefone</h4>
+            <p>+55 (XX) XXXXX-XXXX</p>
+          </div>
+        </a>
+        <!-- [CONTATO] Instagram -->
+        <a href="https://instagram.com/kazinhosystems" target="_blank" class="contact-method">
+          <div class="contact-method-icon instagram">📷</div>
+          <div class="contact-method-text">
+            <h4>Instagram</h4>
+            <p>@kazinhosystems</p>
+          </div>
+        </a>
+        <!-- [CONTATO] LinkedIn -->
+        <a href="https://linkedin.com/company/kazinhosystems" target="_blank" class="contact-method">
+          <div class="contact-method-icon linkedin">💼</div>
+          <div class="contact-method-text">
+            <h4>LinkedIn</h4>
+            <p>Kazinho Systems</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Formulário de Contato -->
+      <div class="contact-grid">
+        <div>
+          <h2 style="margin-bottom:var(--space-6)">Envie uma <span class="text-gradient">mensagem</span></h2>
+          <form class="form" id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="input-group">
+                <label for="contactName">Nome</label>
+                <input type="text" id="contactName" class="input" placeholder="Seu nome" required>
+              </div>
+              <div class="input-group">
+                <label for="contactEmail">Email</label>
+                <input type="email" id="contactEmail" class="input" placeholder="seu@email.com" required>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="contactSubject">Assunto</label>
+              <select id="contactSubject" class="input" required>
+                <option value="">Selecione...</option>
+                <option value="sales">Vendas</option>
+                <option value="support">Suporte</option>
+                <option value="partnership">Parceria</option>
+                <option value="other">Outro</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="contactMessage">Mensagem</label>
+              <textarea id="contactMessage" class="input" placeholder="Sua mensagem..." rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Enviar Mensagem</button>
+          </form>
+        </div>
+        <div>
+          <!-- [TEXTO] WhatsApp CTA -->
+          <div class="card" style="text-align:center;padding:var(--space-10)">
+            <div style="font-size:48px;margin-bottom:var(--space-4)">💬</div>
+            <h3 style="margin-bottom:var(--space-3)">Prefere WhatsApp?</h3>
+            <p style="margin-bottom:var(--space-6)">Converse diretamente com nosso time. Resposta em até 2 horas.</p>
+            <!-- [LINK] WhatsApp direto -->
+            <a href="https://wa.me/SEUNUMERO" target="_blank" class="btn btn-whatsapp btn-lg btn-block">
+              Abrir WhatsApp →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" style="margin-top:var(--space-16)">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>© 2026 Kazinho Systems. Todos os direitos reservados.</span>
+        <a href="../index.html">Kazinho Systems</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="../js/navbar.js"></script>
+  <script src="../js/security.js"></script>
+  <script src="../js/forms.js"></script>
+</body>
+</html>
+
+

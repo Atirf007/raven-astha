@@ -1,0 +1,93 @@
+##############################################################
+#  Nginx — Planta Fabril 3D  |  NR-12 / NR-06 Viewer
+#  KazinhoSystems / ArrudaCorp
+#
+#  INSTRUÇÕES:
+#  1. Copie este arquivo para /etc/nginx/sites-available/nr12-viewer
+#  2. Rode: ln -s /etc/nginx/sites-available/nr12-viewer /etc/nginx/sites-enabled/
+#  3. Rode: nginx -t && systemctl reload nginx
+#
+#  Para adicionar domínio depois:
+#     Troque o "_" em server_name pelo seu domínio:
+#     server_name meudominio.com.br www.meudominio.com.br;
+##############################################################
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    # "_" = responde para qualquer requisição (IP direto ou domínio futuro)
+    server_name _;
+
+    root /var/www/nr12-viewer;
+    index index.html;
+
+    charset utf-8;
+
+    # ── Logs ────────────────────────────────────────────────
+    access_log /var/log/nginx/nr12-access.log;
+    error_log  /var/log/nginx/nr12-error.log warn;
+
+    # ── Página principal ────────────────────────────────────
+    location / {
+        try_files $uri $uri/ =404;
+        add_header X-Frame-Options "SAMEORIGIN";
+        add_header X-Content-Type-Options "nosniff";
+    }
+
+    # ── Arquivo OBJ grande (1,7 GB) — sem timeout ───────────
+    location ~* \.obj$ {
+        # Timeouts generosos para arquivo grande
+        send_timeout         3600s;
+        keepalive_timeout    3600s;
+
+        # Envio eficiente de arquivos grandes
+        sendfile    on;
+        tcp_nopush  on;
+        tcp_nodelay on;
+        aio         threads;
+
+        # Buffer de saída para arquivo grande
+        output_buffers  2 512k;
+
+        # CORS — permite o browser fazer fetch() do .obj
+        add_header Access-Control-Allow-Origin  "*"             always;
+        add_header Access-Control-Allow-Methods "GET,HEAD,OPTIONS" always;
+
+        # Cache de 1 dia (modelo não muda com frequência)
+        add_header Cache-Control "public, max-age=86400";
+
+        # Evita compressão desnecessária no arquivo de texto grande
+        gzip off;
+    }
+
+    # ── CSS / JS / fontes ───────────────────────────────────
+    location ~* \.(css|js|woff2?|ttf|eot)$ {
+        expires 7d;
+        add_header Cache-Control "public, max-age=604800";
+        gzip on;
+    }
+
+    # ── Gzip global ─────────────────────────────────────────
+    gzip              on;
+    gzip_vary         on;
+    gzip_proxied      any;
+    gzip_comp_level   5;
+    gzip_types
+        text/plain
+        text/css
+        text/javascript
+        application/javascript
+        application/json
+        image/svg+xml;
+
+    # ── Proteção básica ─────────────────────────────────────
+    # Esconde versão do Nginx
+    server_tokens off;
+
+    # Bloqueia acesso a arquivos ocultos (.git, .env etc.)
+    location ~ /\. {
+        deny all;
+        return 404;
+    }
+}

@@ -1,0 +1,12 @@
+✔ SEC-FE-001 toast treats markup as literal text (154.237ms)
+✔ SEC-FE-001 stock text, image attributes and action arguments stay data (66.234ms)
+✔ SEC-FE-002 user identity fields cannot add active markup (50.5437ms)
+✔ SEC-FE-001 warehouse names and IDs cannot become executable markup (14.2901ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 321.5574

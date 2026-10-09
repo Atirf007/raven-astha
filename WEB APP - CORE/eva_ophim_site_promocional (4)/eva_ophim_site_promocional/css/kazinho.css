@@ -1,0 +1,265 @@
+/* ============================================================
+   EVAH OPHIM — Kazinho Systems Home (kazinho.css)
+   Hub principal de serviços da Kazinho Systems
+   ============================================================ */
+
+/* ── Services Grid ── */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-6);
+}
+
+.service-card {
+  padding: var(--space-8);
+  background: var(--surface-glass);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-2xl);
+  backdrop-filter: var(--liquid-blur); -webkit-backdrop-filter: var(--liquid-blur);
+  transition: all var(--transition-slow);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+}
+
+.service-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-xl), var(--shadow-glow-lg);
+}
+
+.service-card:hover::before {
+  opacity: 0.05;
+}
+
+.service-card-content {
+  position: relative;
+  z-index: 1;
+}
+
+.service-card-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(200, 200, 200, 0.08));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-6);
+  font-size: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all var(--transition-slow);
+  color: var(--color-primary-light);
+}
+
+.service-card-icon svg {
+  width: 28px;
+  height: 28px;
+  stroke: var(--color-primary-light);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: all var(--transition-slow);
+}
+
+.service-card:hover .service-card-icon {
+  transform: scale(1.15) rotate(5deg);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.4);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.25), rgba(200, 200, 200, 0.15));
+}
+
+.service-card:hover .service-card-icon svg {
+  stroke: var(--color-secondary);
+}
+
+.service-card-badge {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 1;
+}
+
+.service-card h3 {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-3);
+}
+
+.service-card p {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-6);
+}
+
+.service-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-primary);
+  transition: gap var(--transition-fast);
+}
+
+.service-card:hover .service-card-link {
+  gap: var(--space-3);
+}
+
+/* ── About Section ── */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-16);
+  align-items: center;
+}
+
+.about-image {
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  border: 1px solid var(--surface-border);
+  position: relative;
+}
+
+.about-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-primary);
+  opacity: 0.1;
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.about-stat {
+  padding: var(--space-4);
+  background: var(--surface-glass);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.about-stat-number {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-extrabold);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about-stat-label {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-top: var(--space-1);
+}
+
+@media (max-width: 768px) {
+  .about-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Contact Section (Kazinho) ── */
+.contact-methods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.contact-method {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  background: var(--surface-glass);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-slow);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-method::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+  background: radial-gradient(circle at 0% 50%, rgba(255, 255, 255, 0.06) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+  pointer-events: none;
+}
+
+.contact-method:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.contact-method:hover::after {
+  opacity: 1;
+}
+
+.contact-method-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 20px;
+}
+
+.contact-method-icon.whatsapp {
+  background: rgba(37, 211, 102, 0.15);
+  color: #25D366;
+}
+.contact-method-icon.email {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-primary);
+}
+.contact-method-icon.phone {
+  background: rgba(200, 200, 200, 0.15);
+  color: var(--color-secondary);
+}
+.contact-method-icon.instagram {
+  background: rgba(225, 48, 108, 0.15);
+  color: #E1306C;
+}
+.contact-method-icon.linkedin {
+  background: rgba(0, 119, 181, 0.15);
+  color: #0077B5;
+}
+
+.contact-method-text h4 {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+}
+
+.contact-method-text p {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+
+

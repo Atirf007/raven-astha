@@ -1,0 +1,26 @@
+✔ SEC-001 OAuth rejects identity supplied without provider proof (50.2896ms)
+✔ SEC-002 revoked session cannot authorize a signed token (7.9844ms)
+✔ SEC-002 current database role overrides stale token claims (21.7717ms)
+✔ SEC-002 missing tenant is not mapped to default organization (3.9564ms)
+✔ SEC-002 invalid signature and anonymous requests fail (10.4031ms)
+✔ MAP-001 legacy blueprint normalizes and survives JSON save/load (6.459ms)
+✔ MAP-002 every supported visible blueprint entity reaches the canonical 3D plan (1.5011ms)
+✔ MAP-003 coordinates, rotation and levels share one transform (0.3859ms)
+✔ MAP-003 meter blueprints normalize to canonical centimeters (0.3304ms)
+✔ MAP-004 invisible and unknown entities do not crash or enter the plan (0.5123ms)
+✔ MAP-SEC-002 persisted addons cannot trigger external model fetches (0.4483ms)
+✔ MAP-005 API validation enforces size, entity limits and finite dimensions (11.8214ms)
+✔ MAP-006 both web viewers consume the canonical model and render on demand (2.7855ms)
+✔ MAP-007 addon hit testing and rendering stay in their correct pipeline stages (1.4641ms)
+✔ profile response selects the user rather than the API wrapper (1.2539ms)
+✔ profile photo appears in each avatar and falls back if the image fails (0.7307ms)
+✔ invalid image URL stays as an initial; local API image remains available (0.3574ms)
+✔ CAD hidden-to-visible resize preserves finite projection and updates the renderer without maximizing (2.3ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 432.4616

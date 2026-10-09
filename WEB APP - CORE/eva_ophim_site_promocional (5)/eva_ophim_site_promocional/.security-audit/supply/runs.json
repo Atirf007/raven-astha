@@ -1,0 +1,56 @@
+[
+  {
+    "scope": "root",
+    "command": "npm audit --package-lock-only --ignore-scripts --json",
+    "cwd": "C:\\KazinhoSystems - ArrudaCorp\\eva_ophim_site_promocional",
+    "start": "2026-09-14T20:10:56.4452151Z",
+    "end": "2026-09-14T20:10:57.6244426Z",
+    "durationSeconds": 1.1792275,
+    "exitCode": 0
+  },
+  {
+    "scope": "root",
+    "command": "npm sbom --package-lock-only --sbom-format cyclonedx",
+    "cwd": "C:\\KazinhoSystems - ArrudaCorp\\eva_ophim_site_promocional",
+    "start": "2026-09-14T20:10:57.6533534Z",
+    "end": "2026-09-14T20:10:59.1470617Z",
+    "durationSeconds": 1.4937083,
+    "exitCode": 0
+  },
+  {
+    "scope": "api",
+    "command": "npm audit --package-lock-only --ignore-scripts --json",
+    "cwd": "C:\\KazinhoSystems - ArrudaCorp\\eva_ophim_site_promocional\\api",
+    "start": "2026-09-14T20:10:59.5049491Z",
+    "end": "2026-09-14T20:11:00.3916492Z",
+    "durationSeconds": 0.8867001,
+    "exitCode": 0
+  },
+  {
+    "scope": "api",
+    "command": "npm sbom --package-lock-only --sbom-format cyclonedx",
+    "cwd": "C:\\KazinhoSystems - ArrudaCorp\\eva_ophim_site_promocional\\api",
+    "start": "2026-09-14T20:11:00.3950742Z",
+    "end": "2026-09-14T20:11:01.5460898Z",
+    "durationSeconds": 1.1510156,
+    "exitCode": 0
+  },
+  {
+    "scope": "js",
+    "command": "npm audit --package-lock-only --ignore-scripts --json",
+    "cwd": "C:\\KazinhoSystems - ArrudaCorp\\eva_ophim_site_promocional\\js",
+    "start": "2026-09-14T20:11:01.6814208Z",
+    "end": "2026-09-14T20:11:02.6124719Z",
+    "durationSeconds": 0.9310511,
+    "exitCode": 0
+  },
+  {
+    "scope": "js",
+    "command": "npm sbom --package-lock-only --sbom-format cyclonedx",
+    "cwd": "C:\\KazinhoSystems - ArrudaCorp\\eva_ophim_site_promocional\\js",
+    "start": "2026-09-14T20:11:02.6160052Z",
+    "end": "2026-09-14T20:11:03.6183122Z",
+    "durationSeconds": 1.002307,
+    "exitCode": 1
+  }
+]

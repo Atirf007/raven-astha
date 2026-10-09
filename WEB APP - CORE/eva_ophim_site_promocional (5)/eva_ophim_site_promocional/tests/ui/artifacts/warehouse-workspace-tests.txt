@@ -1,0 +1,66 @@
+✔ MAP-001 legacy blueprint normalizes and survives JSON save/load (13.0958ms)
+✔ MAP-002 every supported visible blueprint entity reaches the canonical 3D plan (4.0046ms)
+✔ MAP-003 coordinates, rotation and levels share one transform (1.1064ms)
+✔ MAP-003 meter blueprints normalize to canonical centimeters (0.4982ms)
+✔ MAP-004 invisible and unknown entities do not crash or enter the plan (1.052ms)
+✔ MAP-SEC-002 persisted addons cannot trigger external model fetches (0.6182ms)
+✔ MAP-005 API validation enforces size, entity limits and finite dimensions (14.306ms)
+✔ MAP-006 both web viewers consume the canonical model and render on demand (7.0257ms)
+✔ MAP-007 addon hit testing and rendering stay in their correct pipeline stages (3.2363ms)
+✔ SEC-TENANT components require authentication (128.0832ms)
+✔ corporate design cannot be changed by viewers and uses the authenticated organization (80.5347ms)
+✔ SEC-TENANT viewer cannot mutate warehouse, components or attachments (33.3133ms)
+✔ SEC-WEB-001 admin cannot grant or modify superadmin membership (21.8307ms)
+✔ SEC-WEB-001 superadmin can assign canonical roles within its tenant (3.5494ms)
+✔ SEC-WEB-002 chart rejects cross-tenant user and parent references (10.5076ms)
+✔ SEC-WEB-003 viewers cannot create or delete organization events (15.5447ms)
+✔ SEC-TENANT foreign shelf mutation is constrained in SQL (4.0925ms)
+✔ SEC-TENANT foreign file cannot be downloaded via another material (2.8516ms)
+GET /warehouse/layout error: Error: sentinel schema detail
+    at responder (C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\tests\security\tenant-routes.test.js:75:68)
+    at Object.execute (C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\tests\security\tenant-routes.test.js:6:82)
+    at Object.layoutId (C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\api\services\warehouse-context.js:11:24)
+    at C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\api\routes\warehouse.js:139:39
+    at Layer.handle [as handle_request] (C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\api\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\api\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\api\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\api\node_modules\express\lib\router\layer.js:95:5)
+    at C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\api\node_modules\express\lib\router\index.js:284:15
+    at router.process_params (C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\api\node_modules\express\lib\router\index.js:346:12)
+✔ SEC-TENANT schema errors do not fall back to global layout (9.3018ms)
+✔ MAP-SEC-001 warehouse rejects malformed blueprint before database access (11.6066ms)
+✔ MAP-001 warehouse persists the normalized blueprint inside the tenant boundary (3.6862ms)
+✔ MAP-001 partial dimension update preserves the persisted blueprint (3.3213ms)
+✔ SEC-TENANT all read paths constrain tenant and preserve own resources (23.609ms)
+✔ SEC-TENANT attachment mutations and material lookup deny foreign tenant (7.3861ms)
+✔ SEC-TENANT assignment rejects foreign material without performing write (3.1914ms)
+✔ SEC-TENANT legitimate assignment uses both tenant locks and updates location (4.8068ms)
+✔ SEC-TENANT component validates material ownership and successful creation (16.7746ms)
+✔ SEC-UPLOAD neutralizes active content and accepts legitimate PDF (6.4444ms)
+✔ SEC-UPLOAD self-contained 3D remains supported and external glTF fetch rejected (0.5857ms)
+✔ SEC-UPLOAD download is isolated and does not trust stored MIME (2.7576ms)
+✔ warehouse and shelf reads require authentication; viewers cannot create stocks (131.9229ms)
+GET /warehouse/layout error: Error: Cadastre um armazém ou estoque para começar.
+    at failure (C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\api\services\warehouse-context.js:2:59)
+    at Object.layoutId (C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\api\services\warehouse-context.js:13:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async C:\KazinhoSystems - ArrudaCorp\eva_ophim_site_promocional\api\routes\warehouse.js:139:20 {
+  status: 409
+}
+✔ missing organization warehouse stays empty and layout read never creates one (30.8451ms)
+✔ foreign warehouse and SQL-shaped identifiers cannot expose shelf positions (26.0539ms)
+✔ foreign branch, parent and map are rejected without inserting warehouse (34.652ms)
+✔ substock inherits map and branch from its owned parent (14.1314ms)
+✔ saved shelf positions are restricted to the stock and actual levels (4.8759ms)
+✔ duplicate shelf codes cannot create ambiguous positions across floors (2.0744ms)
+✔ legacy shelves without stock belong only to the original warehouse (0.5537ms)
+✔ client cannot overwrite canonical CAD maps through the reference-map endpoint (11.0336ms)
+✔ CAD hidden-to-visible resize preserves finite projection and updates the renderer without maximizing (4.8533ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1016.12

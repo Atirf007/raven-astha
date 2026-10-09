@@ -1,0 +1,8 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),{JSDOM}=require('../../js/node_modules/jsdom');
+test('condition display keeps zero, absent limits, inert labels and a collapsed history; discards another asset response',async()=>{
+ const dom=new JSDOM('<select id="eamConditionAsset"><option value="7">Bomba</option><option value="8">Motor</option></select><div id="eamConditionResult"></div>',{runScripts:'outside-only'}),w=dom.window;
+ const source=fs.readFileSync('app/js/sistema-core.js','utf8'),start=source.indexOf('async function loadEamCondition(){'),end=source.indexOf('\nasync function ',start+1);assert.ok(end>start);w.eval(source.slice(start,end));
+ const data={rules:[{metric_code:'temperature',minimum_value:0,maximum_value:null,unit:'°C',severity:'warning',is_active:1}],alerts:[{metric_code:'temperature',value:75,unit:'°C',severity:'warning',status:'open'}],readings:[{metric_code:'<img src=x onerror=alert(1)>',value:'0.000000',unit:'mm',source:'inspection',recorded_at:'2026-10-03T12:00:00'}]};w.API={get:async()=>({success:true,data})};await w.loadEamCondition();const target=w.document.getElementById('eamConditionResult');assert.match(target.textContent,/Temperatura: 0 a — °C · Aviso/);assert.match(target.textContent,/75 °C · Aviso · Aberto/);assert.match(target.textContent,/0 mm · Inspeção/);assert.equal(target.querySelector('img'),null);assert.equal(target.querySelector('details').open,false);
+ let finish;w.API.get=()=>new Promise(r=>{finish=r;});const pending=w.loadEamCondition();w.document.getElementById('eamConditionAsset').value='8';finish({success:true,data});await pending;assert.equal(target.textContent,'');dom.window.close();
+});

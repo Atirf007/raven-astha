@@ -1,0 +1,34 @@
+(() => {
+ 'use strict';const make=(tag,text,cls)=>{const e=document.createElement(tag);if(text!=null)e.textContent=text;if(cls)e.className=cls;return e;};
+ document.addEventListener('DOMContentLoaded',()=>{
+  const actions=document.querySelector('#eam-reliability .eam-ux-actions');if(!actions)return;
+  const button=make('button','Operação e reparos','btn btn-secondary btn-sm');button.type='button';actions.append(button);
+  const dialog=make('dialog',null,'eam-ux-dialog');dialog.id='eamObservationsDialog';dialog.setAttribute('aria-labelledby','eamObservationsHeading');
+  const header=make('header'),heading=make('h3','Registrar operação e reparos');heading.id='eamObservationsHeading';const close=make('button','×','eam-ux-close');close.type='button';close.setAttribute('aria-label','Fechar janela');close.onclick=()=>dialog.close();header.append(heading,close);dialog.append(header);
+  const intro=make('div','Registre períodos observados. O reparo ativo é separado da espera e da parada total. Datas usam seu horário local e são gravadas em UTC. Registros são históricos e não podem ser sobrescritos.');dialog.append(intro);
+  const form=make('form',null,'eo-form-grid');const fields={};
+  function field(name,label,type='text'){const wrapper=make('label',label);const input=make('input',null,'eo-input');input.type=type;input.name=name;input.required=true;wrapper.append(input);form.append(wrapper);fields[name]=input;return wrapper;}
+  const kindLabel=make('label','Tipo de observação'),kind=make('select',null,'eo-input');kind.name='kind';for(const [value,label] of [['operation','Operação observada'],['failure','Falha e reparo concluído']]){const o=make('option',label);o.value=value;kind.append(o);}kindLabel.append(kind);form.append(kindLabel);
+  field('started_at','Início observado','datetime-local');field('ended_at','Fim observado / restauração','datetime-local');const repairStart=field('repair_started_at','Início do reparo ativo','datetime-local'),repairEnd=field('repair_ended_at','Fim do reparo ativo','datetime-local');
+  field('source','Origem / registro de evidência');fields.source.maxLength=120;field('notes','Descrição da observação');fields.notes.maxLength=500;
+  const confirmation=make('label'),confirmed=make('input');confirmed.type='checkbox';confirmed.required=true;confirmation.className='eam-observation-confirmation';confirmation.append(confirmed,make('span','Confirmo a origem e os horários desta observação.'));form.append(confirmation);
+  const submit=make('button','Registrar observação','btn btn-primary');submit.type='submit';form.append(submit);const status=make('p');status.setAttribute('role','status');const history=make('div');dialog.append(form,status,history);document.body.append(dialog);
+  function updateKind(){for(const wrapper of [repairStart,repairEnd]){wrapper.hidden=kind.value!=='failure';wrapper.querySelector('input').required=kind.value==='failure';wrapper.querySelector('input').disabled=kind.value!=='failure';}}
+  kind.addEventListener('change',updateKind);updateKind();let assetId=null,requestKey=null,requestContent=null,opening=0;
+  let historyDetails=null,historySummary=null,historyCount=0;
+  async function loadHistory(serial=opening,cursor=null){
+   const result=await API.get('/eam/assets/'+assetId+'/observations'+(cursor?'?after='+encodeURIComponent(cursor):''));if(serial!==opening)return;
+   if(!cursor){history.replaceChildren();historyDetails=null;historySummary=null;historyCount=0;}
+   if(!result.success){if(!cursor)history.append(make('p',result.error||'Histórico indisponível.'));return result;}
+   const records=result.data.records;if(!records.length&&!cursor){history.append(make('p','Nenhuma observação registrada.'));return result;}
+   if(!historyDetails){historyDetails=make('details');historySummary=make('summary');historyDetails.append(historySummary);history.append(historyDetails);}
+   for(const row of records){const item=make('p');item.append(make('strong',row.kind==='operation'?'Operação · ':'Falha e reparo · '),make('span',new Date(row.started_at).toLocaleString('pt-BR')+' → '+new Date(row.ended_at).toLocaleString('pt-BR')+' · '+row.source+' · '+row.notes));historyDetails.append(item);}historyCount+=records.length;historySummary.textContent='Ver histórico · '+historyCount+' registros carregados';
+   if(result.data.has_more&&result.data.next_cursor){const more=make('button','Carregar registros anteriores','btn btn-secondary btn-sm'),message=make('p');more.type='button';message.setAttribute('role','status');historyDetails.append(more,message);more.onclick=async()=>{more.disabled=true;message.textContent='Carregando…';try{const next=await loadHistory(serial,result.data.next_cursor);if(serial!==opening)return;if(next?.success){more.remove();message.remove();}else{message.textContent=next?.error||'Histórico indisponível. Tente novamente.';more.disabled=false;}}catch(_){if(serial===opening){message.textContent='Não foi possível conectar. Tente novamente.';more.disabled=false;}}};}
+   return result;
+  }
+  button.onclick=async()=>{const nextAsset=Number(document.getElementById('eamReliabilityAsset').value);if(!nextAsset){window.showToast?.('Selecione um equipamento.','error');return;}if(assetId!==nextAsset){form.reset();requestKey=null;requestContent=null;updateKind();}assetId=nextAsset;const serial=++opening;status.textContent='';history.replaceChildren();dialog.showModal();await loadHistory(serial);};
+  form.addEventListener('submit',async event=>{event.preventDefault();if(!form.reportValidity())return;let body;try{body={kind:kind.value,started_at:new Date(fields.started_at.value).toISOString(),ended_at:new Date(fields.ended_at.value).toISOString(),source:fields.source.value,notes:fields.notes.value,confirmed:confirmed.checked};if(kind.value==='failure'){body.repair_started_at=new Date(fields.repair_started_at.value).toISOString();body.repair_ended_at=new Date(fields.repair_ended_at.value).toISOString();}}catch(_){status.textContent='Confira as datas informadas.';return;}
+   const serial=opening,targetAsset=assetId,content=JSON.stringify({assetId:targetAsset,...body});if(content!==requestContent){requestKey=crypto.randomUUID();requestContent=content;}body.request_key=requestKey;submit.disabled=true;status.textContent='Registrando…';try{const response=await API.post('/eam/assets/'+targetAsset+'/observations',body);if(serial!==opening)return;if(!response.success){status.textContent=response.error||'Registro indisponível.';return;}status.textContent='Observação registrada no histórico.';form.reset();requestKey=null;requestContent=null;updateKind();await loadHistory(serial);if(serial===opening)await window.loadEamReliability?.();}catch(_){if(serial===opening)status.textContent='Não foi possível conectar. Seus campos foram preservados.';}finally{submit.disabled=false;}
+  });
+ });
+})();

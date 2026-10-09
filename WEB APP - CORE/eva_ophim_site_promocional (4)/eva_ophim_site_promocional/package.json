@@ -1,0 +1,60 @@
+{
+  "version": "1.0.0",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "4.22.3",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "2.4.0",
+    "mysql2": "^3.22.3",
+    "occt-import-js": "0.0.23"
+  },
+  "name": "astha-raven",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.asthareven.wms",
+    "productName": "ASTHA RAVEN",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "desktop-server.js",
+      "api/**/*",
+      "app/**/*",
+      "index.html",
+      "assets/**/*",
+      "css/**/*",
+      "images/**/*",
+      "js/**/*",
+      "old/**/*",
+      "!**/.env",
+      "!**/.env.*",
+      "!**/*.pem",
+      "!**/*.key",
+      "!api/node_modules/**",
+      "!api/database/**",
+      "!api/migrate.js"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "app/images/app_icon.png"
+    },
+    "asar": false
+  },
+  "description": "ASTHA RAVEN WMS",
+  "devDependencies": {
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3"
+  },
+  "main": "main.js",
+  "overrides": {
+    "body-parser": "1.20.8"
+  }
+}

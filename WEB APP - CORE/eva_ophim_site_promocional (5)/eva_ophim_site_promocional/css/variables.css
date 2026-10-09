@@ -1,0 +1,187 @@
+/* ============================================================
+   EVAH OPHIM — Design Tokens (variables.css)
+   [COR] Para alterar cores do site, modifique as variáveis abaixo
+   ============================================================ */
+
+:root {
+  /* ── Cores Primárias ── */
+  /* [COR] Gradiente principal do site */
+  --color-primary: #ffffff;
+  --color-primary-light: #f5f5f5;
+  --color-primary-dark: #cccccc;
+
+  /* [COR] Cor de destaque secundária (cyan) */
+  --color-secondary: #e0e0e0;
+  --color-secondary-light: #ffffff;
+  --color-secondary-dark: #a0a0a0;
+
+  /* [COR] Cor de acento para CTAs urgentes */
+  --color-accent: #ffffff;
+  --color-accent-light: #f0f0f0;
+
+  /* [COR] Cor de sucesso */
+  --color-success: #00FF88;
+  --color-success-dark: #00CC6A;
+
+  /* [COR] Cor de aviso */
+  --color-warning: #FFB830;
+
+  /* [COR] Cor de erro */
+  --color-error: #FF4757;
+
+  /* ── Backgrounds ── */
+  /* [COR] Background principal do site */
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #141414;
+  --bg-elevated: #1a1a1a;
+
+  /* ── Superfícies (Glassmorphism) ── */
+  --surface-glass: rgba(12, 12, 12, 0.45);
+  --surface-glass-hover: rgba(255, 255, 255, 0.05);
+  --surface-glass-active: rgba(255, 255, 255, 0.1);
+  --surface-border: rgba(255, 255, 255, 0.08);
+  --surface-border-hover: rgba(255, 255, 255, 0.15);
+
+  /* ── Textos ── */
+  /* [COR] Cores de texto */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-tertiary: #707070;
+  --text-inverse: #000000;
+
+  /* ── Gradientes ── */
+  --gradient-primary: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.0));
+  --gradient-hero: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+  --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+  --gradient-cta: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+  --gradient-text: linear-gradient(135deg, #ffffff, #a0a0a0);
+  --gradient-mesh: radial-gradient(ellipse at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                   radial-gradient(ellipse at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                   radial-gradient(ellipse at 50% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+
+  /* ── Tipografia ── */
+  /* [FONTE] Fontes do site */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Inter', var(--font-primary);
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Tamanhos */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+  --text-7xl: 4.5rem;
+
+  /* Pesos */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+
+  /* Line Heights */
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* ── Espaçamentos ── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* ── Bordas ── */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* ── Sombras ── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --shadow-glow: 0 0 20px rgba(255, 255, 255, 0.1);
+  --shadow-glow-lg: 0 0 40px rgba(255, 255, 255, 0.2);
+  --shadow-glow-cyan: 0 0 20px rgba(255, 255, 255, 0.1);
+
+  /* ── Transições ── */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Z-Index ── */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-navbar: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-toast: 600;
+
+  /* ── Layout ── */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1440px;
+  --navbar-height: 72px;
+
+  /* ── Blur ── */
+  --liquid-blur: blur(25px) saturate(180%);
+  --blur-sm: 8px;
+  --blur-md: 16px;
+  --blur-lg: 24px;
+  --blur-xl: 40px;
+}
+
+/* ── Modo escuro é o padrão. Light mode só via classe explícita ── */
+/* Removido prefers-color-scheme para forçar dark mode sempre */
+html.light-mode {
+  --bg-primary: #f0f0f5;
+  --bg-secondary: #e5e5ea;
+  --bg-tertiary: #d1d1d6;
+  --bg-elevated: #ffffff;
+  --surface-glass: rgba(255, 255, 255, 0.7);
+  --surface-glass-hover: rgba(255, 255, 255, 0.65);
+  --surface-border: rgba(0, 0, 0, 0.08);
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-tertiary: #555555;
+  --text-inverse: #ffffff;
+  --color-primary: #000000;
+  --color-primary-light: #333333;
+  --color-primary-dark: #000000;
+  --color-secondary: #222222;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --shadow-glow: 0 0 20px rgba(0, 0, 0, 0.05);
+  --gradient-mesh: radial-gradient(ellipse at 20% 50%, rgba(0, 0, 0, 0.03) 0%, transparent 60%),
+                   radial-gradient(ellipse at 80% 20%, rgba(0, 0, 0, 0.02) 0%, transparent 60%),
+                   radial-gradient(ellipse at 50% 80%, rgba(0, 0, 0, 0.015) 0%, transparent 60%);
+}
+
+
+

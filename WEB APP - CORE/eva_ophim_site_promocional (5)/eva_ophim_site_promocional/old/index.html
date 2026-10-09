@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kazinho Systems — Hub de serviços e soluções tecnológicas para gestão empresarial">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:;">
+  <meta name="csrf-token" content="">
+  <title>Kazinho Systems — Hub de Serviços</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/kazinho.css">
+  <link rel="shorcut icon" type="imagex/png" href="images/Logotipo (Alpha).png">
+</head>
+<body>
+  <!-- Cursor Glow Effect -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- NAVBAR -->
+  <!-- ════════════════════════════════════════════════ -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">
+        <img src="images/Logotipo (Alpha).png" alt="Kazinho Systems" style="height:32px;vertical-align:middle;">
+      </a>
+      <div class="navbar-links">
+        <a href="#servicos" class="navbar-link active">Serviços</a>
+        <a href="#sobre" class="navbar-link">Sobre</a>
+        <a href="evah/sobre.html" class="navbar-link">Quem Somos</a>
+        <a href="#contato" class="navbar-link">Contato</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="evah/login.html" class="btn btn-ghost">Login</a>
+        <a href="evah/index.html" class="btn btn-primary">Conheça o EVAH →</a>
+      </div>
+      <!-- Mobile toggle -->
+      <button class="navbar-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div class="navbar-mobile" id="navMobile">
+      <a href="#servicos" class="navbar-link">Serviços</a>
+      <a href="#sobre" class="navbar-link">Sobre</a>
+      <a href="evah/sobre.html" class="navbar-link">Quem Somos</a>
+      <a href="#contato" class="navbar-link">Contato</a>
+      <div class="navbar-actions">
+        <a href="evah/login.html" class="btn btn-secondary btn-block">Login</a>
+        <a href="evah/index.html" class="btn btn-primary btn-block">Conheça o EVAH →</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- HERO SECTION -->
+  <!-- ════════════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <canvas class="hero-particles" id="particlesCanvas"></canvas>
+    <div class="hero-mesh"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+    <div class="hero-grid"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <span>Hub de Soluções Tecnológicas</span>
+      </div>
+
+      <h1 class="hero-title">
+        Tecnologia a serviço da <span class="highlight">eficiência</span> operacional
+      </h1>
+
+      <p class="hero-subtitle">
+        Desenvolvemos soluções sob medida para gestão empresarial, automação de processos e inteligência de dados. Plataformas robustas que acompanham o crescimento da sua operação.
+      </p>
+
+      <div class="hero-actions">
+        <a href="evah/index.html" class="btn btn-primary btn-lg">Explorar EVAH OPHIM →</a>
+        <a href="#contato" class="btn btn-secondary btn-lg">Fale Conosco</a>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="hero-scroll-indicator"></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- SERVIÇOS -->
+  <!-- ════════════════════════════════════════════════ -->
+  <section class="section" id="servicos">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Nossos Serviços</span>
+        <h2>Soluções que <span class="text-gradient">impulsionam</span> resultados</h2>
+        <p>Cada solução é projetada para entregar valor real à operação da sua empresa, com tecnologia de ponta e suporte dedicado.</p>
+      </div>
+
+      <div class="services-grid stagger">
+        <!-- EVAH OPHIM — Card principal -->
+        <a href="evah/index.html" class="service-card reveal">
+          <span class="badge service-card-badge">Destaque</span>
+          <div class="service-card-content">
+            <div class="service-card-icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+            </div>
+            <h3>EVAH OPHIM</h3>
+            <p>Plataforma integrada para controle operacional, gestão de recursos, rastreabilidade e relatórios analíticos em tempo real.</p>
+            <span class="service-card-link">Conhecer produto →</span>
+          </div>
+        </a>
+
+        <!-- Automação Industrial -->
+        <div class="service-card reveal">
+          <div class="service-card-content">
+            <div class="service-card-icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <h3>Automação Industrial</h3>
+            <p>Projetos de automação sob medida para linhas de produção, integrando CLPs, sensores e sistemas supervisórios.</p>
+            <span class="service-card-link">Saiba mais →</span>
+          </div>
+        </div>
+
+        <!-- Cloud & Infraestrutura -->
+        <div class="service-card reveal">
+          <div class="service-card-content">
+            <div class="service-card-icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg>
+            </div>
+            <h3>Cloud & Infraestrutura</h3>
+            <p>Migração e gestão de ambientes cloud com Azure, AWS e Google Cloud. Infraestrutura escalável e segura para sua operação.</p>
+            <span class="service-card-link">Saiba mais →</span>
+          </div>
+        </div>
+
+        <!-- Business Intelligence -->
+        <div class="service-card reveal">
+          <div class="service-card-content">
+            <div class="service-card-icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <h3>Business Intelligence</h3>
+            <p>Dashboards gerenciais, ETL e modelagem de dados para transformar informações em decisões estratégicas fundamentadas.</p>
+            <span class="service-card-link">Saiba mais →</span>
+          </div>
+        </div>
+
+        <!-- Cibersegurança -->
+        <div class="service-card reveal">
+          <div class="service-card-content">
+            <div class="service-card-icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Cibersegurança</h3>
+            <p>Análise de vulnerabilidades, pentest, monitoramento contínuo e políticas de segurança alinhadas à LGPD e ISO 27001.</p>
+            <span class="service-card-link">Saiba mais →</span>
+          </div>
+        </div>
+
+        <!-- IA & Machine Learning -->
+        <div class="service-card reveal">
+          <div class="service-card-content">
+            <div class="service-card-icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h.01"/><path d="M15 9h.01"/><path d="M9 15c.83.94 2.17 1.5 3 1.5s2.17-.56 3-1.5"/></svg>
+            </div>
+            <h3>IA & Machine Learning</h3>
+            <p>Modelos preditivos, processamento de linguagem natural e visão computacional aplicados à indústria e ao varejo.</p>
+            <span class="service-card-link">Saiba mais →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- STATS -->
+  <!-- ════════════════════════════════════════════════ -->
+  <section class="section stats-section">
+    <div class="container">
+      <div class="stats-grid reveal">
+        <div class="stat-item">
+          <div class="stat-number" data-target="150">0</div>
+          <div class="stat-label">Clientes Ativos</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="99.9">0</div>
+          <div class="stat-label">% Uptime</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="50">0</div>
+          <div class="stat-label">Projetos Entregues</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="24">0</div>
+          <div class="stat-label">Suporte 24/7</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- SOBRE -->
+  <!-- ════════════════════════════════════════════════ -->
+  <section class="section" id="sobre">
+    <div class="container">
+      <div class="about-grid">
+        <div class="reveal-left">
+          <span class="section-label">Sobre Nós</span>
+          <h2>Construindo o <span class="text-gradient">futuro</span> da gestão empresarial</h2>
+          <p class="mt-4">Nascemos da necessidade de conectar operação e tecnologia de forma acessível. Nossa equipe reúne especialistas em engenharia de software, automação industrial e ciência de dados, trabalhando em conjunto para entregar soluções que geram impacto mensurável.</p>
+          <p class="mt-4">Acreditamos que a transformação digital não é privilégio de grandes corporações. Por isso, desenvolvemos plataformas escaláveis, de implantação rápida e com suporte humanizado.</p>
+          <div class="about-stats">
+            <div class="about-stat">
+              <div class="about-stat-number" data-target="10">0</div>
+              <div class="about-stat-label">Anos de Experiência</div>
+            </div>
+            <div class="about-stat">
+              <div class="about-stat-number" data-target="35">0</div>
+              <div class="about-stat-label">Especialistas</div>
+            </div>
+          </div>
+        </div>
+        <div class="about-image reveal-right">
+          <div style="width:100%;height:400px;background:var(--gradient-card);border-radius:var(--radius-xl);display:flex;align-items:center;justify-content:center;padding:var(--space-8);">
+            <img src="images/Logotipo (Alpha).png" alt="Kazinho Systems" style="max-width:80%;max-height:80%;object-fit:contain;opacity:0.7;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- CTA - EVAH -->
+  <!-- ════════════════════════════════════════════════ -->
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-box reveal-scale">
+        <h2>Conheça o EVAH OPHIM</h2>
+        <p>Descubra como nossa plataforma pode otimizar a gestão operacional da sua empresa com controle total de recursos, rastreabilidade e inteligência analítica.</p>
+        <a href="evah/index.html" class="btn btn-lg">Explorar Agora →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- CONTATO -->
+  <!-- ════════════════════════════════════════════════ -->
+  <section class="section" id="contato">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Contato</span>
+        <h2>Fale <span class="text-gradient">conosco</span></h2>
+        <p>Entre em contato por qualquer um dos canais abaixo.</p>
+      </div>
+
+      <div class="contact-methods reveal">
+        <a href="https://wa.me/SEUNUMERO" target="_blank" class="contact-method" id="contact-whatsapp">
+          <div class="contact-method-icon whatsapp">💬</div>
+          <div class="contact-method-text">
+            <h4>WhatsApp</h4>
+            <p>+55 (XX) XXXXX-XXXX</p>
+          </div>
+        </a>
+
+        <a href="mailto:contato@kazinhosystems.com" class="contact-method" id="contact-email">
+          <div class="contact-method-icon email">✉️</div>
+          <div class="contact-method-text">
+            <h4>Email</h4>
+            <p>contato@kazinhosystems.com</p>
+          </div>
+        </a>
+
+        <a href="tel:+55XXXXXXXXXX" class="contact-method" id="contact-phone">
+          <div class="contact-method-icon phone">📞</div>
+          <div class="contact-method-text">
+            <h4>Telefone</h4>
+            <p>+55 (XX) XXXXX-XXXX</p>
+          </div>
+        </a>
+
+        <a href="https://instagram.com/kazinhosystems" target="_blank" class="contact-method" id="contact-instagram">
+          <div class="contact-method-icon instagram">📷</div>
+          <div class="contact-method-text">
+            <h4>Instagram</h4>
+            <p>@kazinhosystems</p>
+          </div>
+        </a>
+
+        <a href="https://linkedin.com/company/kazinhosystems" target="_blank" class="contact-method" id="contact-linkedin">
+          <div class="contact-method-icon linkedin">💼</div>
+          <div class="contact-method-text">
+            <h4>LinkedIn</h4>
+            <p>Kazinho Systems</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- FOOTER -->
+  <!-- ════════════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="navbar-logo">
+            <img src="images/Logotipo (Alpha).png" alt="Kazinho Systems" style="height:28px;">
+          </a>
+          <p>Soluções tecnológicas de excelência para gestão empresarial, automação e inteligência de dados.</p>
+          <div class="footer-social">
+            <a href="https://wa.me/SEUNUMERO" target="_blank" aria-label="WhatsApp">💬</a>
+            <a href="https://instagram.com/kazinhosystems" target="_blank" aria-label="Instagram">📷</a>
+            <a href="https://linkedin.com/company/kazinhosystems" target="_blank" aria-label="LinkedIn">💼</a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h4>Produtos</h4>
+          <a href="evah/index.html">EVAH OPHIM</a>
+          <a href="#">Automação</a>
+          <a href="#">Cloud</a>
+        </div>
+        <div class="footer-column">
+          <h4>Empresa</h4>
+          <a href="evah/sobre.html">Quem Somos</a>
+          <a href="#sobre">Sobre</a>
+          <a href="#contato">Contato</a>
+        </div>
+        <div class="footer-column">
+          <h4>Legal</h4>
+          <a href="evah/termos.html">Termos de Serviço</a>
+          <a href="evah/privacidade.html">Privacidade & LGPD</a>
+          <a href="evah/eula.html">EULA</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Kazinho Systems. Todos os direitos reservados.</span>
+        <span>Feito com 💜 por Kazinho Systems</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/animations.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-10-03T14:35:01.030Z",
+  "synthetic": true,
+  "origin": "http://127.0.0.1:3000/api",
+  "login_ms": 653,
+  "reliability": {
+    "from": "2026-09-03T00:00:00.000Z",
+    "to": "2026-10-03T00:00:00.000Z",
+    "observed_operation_hours": 711,
+    "downtime_hours": 9,
+    "mtbf_hours": 237,
+    "mttr_hours": 1.5
+  },
+  "import_study_id": "eab72a4b-1c0f-43bf-8494-7befd5bb353e",
+  "checks": [
+    "catálogo com cálculo e parser reais; acesso anônimo recusado",
+    "sete períodos qualificados persistidos e sobreposição recusada",
+    "MTBF 237 h, MTTR 1,5 h e disponibilidade conferidos sem duplicar paradas",
+    "CSV pelo Docker, zero e ausência preservados; publicação idempotente",
+    "arquivo hostil recusado no parser e cálculo real após importação",
+    "usuário da API sem DDL e sem alteração dos registros históricos; quarentena limpa"
+  ]
+}

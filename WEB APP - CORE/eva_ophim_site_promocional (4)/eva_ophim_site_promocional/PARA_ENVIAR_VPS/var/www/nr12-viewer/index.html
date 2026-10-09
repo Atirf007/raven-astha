@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planta Fabril 3D — Auditoria NR-12 / NR-06 | KazinhoSystems</title>
+  <meta name="description" content="Visualizador 3D de planta fabril para auditoria de conformidade NR-12 (Segurança em Máquinas e Equipamentos) e NR-06 (Equipamentos de Proteção Individual). KazinhoSystems / ArrudaCorp." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Favicon inline -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23f97316'/><text y='24' x='4' font-size='22'>🏭</text></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Three.js r165 via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────────── -->
+<header id="header" role="banner">
+  <div class="header-brand">
+    <div class="brand-icon" aria-hidden="true">🏭</div>
+    <div class="brand-text">
+      <h1>Planta Fabril 3D</h1>
+      <span>Auditoria NR-12 / NR-06 — KazinhoSystems</span>
+    </div>
+  </div>
+
+  <!-- Score Indicator -->
+  <div class="header-score" role="status" aria-live="polite" aria-label="Pontuação de conformidade">
+    <div class="score-ring-wrap" title="Conformidade geral">
+      <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+        <circle class="score-ring-bg" cx="22" cy="22" r="18" />
+        <circle class="score-ring-fill" id="header-ring-fill" cx="22" cy="22" r="18" />
+      </svg>
+      <span class="score-ring-label" id="header-ring-label">0%</span>
+    </div>
+    <div class="score-info">
+      <span class="score-pct status-critico" id="header-score-pct">0%</span>
+      <span class="score-status" id="header-score-status">Crítico</span>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <button class="btn btn-ghost" id="btn-upload-model" title="Carregar modelo 3D" aria-label="Carregar modelo OBJ">
+      📂 Carregar Modelo
+    </button>
+    <button class="btn btn-primary" id="btn-print" title="Gerar relatório PDF" aria-label="Gerar relatório de conformidade">
+      🖨️ Relatório PDF
+    </button>
+  </div>
+</header>
+
+<!-- ── PRINT HEADER (only visible on print) ──────────── -->
+<div class="print-header">
+  <h1 style="font-size:20px; margin-bottom:4px">Relatório de Auditoria — NR-12 / NR-06</h1>
+  <p style="font-size:12px; color:#666">KazinhoSystems / ArrudaCorp — Emitido em: <span id="print-date"></span></p>
+</div>
+
+<!-- ── MAIN LAYOUT ──────────────────────────────────────── -->
+<main id="main-layout" role="main">
+
+  <!-- 3D VIEWPORT ───────────────────────────────────────── -->
+  <section id="viewport-wrap" aria-label="Visualizador 3D da planta fabril">
+    <canvas id="canvas-3d" aria-hidden="true"></canvas>
+
+    <!-- Drop / Upload Overlay -->
+    <div id="drop-overlay" role="region" aria-label="Área de upload do modelo 3D">
+      <div class="drop-icon" aria-hidden="true">🏗️</div>
+      <p class="drop-title">Visualizador 3D de Planta Fabril</p>
+      <p class="drop-sub">
+        Arraste e solte o arquivo da planta aqui<br/>
+        ou clique no botão para selecionar.<br/>
+        <small style="color:var(--text-muted)">Suporta arquivo com MTL opcional para texturas/materiais.</small>
+      </p>
+      <div class="drop-formats" aria-label="Formatos suportados">
+        <span class="format-pill">.OBJ</span>
+        <span class="format-pill">.MTL</span>
+      </div>
+      <button class="btn btn-primary drop-btn" id="browse-btn" aria-label="Selecionar arquivo OBJ do computador">
+        📁 Selecionar Arquivo OBJ
+      </button>
+      <input type="file" id="file-input" accept=".obj,.mtl" multiple aria-label="Input de arquivo OBJ/MTL" />
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" role="status" aria-live="polite" aria-label="Carregando modelo 3D">
+      <div class="spinner" aria-hidden="true"></div>
+      <div class="load-progress-wrap">
+        <div class="load-progress-header">
+          <p class="loading-text" id="load-progress-text">Carregando modelo 3D…</p>
+          <span class="load-pct" id="load-progress-pct"></span>
+        </div>
+        <div class="load-bar-track" aria-hidden="true">
+          <div class="load-bar-fill" id="load-progress-bar" style="width:0%"></div>
+        </div>
+        <p class="load-hint">Arquivo de 1,7 GB — aguarde, o processo pode levar alguns minutos conforme a memória disponível.</p>
+      </div>
+    </div>
+
+    <!-- Viewport Info Badges -->
+    <div id="viewport-info" aria-hidden="true">
+      <div class="info-badge">
+        <div class="dot"></div>
+        <span id="model-name-badge">Nenhum modelo</span>
+      </div>
+    </div>
+
+    <!-- Viewport Toolbar -->
+    <div id="viewport-toolbar" role="toolbar" aria-label="Controles do visualizador 3D">
+      <button class="btn-icon" id="btn-zoom-in"   title="Aproximar"        aria-label="Aproximar zoom">🔍</button>
+      <button class="btn-icon" id="btn-zoom-out"   title="Afastar"          aria-label="Afastar zoom">🔎</button>
+      <button class="btn-icon" id="btn-reset-cam"  title="Resetar câmera"   aria-label="Resetar câmera">⟳</button>
+      <button class="btn-icon" id="btn-fullscreen" title="Tela cheia"        aria-label="Tela cheia">⛶</button>
+    </div>
+  </section>
+
+  <!-- SIDE PANEL ─────────────────────────────────────────── -->
+  <aside id="side-panel" role="complementary" aria-label="Painel de conformidade NR-12 e NR-06">
+
+    <!-- Tabs -->
+    <nav id="panel-tabs" role="tablist" aria-label="Abas do painel de conformidade">
+      <button class="tab-btn active" data-tab="tab-nr12" role="tab" aria-selected="true"  id="tabnav-nr12" aria-controls="tab-nr12">
+        🛡️ NR-12
+        <span class="tab-badge" id="tab-badge-nr12">31</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-nr06" role="tab" aria-selected="false" id="tabnav-nr06" aria-controls="tab-nr06">
+        🦺 NR-06
+        <span class="tab-badge" id="tab-badge-nr06">17</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-summary" role="tab" aria-selected="false" id="tabnav-summary" aria-controls="tab-summary">
+        📊 Resumo
+      </button>
+      <button class="tab-btn" data-tab="tab-model" role="tab" aria-selected="false" id="tabnav-model" aria-controls="tab-model">
+        ⚙️ Modelo
+      </button>
+    </nav>
+
+    <!-- Panel Content -->
+    <div id="panel-content">
+
+      <!-- TAB: NR-12 ───────────────────────────────────── -->
+      <div class="tab-panel active" id="tab-nr12" role="tabpanel" aria-labelledby="tabnav-nr12">
+        <div class="nr-header-info">
+          <h3>NR-12 — Segurança em Máquinas e Equipamentos</h3>
+          <p>Marque os itens verificados e em conformidade na planta fabril. O score de conformidade é atualizado em tempo real.</p>
+        </div>
+        <div id="nr12-list" role="list" aria-label="Checklist NR-12"></div>
+      </div>
+
+      <!-- TAB: NR-06 ───────────────────────────────────── -->
+      <div class="tab-panel" id="tab-nr06" role="tabpanel" aria-labelledby="tabnav-nr06">
+        <div class="nr-header-info">
+          <h3>NR-06 — Equipamentos de Proteção Individual</h3>
+          <p>Verifique a disponibilidade, validade e uso correto dos EPIs obrigatórios para o ambiente fabril.</p>
+        </div>
+        <div id="nr06-list" role="list" aria-label="Checklist NR-06"></div>
+      </div>
+
+      <!-- TAB: RESUMO ──────────────────────────────────── -->
+      <div class="tab-panel" id="tab-summary" role="tabpanel" aria-labelledby="tabnav-summary">
+
+        <!-- Big Score Card -->
+        <div class="summary-card">
+          <div class="summary-title">Score Geral de Conformidade</div>
+          <div class="summary-big-score">
+            <div class="big-ring" title="Conformidade geral em percentual">
+              <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
+                <circle class="big-ring-bg" cx="36" cy="36" r="33" />
+                <circle class="big-ring-fill" id="big-ring-fill" cx="36" cy="36" r="33" />
+              </svg>
+              <span class="big-ring-label" id="big-ring-label">0%</span>
+            </div>
+            <div class="summary-stats">
+              <div class="stat-row">
+                <div class="stat-dot" style="background:var(--green)"></div>
+                <span class="stat-label">Itens conformes</span>
+                <strong class="stat-val" style="color:var(--green)" id="stat-checked">0</strong>
+              </div>
+              <div class="stat-row">
+                <div class="stat-dot" style="background:var(--red)"></div>
+                <span class="stat-label">Pendentes</span>
+                <strong class="stat-val" style="color:var(--red)" id="stat-pending">48</strong>
+              </div>
+              <div class="stat-row">
+                <div class="stat-dot" style="background:var(--text-muted)"></div>
+                <span class="stat-label">Total de itens</span>
+                <strong class="stat-val" id="stat-total">48</strong>
+              </div>
+            </div>
+          </div>
+          <div class="status-banner critico" id="status-banner" role="status">
+            <span>🔴</span><span>Crítico: 0% de conformidade (0/48 itens)</span>
+          </div>
+        </div>
+
+        <!-- Per-category progress bars -->
+        <div class="summary-card">
+          <div class="summary-title">Progresso por Categoria</div>
+          <div id="summary-bars"></div>
+        </div>
+
+      </div>
+
+      <!-- TAB: MODELO ──────────────────────────────────── -->
+      <div class="tab-panel" id="tab-model" role="tabpanel" aria-labelledby="tabnav-model">
+
+        <!-- Model Stats Grid -->
+        <div class="model-info-grid" role="region" aria-label="Estatísticas do modelo 3D">
+          <div class="model-stat-card">
+            <div class="val" id="info-vertices">—</div>
+            <div class="lbl">Vértices</div>
+          </div>
+          <div class="model-stat-card">
+            <div class="val" id="info-faces">—</div>
+            <div class="lbl">Faces</div>
+          </div>
+          <div class="model-stat-card">
+            <div class="val" id="info-objects">—</div>
+            <div class="lbl">Objetos</div>
+          </div>
+          <div class="model-stat-card">
+            <div class="val" id="info-materials">—</div>
+            <div class="lbl">Materiais</div>
+          </div>
+        </div>
+
+        <!-- Display Settings -->
+        <div class="model-controls">
+          <h4>Configurações de Visualização</h4>
+          <div class="control-row">
+            <span>Grade de referência</span>
+            <label class="toggle-switch" aria-label="Alternar grade de referência">
+              <input type="checkbox" id="toggle-grid" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="control-row">
+            <span>Modo wireframe</span>
+            <label class="toggle-switch" aria-label="Alternar modo wireframe">
+              <input type="checkbox" id="toggle-wire" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Controls Reference -->
+        <div class="model-controls" style="margin-top:16px">
+          <h4>Controles do Mouse</h4>
+          <div class="control-row"><span>Botão esquerdo + arrastar</span><span style="color:var(--orange);font-size:11px">Orbitar</span></div>
+          <div class="control-row"><span>Botão direito + arrastar</span><span style="color:var(--orange);font-size:11px">Pan</span></div>
+          <div class="control-row"><span>Scroll do mouse</span><span style="color:var(--orange);font-size:11px">Zoom</span></div>
+          <div class="control-row"><span>Duplo clique</span><span style="color:var(--orange);font-size:11px">Focar objeto</span></div>
+        </div>
+
+      </div>
+
+    </div><!-- /panel-content -->
+
+    <!-- Panel Footer -->
+    <div id="panel-footer">
+      <button class="btn btn-ghost" id="btn-clear-all" onclick="clearAll()" aria-label="Limpar todos os checkboxes">
+        🗑️ Limpar Tudo
+      </button>
+      <button class="btn btn-primary" onclick="window.print()" aria-label="Gerar relatório PDF de conformidade">
+        🖨️ Exportar Relatório
+      </button>
+    </div>
+
+  </aside>
+</main>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container" role="region" aria-live="polite" aria-label="Notificações"></div>
+
+<!-- ── SCRIPTS ──────────────────────────────────────────── -->
+<!-- Three.js Addons via importmap shim — using r128 builds -->
+<script>
+  // OBJLoader for Three.js r128
+  (function(){
+    // Minimal OBJLoader compatible with r128
+    const _parseMap = new Map();
+
+    THREE.OBJLoader = class OBJLoader extends THREE.Loader {
+      constructor(manager) { super(manager); }
+
+      load(url, onLoad, onProgress, onError) {
+        const loader = new THREE.FileLoader(this.manager);
+        loader.setPath(this.path);
+        loader.setRequestHeader(this.requestHeader);
+        loader.setWithCredentials(this.withCredentials);
+        loader.load(url, text => {
+          try { onLoad(this.parse(text)); }
+          catch(e) { if(onError) onError(e); }
+        }, onProgress, onError);
+      }
+
+      setMaterials(materials) { this.materials = materials; return this; }
+
+      parse(text) {
+        const lines = text.split('\n');
+        const state = {
+          objects: [], object: null,
+          vertices: [], normals: [], colors: [], uvs: [],
+          materials: {}, materialLibraries: [],
+        };
+
+        const startObject = (name) => {
+          if (state.object && state.object.currentMaterial().geometry.vertices.length === 0) return;
+          state.objects.push(state.object = {
+            name: name || '', fromDeclaration: name !== undefined,
+            geometry: { vertices: [], normals: [], colors: [], uvs: [], hasUVIndices: false },
+            materials: [],
+            smooth: false,
+            currentMaterial() {
+              if (!this.materials.length) this.materials.push({ name: '', smooth: this.smooth, groupStart: 0, groupCount: -1, inherited: false, clone(n){return {...this, name:n};} });
+              return this.materials[this.materials.length-1];
+            }
+          });
+        };
+
+        const addVertex = (a, b, c, na, nb, nc, ua, ub) => {
+          const o = state.object;
+          const vi = [a, b, c].map(i => (i >= 0 ? i - 1 : state.vertices.length / 3 + i) * 3);
+          o.geometry.vertices.push(state.vertices[vi[0]], state.vertices[vi[0]+1], state.vertices[vi[0]+2]);
+          o.geometry.vertices.push(state.vertices[vi[1]], state.vertices[vi[1]+1], state.vertices[vi[1]+2]);
+          o.geometry.vertices.push(state.vertices[vi[2]], state.vertices[vi[2]+1], state.vertices[vi[2]+2]);
+          if (state.colors.length > 0) {
+            o.geometry.colors.push(state.colors[vi[0]], state.colors[vi[0]+1], state.colors[vi[0]+2]);
+            o.geometry.colors.push(state.colors[vi[1]], state.colors[vi[1]+1], state.colors[vi[1]+2]);
+            o.geometry.colors.push(state.colors[vi[2]], state.colors[vi[2]+1], state.colors[vi[2]+2]);
+          }
+          if (na !== undefined) {
+            const ni = [na, nb, nc].map(i => (i >= 0 ? i - 1 : state.normals.length / 3 + i) * 3);
+            o.geometry.normals.push(state.normals[ni[0]], state.normals[ni[0]+1], state.normals[ni[0]+2]);
+            o.geometry.normals.push(state.normals[ni[1]], state.normals[ni[1]+1], state.normals[ni[1]+2]);
+            o.geometry.normals.push(state.normals[ni[2]], state.normals[ni[2]+1], state.normals[ni[2]+2]);
+          }
+          if (ua !== undefined) {
+            const ui = [ua, ub].map((i, idx) => {
+              const ri = idx === 0 ? ua : ub;
+              return (ri >= 0 ? ri - 1 : state.uvs.length / 2 + ri) * 2;
+            });
+          }
+        };
+
+        startObject();
+
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (line.length === 0 || line.startsWith('#')) continue;
+          const parts = line.split(/\s+/);
+          const cmd = parts[0];
+
+          if (cmd === 'v') {
+            state.vertices.push(+parts[1], +parts[2], +parts[3]);
+          } else if (cmd === 'vn') {
+            state.normals.push(+parts[1], +parts[2], +parts[3]);
+          } else if (cmd === 'vt') {
+            state.uvs.push(+parts[1], +parts[2]);
+          } else if (cmd === 'f') {
+            // Parse face — supports v, v/vt, v/vt/vn, v//vn
+            const verts = parts.slice(1).map(p => {
+              const idx = p.split('/').map(x => x === '' ? undefined : +x);
+              return { v: idx[0], vt: idx[1], vn: idx[2] };
+            });
+            // Triangulate (fan method)
+            for (let j = 1; j < verts.length - 1; j++) {
+              const [v0, vj, vj1] = [verts[0], verts[j], verts[j+1]];
+              const push = (vi, ni, ti) => {
+                const vidx = (vi >= 0 ? vi - 1 : state.vertices.length / 3 + vi) * 3;
+                state.object.geometry.vertices.push(
+                  state.vertices[vidx] ?? 0,
+                  state.vertices[vidx+1] ?? 0,
+                  state.vertices[vidx+2] ?? 0
+                );
+                if (ni !== undefined && state.normals.length) {
+                  const nidx = (ni >= 0 ? ni - 1 : state.normals.length / 3 + ni) * 3;
+                  state.object.geometry.normals.push(state.normals[nidx] ?? 0, state.normals[nidx+1] ?? 0, state.normals[nidx+2] ?? 0);
+                }
+                if (ti !== undefined && state.uvs.length) {
+                  const tidx = (ti >= 0 ? ti - 1 : state.uvs.length / 2 + ti) * 2;
+                  state.object.geometry.uvs.push(state.uvs[tidx] ?? 0, state.uvs[tidx+1] ?? 0);
+                  state.object.geometry.hasUVIndices = true;
+                }
+              };
+              push(v0.v, v0.vn, v0.vt);
+              push(vj.v, vj.vn, vj.vt);
+              push(vj1.v, vj1.vn, vj1.vt);
+            }
+          } else if (cmd === 'o') {
+            startObject(parts.slice(1).join(' '));
+          } else if (cmd === 'g') {
+            // group — treat as sub-object name hint
+          } else if (cmd === 'usemtl') {
+            // material name
+          } else if (cmd === 's') {
+            state.object.smooth = parts[1] !== '0' && parts[1] !== 'off';
+          }
+        }
+
+        const container = new THREE.Group();
+        container.name = 'OBJModel';
+
+        for (const obj of state.objects) {
+          const geo = obj.geometry;
+          if (geo.vertices.length === 0) continue;
+
+          const geometry = new THREE.BufferGeometry();
+          geometry.setAttribute('position', new THREE.Float32BufferAttribute(geo.vertices, 3));
+
+          if (geo.normals.length === geo.vertices.length) {
+            geometry.setAttribute('normal', new THREE.Float32BufferAttribute(geo.normals, 3));
+          } else {
+            geometry.computeVertexNormals();
+          }
+
+          if (geo.hasUVIndices && geo.uvs.length > 0) {
+            geometry.setAttribute('uv', new THREE.Float32BufferAttribute(geo.uvs, 2));
+          }
+
+          let mat;
+          if (this.materials && this.materials.materials) {
+            const matKeys = Object.keys(this.materials.materials);
+            mat = matKeys.length ? this.materials.create(matKeys[0]) : null;
+          }
+          if (!mat) {
+            mat = new THREE.MeshStandardMaterial({ color: 0x7090a0, roughness: 0.65, metalness: 0.25, side: THREE.DoubleSide });
+          }
+
+          const mesh = new THREE.Mesh(geometry, mat);
+          mesh.name = obj.name || 'mesh_' + container.children.length;
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
+          container.add(mesh);
+        }
+
+        return container;
+      }
+    };
+
+    // MTLLoader stub — basic diffuse support
+    THREE.MTLLoader = class MTLLoader extends THREE.Loader {
+      constructor(manager) { super(manager); }
+      parse(text, path) {
+        const materials = {};
+        let current = null;
+        text.split('\n').forEach(line => {
+          line = line.trim();
+          if (!line || line.startsWith('#')) return;
+          const parts = line.split(/\s+/);
+          if (parts[0] === 'newmtl') {
+            current = parts[1];
+            materials[current] = { Kd: [0.7, 0.7, 0.7] };
+          } else if (parts[0] === 'Kd' && current) {
+            materials[current].Kd = [+parts[1], +parts[2], +parts[3]];
+          }
+        });
+        return {
+          materials,
+          preload() {},
+          create(name) {
+            const m = materials[name];
+            if (!m) return new THREE.MeshStandardMaterial({ color: 0x888888 });
+            const c = m.Kd;
+            return new THREE.MeshStandardMaterial({
+              color: new THREE.Color(c[0], c[1], c[2]),
+              roughness: 0.65, metalness: 0.2, side: THREE.DoubleSide
+            });
+          }
+        };
+      }
+    };
+
+    // OrbitControls — minimal but fully functional
+    // Using the CDN version below via script tag
+  })();
+</script>
+
+<!-- OrbitControls via separate CDN -->
+<script>
+// Lightweight OrbitControls compatible with Three.js r128
+THREE.OrbitControls = (function(){
+  function OrbitControls(camera, domElement) {
+    this.camera = camera;
+    this.domElement = domElement || document;
+    this.enabled = true;
+    this.target = new THREE.Vector3();
+    this.minDistance = 0;
+    this.maxDistance = Infinity;
+    this.minPolarAngle = 0;
+    this.maxPolarAngle = Math.PI;
+    this.enableDamping = false;
+    this.dampingFactor = 0.05;
+
+    // Internal
+    const scope = this;
+    let isMouseDown = false, isRightDown = false;
+    let lastMouse = { x: 0, y: 0 };
+    let spherical = new THREE.Spherical();
+    let sphericalDelta = new THREE.Spherical();
+    let panOffset = new THREE.Vector3();
+    let dampingSpherical = new THREE.Spherical(0, 0, 0);
+    let dampingPan = new THREE.Vector3();
+
+    function getOffset() {
+      const offset = new THREE.Vector3();
+      return offset.copy(camera.position).sub(scope.target);
+    }
+
+    function apply() {
+      const offset = getOffset();
+      spherical.setFromVector3(offset);
+      spherical.theta += sphericalDelta.theta;
+      spherical.phi   += sphericalDelta.phi;
+      spherical.phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, spherical.phi));
+      spherical.radius = Math.max(scope.minDistance, Math.min(scope.maxDistance, spherical.radius));
+      scope.target.add(panOffset);
+      const newPos = new THREE.Vector3().setFromSpherical(spherical).add(scope.target);
+      camera.position.copy(newPos);
+      camera.lookAt(scope.target);
+
+      if (scope.enableDamping) {
+        sphericalDelta.theta *= (1 - scope.dampingFactor);
+        sphericalDelta.phi   *= (1 - scope.dampingFactor);
+        panOffset.multiplyScalar(1 - scope.dampingFactor);
+      } else {
+        sphericalDelta.set(0, 0, 0);
+        panOffset.set(0, 0, 0);
+      }
+    }
+
+    domElement.addEventListener('mousedown', e => {
+      if (e.button === 0) isMouseDown = true;
+      if (e.button === 2) isRightDown = true;
+      lastMouse = { x: e.clientX, y: e.clientY };
+    });
+
+    document.addEventListener('mouseup', () => { isMouseDown = false; isRightDown = false; });
+
+    document.addEventListener('mousemove', e => {
+      if (!scope.enabled) return;
+      const dx = e.clientX - lastMouse.x;
+      const dy = e.clientY - lastMouse.y;
+      lastMouse = { x: e.clientX, y: e.clientY };
+
+      if (isMouseDown && !isRightDown) {
+        const el = scope.domElement === document ? document.body : scope.domElement;
+        sphericalDelta.theta -= 2 * Math.PI * dx / el.clientWidth;
+        sphericalDelta.phi   -= 2 * Math.PI * dy / el.clientHeight;
+      } else if (isRightDown) {
+        const offset = getOffset();
+        const len = offset.length();
+        const panSpeed = len * Math.tan(camera.fov * Math.PI / 360);
+        const el = scope.domElement === document ? document.body : scope.domElement;
+        const panX = -2 * dx * panSpeed / el.clientHeight;
+        const panY =  2 * dy * panSpeed / el.clientHeight;
+        const right = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 0);
+        const up    = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 1);
+        panOffset.addScaledVector(right, panX).addScaledVector(up, panY);
+      }
+    });
+
+    domElement.addEventListener('wheel', e => {
+      e.preventDefault();
+      const offset = getOffset();
+      spherical.setFromVector3(offset);
+      const factor = e.deltaY > 0 ? 1.1 : 0.9;
+      spherical.radius = Math.max(scope.minDistance, Math.min(scope.maxDistance, spherical.radius * factor));
+      const newPos = new THREE.Vector3().setFromSpherical(spherical).add(scope.target);
+      camera.position.copy(newPos);
+      camera.lookAt(scope.target);
+    }, { passive: false });
+
+    domElement.addEventListener('contextmenu', e => e.preventDefault());
+
+    // Touch support
+    let touches = [];
+    let lastPinchDist = 0;
+    domElement.addEventListener('touchstart', e => { touches = Array.from(e.touches); lastPinchDist = 0; });
+    domElement.addEventListener('touchmove', e => {
+      e.preventDefault();
+      if (e.touches.length === 1) {
+        const dx = e.touches[0].clientX - touches[0].clientX;
+        const dy = e.touches[0].clientY - touches[0].clientY;
+        const el = scope.domElement === document ? document.body : scope.domElement;
+        sphericalDelta.theta -= 2 * Math.PI * dx / el.clientWidth;
+        sphericalDelta.phi   -= 2 * Math.PI * dy / el.clientHeight;
+        touches = Array.from(e.touches);
+      } else if (e.touches.length === 2) {
+        const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+        if (lastPinchDist) {
+          const offset = getOffset();
+          spherical.setFromVector3(offset);
+          spherical.radius *= lastPinchDist / d;
+          spherical.radius = Math.max(scope.minDistance, Math.min(scope.maxDistance, spherical.radius));
+          const newPos = new THREE.Vector3().setFromSpherical(spherical).add(scope.target);
+          camera.position.copy(newPos);
+          camera.lookAt(scope.target);
+        }
+        lastPinchDist = d;
+      }
+    }, { passive: false });
+
+    this.update = function() { apply(); };
+    this.dispose = function() {};
+  }
+  return OrbitControls;
+})();
+</script>
+
+<!-- Print date helper -->
+<script>
+  document.getElementById('print-date').textContent = new Date().toLocaleDateString('pt-BR', {
+    day: '2-digit', month: 'long', year: 'numeric'
+  });
+</script>
+
+<!-- Clear All helper (called from HTML) -->
+<script>
+  function clearAll() {
+    if (!confirm('Limpar todos os itens marcados?')) return;
+    document.querySelectorAll('.check-item.checked').forEach(el => el.classList.remove('checked'));
+    if (window.state) state.checkedItems.clear();
+    if (window.updateScoreUI) updateScoreUI();
+    showToast('🗑️ Checklist limpo');
+  }
+</script>
+
+<!-- Main App -->
+<script src="js/main.js"></script>
+
+</body>
+</html>

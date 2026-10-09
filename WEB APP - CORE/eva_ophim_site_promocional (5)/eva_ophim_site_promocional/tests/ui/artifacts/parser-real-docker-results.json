@@ -1,0 +1,83 @@
+{
+  "generated_at": "2026-10-03T13:00:39.367Z",
+  "image": "node@sha256:83f1c388c31fb2e51f7cbd4dea949b96260798c98f206e8e4696bc93bd964e3a",
+  "checks": [
+    "CSV real UTF-8, aspas, zero e ausência",
+    "Mapeamento preserva identificador textual e zero/null",
+    "JSON plano real",
+    "Cabeçalho de protótipo recusado no contêiner",
+    "Cancelamento real sem contêiner residual",
+    "Isolamento real inspecionado: usuário, rede, filesystem, capacidades, mounts e limites"
+  ],
+  "inspections": [
+    {
+      "user": "65534:65534",
+      "image": "node@sha256:83f1c388c31fb2e51f7cbd4dea949b96260798c98f206e8e4696bc93bd964e3a",
+      "network": "none",
+      "readonly": true,
+      "memory": 134217728,
+      "memory_swap": 134217728,
+      "pids": 32,
+      "cpu": 500000000,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges"
+      ],
+      "mounts": [],
+      "environment_keys": [
+        "NODE_OPTIONS",
+        "PATH",
+        "NODE_VERSION",
+        "YARN_VERSION"
+      ]
+    },
+    {
+      "user": "65534:65534",
+      "image": "node@sha256:83f1c388c31fb2e51f7cbd4dea949b96260798c98f206e8e4696bc93bd964e3a",
+      "network": "none",
+      "readonly": true,
+      "memory": 134217728,
+      "memory_swap": 134217728,
+      "pids": 32,
+      "cpu": 500000000,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges"
+      ],
+      "mounts": [],
+      "environment_keys": [
+        "NODE_OPTIONS",
+        "PATH",
+        "NODE_VERSION",
+        "YARN_VERSION"
+      ]
+    },
+    {
+      "user": "65534:65534",
+      "image": "node@sha256:83f1c388c31fb2e51f7cbd4dea949b96260798c98f206e8e4696bc93bd964e3a",
+      "network": "none",
+      "readonly": true,
+      "memory": 134217728,
+      "memory_swap": 134217728,
+      "pids": 32,
+      "cpu": 500000000,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges"
+      ],
+      "mounts": [],
+      "environment_keys": [
+        "NODE_OPTIONS",
+        "PATH",
+        "NODE_VERSION",
+        "YARN_VERSION"
+      ]
+    }
+  ]
+}

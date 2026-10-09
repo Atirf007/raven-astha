@@ -1,0 +1,726 @@
+{
+  "timestamp": "2026-09-14T20:09:37.7135006Z",
+  "git": "NOT_AVAILABLE",
+  "head": "UNKNOWN",
+  "branch": "UNKNOWN",
+  "preexistingChanges": "UNKNOWN - preserved using pre-edit file snapshot",
+  "snapshot": "C:\\Users\\ciroe\\AppData\\Local\\Temp\\astha-security-baseline-63eafe486ea44ed998a63e61d4ce0dbb",
+  "files": [
+    {
+      "path": "test-static.js",
+      "sha256": "D37E6EA9C8D17F08234A5EB013B0753AE70DA59A30B67091BDD98AC4565DD656"
+    },
+    {
+      "path": "test-login.js",
+      "sha256": "E468F3833ECB6FBF7DD7901A64F8FEC67C6CF4280C7C41F59DB04F9581170F26"
+    },
+    {
+      "path": "temp_tabs.txt",
+      "sha256": "DD1A19DAA862D6AAEC5B096DBD668C2208D961E81BE1F1D9E0DA45808170C361"
+    },
+    {
+      "path": "temp_ribbon.txt",
+      "sha256": "FF19FDCEF2F7047E09C82249EFD47342FA839A27B4BBADE8BBFF4C54DDABBF57"
+    },
+    {
+      "path": "script_dump.txt",
+      "sha256": "4B575396933997C65B2D98E9ED8F82B9F023A4FA6D6AEC48FFB01F086383AB0D"
+    },
+    {
+      "path": "remove_emojis_js.js",
+      "sha256": "08972C6EA13F54903A1553D75C68045ED6DD539CC509B89DCB4172AD638225D8"
+    },
+    {
+      "path": "remove_emojis.js",
+      "sha256": "4D75CC9EF5DD607A5F630F3074197AD2C4DD8936A46FED6FBA7D7420471C66BF"
+    },
+    {
+      "path": "query",
+      "sha256": "0DD7D853FF88041FDAC5077A0B682EF54265679CE365C16931C324943C8ED4AB"
+    },
+    {
+      "path": "fix_corrupt.js",
+      "sha256": "DA9B01A5F355CB0DC1DCCC1D1B6B2D578A8BA391ED5575BF6D833CBBD89739C5"
+    },
+    {
+      "path": "fix_auth.js",
+      "sha256": "32F07780903462D55C56CC50AE6E9CF5D5F9CC6192CB8DEAC530E18A6EE31A97"
+    },
+    {
+      "path": "evah\\termos.html",
+      "sha256": "CA56EDCB05875D6DBF7DDB98A203049E061CA2CA874FCBCE3F955834DA27DDB7"
+    },
+    {
+      "path": "evah\\sobre.html",
+      "sha256": "29477AF3D3E4D58FC6944B42DEF3F672334CD097442172AF8F31753B0F2314C8"
+    },
+    {
+      "path": "evah\\sistema\\index.html",
+      "sha256": "E933582FAB959A6E821129AC9EAF713B5680D3ED3D28224F18D83229E1FFAD4C"
+    },
+    {
+      "path": "evah\\register.html",
+      "sha256": "9D8ED5D87ADB26A1CAAB86AFBDE4D0F32CFA671984E23C01EE314100CA684CED"
+    },
+    {
+      "path": "evah\\privacidade.html",
+      "sha256": "C609E299E740046DA1EDE063F2372CB29714945D12CA5AA69C2D646E6CC0CFF2"
+    },
+    {
+      "path": "evah\\onboarding.html",
+      "sha256": "1A84733BD0D1ABBB400AFB006799F2696E095F8152B075D7B40047C9DCBD49D8"
+    },
+    {
+      "path": "evah\\login.html",
+      "sha256": "54C26D1C1ACC26888120D67D389C6D40F9E8A21A6B2AD753782EA5240BF3FF9D"
+    },
+    {
+      "path": "evah\\index.html",
+      "sha256": "ABDC4A2C8591FA2687FB47B03954C6CD85422D4B31319B351EE020959AA5B0A3"
+    },
+    {
+      "path": "PARA_ENVIAR_VPS\\var\\www\\nr12-viewer\\js\\main.js",
+      "sha256": "1664B35F1DD7CA778199CC3C785310E0A7A6F12467307F4C57A645023DFAC780"
+    },
+    {
+      "path": "PARA_ENVIAR_VPS\\var\\www\\nr12-viewer\\index.html",
+      "sha256": "843B6F1F730A17E0CA74D30AC2FB0EC35560EC12061583CC6CD9235936943B75"
+    },
+    {
+      "path": "evah\\home\\index.html",
+      "sha256": "F58D00F556F6CA0EB8BCA7F4F1156C2F16ECF1E41F61A5D0111352E21803CA42"
+    },
+    {
+      "path": "evah\\eula.html",
+      "sha256": "E65E6F9D5A327EC84666BCDAD5EC0EC8A15777C047E38CBC67DB0303E21282BA"
+    },
+    {
+      "path": "evah\\contact.html",
+      "sha256": "C6819EFC6701F92EA1AD24F7018791A38A17D6BE9EF3F0072A31369728FDE60C"
+    },
+    {
+      "path": "DOCUMENTACAO.md",
+      "sha256": "20BA64850299082ACF4EEDDA0107B66530E4AA220935D3AE1852CB08EE58A640"
+    },
+    {
+      "path": "desktop.ini",
+      "sha256": "1798FFAB04C00F0173CD8D6246198F5E03F99623FAE45F4FA1CEA42285130250"
+    },
+    {
+      "path": "DATABASE_SETUP.txt",
+      "sha256": "29648DC5C78406D96AD3BFFE56B3DB5B3BD73DE39451093742C470175DC8CA55"
+    },
+    {
+      "path": "PARA_ENVIAR_VPS\\var\\www\\nr12-viewer\\css\\style.css",
+      "sha256": "ED131059C4D7DDBDC3CFC7D66FE39905233890EEE5E979F9F73848C8E23B2D5F"
+    },
+    {
+      "path": "database\\schema.sql",
+      "sha256": "E08AACD9ABC75437AB513504CB5F0132E3E65FFFE9EC3636B89467528480A139"
+    },
+    {
+      "path": "css\\variables.css",
+      "sha256": "858DECD82680A4E48DCD80A9BFFB52F5000E0A39F744102AFBE9E2F5326F2CB6"
+    },
+    {
+      "path": "css\\sistema.css",
+      "sha256": "81ED32DA85103EFC4C2FD42E3A556DE48C1A8D1E158D46FA1311475F2EE3E591"
+    },
+    {
+      "path": "css\\sections.css",
+      "sha256": "82823692B63C604EAB77C91C56CA53FAD6F6B5A6CD597E5D2659107B43B944BF"
+    },
+    {
+      "path": "css\\reset.css",
+      "sha256": "2F2940266A0AFB04DDBAFDB7323B9F65A730A6344A15437DC33D346D08EE4907"
+    },
+    {
+      "path": "css\\navbar.css",
+      "sha256": "9D0D1F82812D56812116CDD6973D47F39521C001B536C7E8A65B676210EFE8E0"
+    },
+    {
+      "path": "css\\kazinho.css",
+      "sha256": "1CC616A7A1806BF4E40353432805F5DA777804B0725D3EB7FF6104A329CED961"
+    },
+    {
+      "path": "css\\hero.css",
+      "sha256": "6FEA4481749A7070F8A2EC0BD19DC1340FC4762B4C972C9148B2DBD234C597FF"
+    },
+    {
+      "path": "css\\global.css",
+      "sha256": "8B73D69E2BF5559D5F417400B9432EED1F3F165AE173F307B8B2B9638421322A"
+    },
+    {
+      "path": "css\\forms.css",
+      "sha256": "B82FEFE2F2D3E5114552674ADF5A7321CCB92F60BBA7E041ACAB564998DD4E27"
+    },
+    {
+      "path": "css\\components.css",
+      "sha256": "617409439973815737452E814FE3254E119092511BAFEFCBA3CB078253DDBE25"
+    },
+    {
+      "path": "css\\animations.css",
+      "sha256": "96F86B724F1B5B5D1FDA0D8C590D0C78272006F895AA8C59820D6E4AF7FCE9FA"
+    },
+    {
+      "path": "build_installer.bat",
+      "sha256": "5D6827158599D4D9EE4B98C6C6458E3180A9C95713AF24E742B4DDD86369327C"
+    },
+    {
+      "path": "PARA_ENVIAR_VPS\\etc\\nginx\\sites-available\\nr12-viewer",
+      "sha256": "FD257EF12A9B623E2B92E1609B711FAC9E8E632E6E6C1BED2E8F2B1D8C21123E"
+    },
+    {
+      "path": "package.json",
+      "sha256": "EA3EC3173906BD133CB84ABE5484E036A1BE4406FB86006D3E3EC8BACE8629E3"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "8C550BEEF007F0D9A1DA0091AFDF53118E2B9648BBEA17D37DB58F517866D2AF"
+    },
+    {
+      "path": "assets\\images\\logo.svg",
+      "sha256": "ED57EB26BC3679B5D0696049F27CFA00976225B1171AEF1743C9C0B104B3E410"
+    },
+    {
+      "path": "app\\sistema.html",
+      "sha256": "872E938E4589F1242E66D5523200973831F20D073132068A7F25C58F520B241E"
+    },
+    {
+      "path": "app\\settings.html",
+      "sha256": "B48C01E43391B4F8BA152E3DFD8ADB87BD7C1BB51A7F888389CEE7811DCBDC76"
+    },
+    {
+      "path": "app\\register.html",
+      "sha256": "279F77D36DA36884522C997998FD5C64293BE2D8E121730B5264A5EF944EE317"
+    },
+    {
+      "path": "app\\onboarding.html",
+      "sha256": "9A3458E251BABC26E05A61D338A854C98FB38BE7BFADB5376C45DE64E7DF50AA"
+    },
+    {
+      "path": "app\\login.html",
+      "sha256": "CEEE28AAAE8EA4F28B53120AB6E045C6D22C8BCD1AF97A4178718C4A5717E81B"
+    },
+    {
+      "path": "old\\js\\sistema-map.js",
+      "sha256": "14DDC7EE474ECD17BF7468C61B51F526ACC0B8571E30CEDD30809ED0EFEB5B84"
+    },
+    {
+      "path": "old\\js\\sistema-features.js",
+      "sha256": "BA709194C20F7F1E05228B4E6B45C7683F201A5486BD02A1B79D3E1D1DDA7B33"
+    },
+    {
+      "path": "old\\js\\sistema-core.js",
+      "sha256": "537E35BB3FE313565045151DC7BA6F1303E3F7116100C2FB7BC948B95AE4597B"
+    },
+    {
+      "path": "old\\js\\sistema-builder-3d.js",
+      "sha256": "E794B43F0462E684E106934BDCF8196463F4725F5934D84068351305770B9B0A"
+    },
+    {
+      "path": "old\\js\\sistema-builder-2d.js",
+      "sha256": "32082F3D3A0012193A8020AFE2D18C64BF033086E286B3CCCCE44F2AF52A2F39"
+    },
+    {
+      "path": "old\\js\\sistema-3d-viewer.js",
+      "sha256": "A5366B186B6877ACD4E4E55407EF559F3005CFA964A9D27D0E0CF567571B1EE7"
+    },
+    {
+      "path": "old\\js\\security.js",
+      "sha256": "10DC4FDA374A2AAA119E3045B8F4A057E58380B85CB9F1240E8C8DFF5BB6806A"
+    },
+    {
+      "path": "old\\js\\script_check_0.js",
+      "sha256": "DDF85A0E381ECE59314817596177D1424B7DECC0CC4D40AC6BD9DE889A126580"
+    },
+    {
+      "path": "old\\js\\navbar.js",
+      "sha256": "0A108278B0532DA009107AED8B5C660FE980F3B6CC1A62766567076EE1ECA8EC"
+    },
+    {
+      "path": "old\\js\\main.js",
+      "sha256": "BDB3EF8D2ED0C6384912C7FCDFDA4DC1C7321FA3222ACBFE2116AA3366760836"
+    },
+    {
+      "path": "old\\js\\forms.js",
+      "sha256": "DDC7CDE8F361A03425A8803E9784EB94E8602895635145248BEBC476112F10BA"
+    },
+    {
+      "path": "old\\js\\azure.js",
+      "sha256": "0CFD71C0351F1929AE13618E27B1C3705D4F5BB61F212FF97EF66E281A5F9515"
+    },
+    {
+      "path": "old\\js\\auth.js",
+      "sha256": "CBCD9A1EAC80A21862FC7DF5E439FF41A312F8C44D4E37C8D4FB39DFEF1F033E"
+    },
+    {
+      "path": "old\\js\\api.js",
+      "sha256": "505953B1BBD589B93CA4F40D1DFBCFDCEA9E1931B8A00106ACE44A218F0699CF"
+    },
+    {
+      "path": "old\\js\\animations.js",
+      "sha256": "8841531209A5FF48250730CD2C2FB8699DAD5E4D72BD46E57432841D9FB22F82"
+    },
+    {
+      "path": "old\\index.html",
+      "sha256": "021DCC8A187C32602E9C1D677784D51EFE6C371D131AB5B3DBC3E415D3780024"
+    },
+    {
+      "path": "app\\js\\sistema-map.js",
+      "sha256": "E02A85DF0444AC6FAB3FA175E1DB336C1D9AF889D78D46B0680730B9309D35D6"
+    },
+    {
+      "path": "app\\js\\sistema-features.js",
+      "sha256": "DF8149BFE2628299F88BA4F8A2B672CC6D601D1E06EE24DA77C35842AAE98A15"
+    },
+    {
+      "path": "app\\js\\sistema-core.js",
+      "sha256": "2C46480E96A1B01015D30F36344B0172C35FB7C574C6FFB78D2F3381487C8177"
+    },
+    {
+      "path": "app\\js\\sistema-builder-3d.js",
+      "sha256": "4A57E17DE8814FDDFBD431FC925F414FA082F9E06FDE19D6E129A47D722DA98D"
+    },
+    {
+      "path": "app\\js\\sistema-builder-2d.js",
+      "sha256": "87BB6502C50D244D6DBC788849629840FF7BB3AACDDF02A696431221618548CD"
+    },
+    {
+      "path": "app\\js\\sistema-3d-viewer.js",
+      "sha256": "7E192A58CDD30A5D4AAD5FEC2D9680C851E26710C9E15B4F29EE2B03358B798C"
+    },
+    {
+      "path": "app\\js\\security.js",
+      "sha256": "5CF387E44843CBCB3D7823792CF200EC10D96AC9080C5AFC9B06F7885230F3B1"
+    },
+    {
+      "path": "app\\js\\register-wizard.js",
+      "sha256": "C136B7FD2F7011F2B03670955326A868B898992FC4C26F2A2738F3588005F9B1"
+    },
+    {
+      "path": "app\\js\\forms.js",
+      "sha256": "F1FA6B8C199DE57811CABF3DF7182CBF0B9D9B62009717BC50AA003E18E7572E"
+    },
+    {
+      "path": "app\\js\\azure.js",
+      "sha256": "8B6C8FB34D7E1534891A26DF62355CCF9ACBE77BCD3AB4FDE50CF5010C3D8683"
+    },
+    {
+      "path": "app\\js\\auth.js",
+      "sha256": "E42DA9E89C1B2BC1EBCA455FF4E562790EBF2749F68442ABFD932D71EA5B1E0D"
+    },
+    {
+      "path": "app\\js\\api.js",
+      "sha256": "D73E2E0CF0DB0D9EF3EA7FED749103ADC38F13AC9B457AC5E86DCC2DC55B4A66"
+    },
+    {
+      "path": "api\\server.js",
+      "sha256": "91C004A24B2EEEFE914275722807E842009A7E6E16E236F6CC26B8D7347F4319"
+    },
+    {
+      "path": "app\\home.html",
+      "sha256": "53D3545C8320A0966A5C4C7F0AE06F782A888052475AE3914092AF3A7F40A24F"
+    },
+    {
+      "path": "old\\evah\\termos.html",
+      "sha256": "CA56EDCB05875D6DBF7DDB98A203049E061CA2CA874FCBCE3F955834DA27DDB7"
+    },
+    {
+      "path": "old\\evah\\sobre.html",
+      "sha256": "29477AF3D3E4D58FC6944B42DEF3F672334CD097442172AF8F31753B0F2314C8"
+    },
+    {
+      "path": "app\\css\\variables.css",
+      "sha256": "E214DFFD9A8ACA4FFCD7E2FB78E0A8CA57C6D58305B0093AEA11DF5DE7A74CEC"
+    },
+    {
+      "path": "app\\css\\sistema.css",
+      "sha256": "4C00B9E8FD6CF3534B9DBBA8800C70CDD706A9D3276FFE5D82CEE2FEEFA78570"
+    },
+    {
+      "path": "app\\css\\reset.css",
+      "sha256": "AA9666614FFFC83FAE7272D2D1859D3E4C4386D6FCA6BEF144E626DB4197F09F"
+    },
+    {
+      "path": "app\\css\\global.css",
+      "sha256": "9EA9A171CAB558909C481411FA6E9E6746328ABF77FACA3D8B6A4ECC77729997"
+    },
+    {
+      "path": "app\\css\\forms.css",
+      "sha256": "DF4B06BA1C2EFDB57DD755C8653794A4743B57E89446CB19B1F0555FDE357803"
+    },
+    {
+      "path": "app\\css\\fix_warehouse.sql",
+      "sha256": "61F630B98A00040415A1B1CB64C57486D263D474C636E5AD428398507E5D8C97"
+    },
+    {
+      "path": "app\\css\\components.css",
+      "sha256": "785C92D2EDBA43ADABFCE5FE7796A29CB24D22A7E7DA212271A58FC3E8E31491"
+    },
+    {
+      "path": "app\\css\\auth-redesign.css",
+      "sha256": "B90A684182CEFF6DC450E368EED9EBDC4F74D81FF8BF046D85A47B91C270578B"
+    },
+    {
+      "path": "app\\css\\animations.css",
+      "sha256": "488912975D0CE132D6DC9EDC05D996837B2EE09E16B9C1899D2E0D2A84306837"
+    },
+    {
+      "path": "api\\routes\\warehouse.js",
+      "sha256": "EAE0FB0755033CC6E508FC362266ED142F77657B187F3F0EE42601AEC2A210EE"
+    },
+    {
+      "path": "api\\routes\\organizations.js",
+      "sha256": "566FBCAFEF859286102F9CA82C5BF060063BF0D5128D5F8AED92DFCA42CCFE37"
+    },
+    {
+      "path": "api\\routes\\oauth.js",
+      "sha256": "83B09E7DBBC6BB759C37C9E1DA414357B01CE27C18B3BB06E9F95EAB325EDFAF"
+    },
+    {
+      "path": "api\\routes\\movements.js",
+      "sha256": "02B14BA698047EC5AF47E8757EAE30B54A6C429E70882DC31833AC845389E2F4"
+    },
+    {
+      "path": "api\\routes\\materials.js",
+      "sha256": "CF48AB829A17ACFEDC4CCD05AD5E43B57C6A8016C2CE98C6932637525C7CCFD7"
+    },
+    {
+      "path": "api\\routes\\material-files.js",
+      "sha256": "80F7CEE5BC86162030C067DC19997E2E5708E8EF5D562820294E13E8593F7DBD"
+    },
+    {
+      "path": "api\\routes\\contact.js",
+      "sha256": "1488B107AC2D8A3B29B01ED9411F457BD2312A25FBB49F357D0A3943876FA77B"
+    },
+    {
+      "path": "api\\routes\\components.js",
+      "sha256": "2C1B52F8EE79D30449642F1075831A4C0495473F9F21C7F73D77DAC4FA638D15"
+    },
+    {
+      "path": "api\\routes\\auth.js",
+      "sha256": "6D1DADB411A65DEBEAEEE01380EFAA8AA86A8EF9E78D69E097182282267A24CE"
+    },
+    {
+      "path": "api\\package.json",
+      "sha256": "974587CB2DC47D4CFE39EE0214E4AB9437760250AA808B3ADCF4EE78321F5339"
+    },
+    {
+      "path": "api\\package-lock.json",
+      "sha256": "FE418595FECEB930D18A95874DF721C789E1EA2DE196B927C33FB90E17199A25"
+    },
+    {
+      "path": "api\\migrate.js",
+      "sha256": "3A3BE1BBA638366AD7884C5B41BFF98A0AA1AE00293441C45A463D09648F6406"
+    },
+    {
+      "path": "old\\evah\\sistema\\index.html",
+      "sha256": "BCC6DCB7082A688EE7E27A2F1EF58C03589BBF36C564F2282CC1A491FFF9D2D1"
+    },
+    {
+      "path": "old\\evah\\register.html",
+      "sha256": "9D8ED5D87ADB26A1CAAB86AFBDE4D0F32CFA671984E23C01EE314100CA684CED"
+    },
+    {
+      "path": "old\\evah\\privacidade.html",
+      "sha256": "C609E299E740046DA1EDE063F2372CB29714945D12CA5AA69C2D646E6CC0CFF2"
+    },
+    {
+      "path": "old\\evah\\onboarding.html",
+      "sha256": "1A84733BD0D1ABBB400AFB006799F2696E095F8152B075D7B40047C9DCBD49D8"
+    },
+    {
+      "path": "old\\evah\\login.html",
+      "sha256": "54C26D1C1ACC26888120D67D389C6D40F9E8A21A6B2AD753782EA5240BF3FF9D"
+    },
+    {
+      "path": "old\\evah\\index.html",
+      "sha256": "EC54ABBABD5B1401F1017001A102C9798F36DB5BAC96889972D170D6868109B4"
+    },
+    {
+      "path": "api\\middleware\\validator.js",
+      "sha256": "FD380FE6995CF268A86BAE5AB3D9AF062747C14D3E6A1CE3B697D13472537921"
+    },
+    {
+      "path": "api\\middleware\\rateLimiter.js",
+      "sha256": "A1C11A87669FDE47F52317810249599A71A6BD59F6465FDDF608E354CA8AAFFA"
+    },
+    {
+      "path": "api\\middleware\\rateLimitByUser.js",
+      "sha256": "E638E0A8F04613415122EAB52AA69111E17DCF3C4FF5ADCCE5C002846EB893A5"
+    },
+    {
+      "path": "api\\middleware\\auth.js",
+      "sha256": "AE87E89DD808F942BAB36E71587C04C181A1E0564C2A60D511CC833881FABBF7"
+    },
+    {
+      "path": "old\\evah\\home\\index.html",
+      "sha256": "F58D00F556F6CA0EB8BCA7F4F1156C2F16ECF1E41F61A5D0111352E21803CA42"
+    },
+    {
+      "path": "old\\evah\\eula.html",
+      "sha256": "E65E6F9D5A327EC84666BCDAD5EC0EC8A15777C047E38CBC67DB0303E21282BA"
+    },
+    {
+      "path": "old\\evah\\contact.html",
+      "sha256": "C6819EFC6701F92EA1AD24F7018791A38A17D6BE9EF3F0072A31369728FDE60C"
+    },
+    {
+      "path": "js\\update_sistema.js",
+      "sha256": "5A862C12AF530109ECF23AEB12E023FEDEC6500A4E9E2E190D230827805CA273"
+    },
+    {
+      "path": "js\\update_home2.js",
+      "sha256": "9DA7D30D43B5D06C8E447B6C61D5BB0C65B450A4749077B3C32889C5206E0D0E"
+    },
+    {
+      "path": "js\\update_home.js",
+      "sha256": "61D22D46FD90BFF244915645A2EC7AF39AA591780FDC9038E302FA0A891FBF97"
+    },
+    {
+      "path": "js\\update_colors.js",
+      "sha256": "2D770DA09F898EA149C857422A0C56792DF706CB1E9A80590B45580DFC641255"
+    },
+    {
+      "path": "js\\update_admin_users.js",
+      "sha256": "382CCDFD7EE57A2D1C5CBE13EE89E0AAE3A8B2FF0334523146B00D8547CCC69E"
+    },
+    {
+      "path": "js\\update_admin_orgs.js",
+      "sha256": "952B51F860AC5EAB552BC9438E673DF100C8B9AA71C6212BC7905569C4C48FBF"
+    },
+    {
+      "path": "js\\test_dom.js",
+      "sha256": "14A03A1D03F69DB5F661087CE2025938EF17E566F956587B01B0D66892E2701A"
+    },
+    {
+      "path": "js\\sistema-map.js",
+      "sha256": "14DDC7EE474ECD17BF7468C61B51F526ACC0B8571E30CEDD30809ED0EFEB5B84"
+    },
+    {
+      "path": "js\\sistema-features.js",
+      "sha256": "BA709194C20F7F1E05228B4E6B45C7683F201A5486BD02A1B79D3E1D1DDA7B33"
+    },
+    {
+      "path": "js\\sistema-core.js",
+      "sha256": "811C338149A815C6EE3379DD745783C483AE10885244A68C5E1D3414389F5379"
+    },
+    {
+      "path": "js\\sistema-builder-3d.js",
+      "sha256": "E794B43F0462E684E106934BDCF8196463F4725F5934D84068351305770B9B0A"
+    },
+    {
+      "path": "js\\sistema-builder-2d.js",
+      "sha256": "A655F46BFEF776508835D2A11F4DBF9A2B25F2188B0D7568CF60216563C45814"
+    },
+    {
+      "path": "js\\sistema-3d-viewer.js",
+      "sha256": "A5366B186B6877ACD4E4E55407EF559F3005CFA964A9D27D0E0CF567571B1EE7"
+    },
+    {
+      "path": "js\\security.js",
+      "sha256": "10DC4FDA374A2AAA119E3045B8F4A057E58380B85CB9F1240E8C8DFF5BB6806A"
+    },
+    {
+      "path": "js\\script_check_0.js",
+      "sha256": "DDF85A0E381ECE59314817596177D1424B7DECC0CC4D40AC6BD9DE889A126580"
+    },
+    {
+      "path": "js\\package.json",
+      "sha256": "41BDE54AD50C90B59FB5B8A6BC7769A6C92F23CEFC7FE604B8ABB5E09C595467"
+    },
+    {
+      "path": "js\\package-lock.json",
+      "sha256": "2163507688C0AA516CD45674CB0AD764989140D53EAD222721AD73B007FA6118"
+    },
+    {
+      "path": "js\\navbar.js",
+      "sha256": "0A108278B0532DA009107AED8B5C660FE980F3B6CC1A62766567076EE1ECA8EC"
+    },
+    {
+      "path": "js\\main.js",
+      "sha256": "BDB3EF8D2ED0C6384912C7FCDFDA4DC1C7321FA3222ACBFE2116AA3366760836"
+    },
+    {
+      "path": "js\\forms.js",
+      "sha256": "DDC7CDE8F361A03425A8803E9784EB94E8602895635145248BEBC476112F10BA"
+    },
+    {
+      "path": "js\\fix_redundant_script.js",
+      "sha256": "95633F073C1688D0AAAC79F951A0110469F9BC8E495E597680B542BE30732851"
+    },
+    {
+      "path": "js\\fix_modal_structure.js",
+      "sha256": "0FD5AA3D240356417FC557BAB3BF57982A325AA8A6B9E05F83CD225F33F4213C"
+    },
+    {
+      "path": "js\\azure.js",
+      "sha256": "0CFD71C0351F1929AE13618E27B1C3705D4F5BB61F212FF97EF66E281A5F9515"
+    },
+    {
+      "path": "js\\auth.js",
+      "sha256": "CBCD9A1EAC80A21862FC7DF5E439FF41A312F8C44D4E37C8D4FB39DFEF1F033E"
+    },
+    {
+      "path": "js\\api.js",
+      "sha256": "505953B1BBD589B93CA4F40D1DFBCFDCEA9E1931B8A00106ACE44A218F0699CF"
+    },
+    {
+      "path": "js\\animations.js",
+      "sha256": "8841531209A5FF48250730CD2C2FB8699DAD5E4D72BD46E57432841D9FB22F82"
+    },
+    {
+      "path": "index.html",
+      "sha256": "B37FC754B9A1F5A3D6DE004DFD3BB80F738FAF50F57E34B2B4025B4E3501D829"
+    },
+    {
+      "path": "api\\database\\migrate_orgs.js",
+      "sha256": "098A9B7E07F546FB94AC1AF8ABC7D2C1A54EF89ECF0C3FDEDC5634AEE7F0EDD8"
+    },
+    {
+      "path": "api\\database\\migrate_multitenancy.js",
+      "sha256": "0C21642EDCE69F98710354FC398004FB7A55D85FD0D49F977051FCB50638D844"
+    },
+    {
+      "path": "api\\database\\migrate_files.js",
+      "sha256": "DF40DB29EAD14132A1175E59B56547E9D49C16E0B82EF52C9699169DA80CF757"
+    },
+    {
+      "path": "api\\database\\migrate_blueprint.js",
+      "sha256": "C2716BF4ED1C93CF2CCB234F60FFADB2890D287663D6DDECF7803B68E8B4DF3E"
+    },
+    {
+      "path": "api\\database\\init.js",
+      "sha256": "4467F072C614591259C993082BEAAAD17DB6B8DA4A7E4942C10B79BC65433ABB"
+    },
+    {
+      "path": "api\\database\\connection.js",
+      "sha256": "2B1D7F205241CA21360CDA072B765A416A9A9DFC223EA2C5BE2EBC389BCEA1A3"
+    },
+    {
+      "path": "api\\.env.example",
+      "sha256": "AB0454113287FA2381FB46420C633535542FFF96333B5867C647CFF8F89254A5"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "8121E03F6AD6959E7B05C397C1ED51557D99A9EB1639669A1DCD90A0D089EE5D"
+    },
+    {
+      "path": "old\\css\\variables.css",
+      "sha256": "858DECD82680A4E48DCD80A9BFFB52F5000E0A39F744102AFBE9E2F5326F2CB6"
+    },
+    {
+      "path": "old\\css\\sistema.css",
+      "sha256": "81ED32DA85103EFC4C2FD42E3A556DE48C1A8D1E158D46FA1311475F2EE3E591"
+    },
+    {
+      "path": "old\\css\\sections.css",
+      "sha256": "82823692B63C604EAB77C91C56CA53FAD6F6B5A6CD597E5D2659107B43B944BF"
+    },
+    {
+      "path": "old\\css\\reset.css",
+      "sha256": "2F2940266A0AFB04DDBAFDB7323B9F65A730A6344A15437DC33D346D08EE4907"
+    },
+    {
+      "path": "old\\css\\navbar.css",
+      "sha256": "9D0D1F82812D56812116CDD6973D47F39521C001B536C7E8A65B676210EFE8E0"
+    },
+    {
+      "path": "old\\css\\kazinho.css",
+      "sha256": "1CC616A7A1806BF4E40353432805F5DA777804B0725D3EB7FF6104A329CED961"
+    },
+    {
+      "path": "old\\css\\hero.css",
+      "sha256": "6FEA4481749A7070F8A2EC0BD19DC1340FC4762B4C972C9148B2DBD234C597FF"
+    },
+    {
+      "path": "old\\css\\global.css",
+      "sha256": "8B73D69E2BF5559D5F417400B9432EED1F3F165AE173F307B8B2B9638421322A"
+    },
+    {
+      "path": "old\\css\\forms.css",
+      "sha256": "B82FEFE2F2D3E5114552674ADF5A7321CCB92F60BBA7E041ACAB564998DD4E27"
+    },
+    {
+      "path": "old\\css\\components.css",
+      "sha256": "617409439973815737452E814FE3254E119092511BAFEFCBA3CB078253DDBE25"
+    },
+    {
+      "path": "old\\css\\animations.css",
+      "sha256": "96F86B724F1B5B5D1FDA0D8C590D0C78272006F895AA8C59820D6E4AF7FCE9FA"
+    },
+    {
+      "path": "main.js",
+      "sha256": "221E0A66F33ADF8F3BDE8910AB80A69E11596EF37097BE63D52538E3CD95D806"
+    },
+    {
+      "path": "fix_mojibake.js",
+      "sha256": "82075F23401E2D74AE4483B6540546E359CB779E5CB551108CC69ADBBB2FA293"
+    },
+    {
+      "path": "fix_final.js",
+      "sha256": "3D392185223B8E781A5955493DACB7452FC0D34D1499541AE8EEFF9A2F38C18E"
+    },
+    {
+      "path": "fix_encoding.js",
+      "sha256": "62639DD0A084CE613A1607F2E5F5BA02D2BDAAAE74379BD2B6A70962546A60F9"
+    },
+    {
+      "path": "fix_corrupt2.js",
+      "sha256": "51A091ABE6D5D1DAFF4F2FC57D20E5C7CEEB304FF1AB27FB101959E11B6308EB"
+    },
+    {
+      "path": "fix_settings_script.js",
+      "sha256": "65824E38252BF7E5ABE9B6B476943F4A3917E821AE67AFF7EEEFB0DFA0E03756"
+    },
+    {
+      "path": "fix_settings.js",
+      "sha256": "9BA4117A56E16A3FFD5F6ADDB95F6EE0972F1A5242F2B52630D65E9ABE965282"
+    },
+    {
+      "path": "fix_ui.js",
+      "sha256": "A0F216755985F18CA02366ABD69D4E94595B970E2A6D2CDE6EAE6560A64FFDBB"
+    },
+    {
+      "path": ".agents\\skills\\token-budget-router\\SKILL.md",
+      "sha256": "C7867CF81A0E6F13BC3A70A2D714D5A4F3C7C0FDA36CADA02650C87E2204E049"
+    },
+    {
+      "path": ".agents\\skills\\surgical-code-search\\SKILL.md",
+      "sha256": "CDA954AE2CFA54272CB5D92D44DAB575BCBBFB3A3866CC5E66AF63DA5315D1FA"
+    },
+    {
+      "path": ".agents\\skills\\sql-injection-prevention\\SKILL.md",
+      "sha256": "BA25CB64FEABA903E6A2D89480906F2D159934EC9D0513861DD77BD535B370E8"
+    },
+    {
+      "path": ".agents\\skills\\secure-by-default\\SKILL.md",
+      "sha256": "E02FD96A8F831326C23E8198E046D0400079995795BAC80237E24EFBFBE19A28"
+    },
+    {
+      "path": ".agents\\skills\\secrets-hygiene\\SKILL.md",
+      "sha256": "F642A369CC187BF87ED8241B1CAA29520681EBB3B5405C9F4231BD117E8EF2D8"
+    },
+    {
+      "path": ".agents\\skills\\dependency-supply-chain\\SKILL.md",
+      "sha256": "2DBE1AA6787C703F98CBA842C1F76341741CED4626BD1AD7F615F4826C94BD08"
+    },
+    {
+      "path": ".agents\\skills\\context-hygiene\\SKILL.md",
+      "sha256": "7234347777B44340F9A3A70473B058176184C83D6521D16497AFBC4E264B59AC"
+    },
+    {
+      "path": ".agents\\skills\\concise-output\\SKILL.md",
+      "sha256": "3EAC67F230EB7E70772A51A0F8EAD8F97FEF1DF8025EE115BCCC4C5D12177CE2"
+    },
+    {
+      "path": ".agents\\skills\\code-review-lite\\SKILL.md",
+      "sha256": "F61BD2540320827911FBD8EC31DC882B3BB5D9CEC5C4BA2877FF33709165F511"
+    },
+    {
+      "path": ".agents\\skills\\code-review\\SKILL.md",
+      "sha256": "FCDD8AADE62765558A85AD769D825188EF0091BECE9648F20660CCDEC414794D"
+    }
+  ]
+}

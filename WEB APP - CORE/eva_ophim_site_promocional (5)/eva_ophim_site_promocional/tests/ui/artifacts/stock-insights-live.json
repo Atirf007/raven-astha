@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-06T23:51:28.590Z",
+  "checks": [
+    "Real MySQL aggregates match five laboratory materials",
+    "Invalid and unknown filters rejected",
+    "Entry and exit preserve balance, captured valuation and purpose",
+    "Map deletion hides stocks and restoration recovers them"
+  ],
+  "synthetic": true
+}
