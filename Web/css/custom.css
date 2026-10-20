@@ -1,0 +1,73 @@
+@font-face {
+  font-family: Nunito; /* set name */
+  src: url("../assets/Nunito-SemiBold.ttf"); /* url of the font */
+}
+
+:root{
+    --bs-font-sans-serif: Nunito, sans-serif;
+}
+
+section{
+    padding: 65px 0;
+    scroll-margin-top: 80px;
+}
+
+footer{
+    padding-bottom: 50px;
+}
+
+.rv_imagem{
+    border-radius: 20px;
+}
+.gradient{
+    background: #9861F2;
+    background: linear-gradient(135deg,rgba(152, 97, 242, 1) 0%, rgba(69, 0, 181, 1) 75%);
+}
+
+#showcase{
+    padding-top: 90px;
+}
+
+/* Browser-style frame used to present product screenshots */
+.browser-frame{
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 20px 45px rgba(30, 10, 70, 0.18);
+    border: 1px solid rgba(0,0,0,0.06);
+}
+.browser-frame-bar{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: #eceaf3;
+}
+.browser-frame-bar span{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d3cfe6;
+    display: inline-block;
+}
+.browser-frame-bar span:first-child{ background: #f2867a; }
+.browser-frame-bar span:nth-child(2){ background: #f2c97a; }
+.browser-frame-bar span:nth-child(3){ background: #8fd9a8; }
+.browser-frame img{
+    display: block;
+}
+
+/* Showcase tab pills */
+#showcase-tabs .nav-link{
+    color: #452c8c;
+    border: 1px solid #d9cdf5;
+    border-radius: 30px;
+    padding: 8px 20px;
+    font-weight: 500;
+    background: #fff;
+}
+#showcase-tabs .nav-link.active{
+    background: #9861F2;
+    color: #fff;
+    border-color: #9861F2;
+}
