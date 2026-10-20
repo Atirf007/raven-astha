@@ -1,0 +1,1496 @@
+{
+  "version": "1.0.0",
+  "industrial": 208,
+  "complementary": 40,
+  "implemented": 248,
+  "items": [
+    {
+      "id": "ASTHA-3D-001",
+      "name": "Fresadora universal",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-002",
+      "name": "Fresadora vertical",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-003",
+      "name": "Furadeira de coluna",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-004",
+      "name": "Mandrilhadora",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-005",
+      "name": "Retífica plana",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-006",
+      "name": "Retífica cilíndrica",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-007",
+      "name": "Serra de fita",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-008",
+      "name": "Guilhotina",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-009",
+      "name": "Dobradeira CNC",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-010",
+      "name": "Puncionadeira",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-011",
+      "name": "Máquina de corte a laser",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-012",
+      "name": "Máquina de corte a plasma",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-013",
+      "name": "Eletroerosão",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-014",
+      "name": "Máquina de rebarbação",
+      "status": "implemented-parametric",
+      "category": "Usinagem e metalurgia"
+    },
+    {
+      "id": "ASTHA-3D-015",
+      "name": "Injetora de plástico",
+      "status": "implemented-parametric",
+      "category": "Conformação, plásticos e fundição"
+    },
+    {
+      "id": "ASTHA-3D-016",
+      "name": "Extrusora",
+      "status": "implemented-parametric",
+      "category": "Conformação, plásticos e fundição"
+    },
+    {
+      "id": "ASTHA-3D-017",
+      "name": "Sopradora",
+      "status": "implemented-parametric",
+      "category": "Conformação, plásticos e fundição"
+    },
+    {
+      "id": "ASTHA-3D-018",
+      "name": "Termoformadora",
+      "status": "implemented-parametric",
+      "category": "Conformação, plásticos e fundição"
+    },
+    {
+      "id": "ASTHA-3D-019",
+      "name": "Calandra",
+      "status": "implemented-parametric",
+      "category": "Conformação, plásticos e fundição"
+    },
+    {
+      "id": "ASTHA-3D-020",
+      "name": "Laminadora",
+      "status": "implemented-parametric",
+      "category": "Conformação, plásticos e fundição"
+    },
+    {
+      "id": "ASTHA-3D-021",
+      "name": "Prensa excêntrica",
+      "status": "implemented-parametric",
+      "category": "Conformação, plásticos e fundição"
+    },
+    {
+      "id": "ASTHA-3D-022",
+      "name": "Célula de estampagem",
+      "status": "implemented-parametric",
+      "category": "Conformação, plásticos e fundição"
+    },
+    {
+      "id": "ASTHA-3D-023",
+      "name": "Máquina de fundição sob pressão",
+      "status": "implemented-parametric",
+      "category": "Conformação, plásticos e fundição"
+    },
+    {
+      "id": "ASTHA-3D-024",
+      "name": "Jateadora industrial",
+      "status": "implemented-parametric",
+      "category": "Conformação, plásticos e fundição"
+    },
+    {
+      "id": "ASTHA-3D-025",
+      "name": "Forno de tratamento térmico",
+      "status": "implemented-parametric",
+      "category": "Conformação, plásticos e fundição"
+    },
+    {
+      "id": "ASTHA-3D-026",
+      "name": "Tanque de têmpera",
+      "status": "implemented-parametric",
+      "category": "Conformação, plásticos e fundição"
+    },
+    {
+      "id": "ASTHA-3D-027",
+      "name": "Tanque agitado",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-028",
+      "name": "Reator industrial",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-029",
+      "name": "Misturador horizontal",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-030",
+      "name": "Misturador vertical",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-031",
+      "name": "Homogeneizador",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-032",
+      "name": "Dosador gravimétrico",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-033",
+      "name": "Silo",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-034",
+      "name": "Funil de alimentação",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-035",
+      "name": "Trocador de calor",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-036",
+      "name": "Pasteurizador",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-037",
+      "name": "Evaporador",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-038",
+      "name": "Centrífuga industrial",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-039",
+      "name": "Filtro-prensa",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-040",
+      "name": "Secador rotativo",
+      "status": "implemented-parametric",
+      "category": "Processamento industrial"
+    },
+    {
+      "id": "ASTHA-3D-041",
+      "name": "Envasadora",
+      "status": "implemented-parametric",
+      "category": "Embalagem e final de linha"
+    },
+    {
+      "id": "ASTHA-3D-042",
+      "name": "Tampadora",
+      "status": "implemented-parametric",
+      "category": "Embalagem e final de linha"
+    },
+    {
+      "id": "ASTHA-3D-043",
+      "name": "Rotuladora",
+      "status": "implemented-parametric",
+      "category": "Embalagem e final de linha"
+    },
+    {
+      "id": "ASTHA-3D-044",
+      "name": "Seladora",
+      "status": "implemented-parametric",
+      "category": "Embalagem e final de linha"
+    },
+    {
+      "id": "ASTHA-3D-045",
+      "name": "Encartuchadora",
+      "status": "implemented-parametric",
+      "category": "Embalagem e final de linha"
+    },
+    {
+      "id": "ASTHA-3D-046",
+      "name": "Encaixotadora",
+      "status": "implemented-parametric",
+      "category": "Embalagem e final de linha"
+    },
+    {
+      "id": "ASTHA-3D-047",
+      "name": "Embaladora flow-pack",
+      "status": "implemented-parametric",
+      "category": "Embalagem e final de linha"
+    },
+    {
+      "id": "ASTHA-3D-048",
+      "name": "Túnel de termoencolhimento",
+      "status": "implemented-parametric",
+      "category": "Embalagem e final de linha"
+    },
+    {
+      "id": "ASTHA-3D-049",
+      "name": "Paletizadora",
+      "status": "implemented-parametric",
+      "category": "Embalagem e final de linha"
+    },
+    {
+      "id": "ASTHA-3D-050",
+      "name": "Despaletizadora",
+      "status": "implemented-parametric",
+      "category": "Embalagem e final de linha"
+    },
+    {
+      "id": "ASTHA-3D-051",
+      "name": "Envolvedora stretch",
+      "status": "implemented-parametric",
+      "category": "Embalagem e final de linha"
+    },
+    {
+      "id": "ASTHA-3D-052",
+      "name": "Verificadora automática de peso",
+      "status": "implemented-parametric",
+      "category": "Embalagem e final de linha"
+    },
+    {
+      "id": "ASTHA-3D-053",
+      "name": "Braço robótico de seis eixos",
+      "status": "implemented-parametric",
+      "category": "Robótica e células automatizadas"
+    },
+    {
+      "id": "ASTHA-3D-054",
+      "name": "Robô SCARA",
+      "status": "implemented-parametric",
+      "category": "Robótica e células automatizadas"
+    },
+    {
+      "id": "ASTHA-3D-055",
+      "name": "Robô delta",
+      "status": "implemented-parametric",
+      "category": "Robótica e células automatizadas"
+    },
+    {
+      "id": "ASTHA-3D-056",
+      "name": "Robô cartesiano XYZ",
+      "status": "implemented-parametric",
+      "category": "Robótica e células automatizadas"
+    },
+    {
+      "id": "ASTHA-3D-057",
+      "name": "Cobot",
+      "status": "implemented-parametric",
+      "category": "Robótica e células automatizadas"
+    },
+    {
+      "id": "ASTHA-3D-058",
+      "name": "Célula robótica completa",
+      "status": "implemented-parametric",
+      "category": "Robótica e células automatizadas"
+    },
+    {
+      "id": "ASTHA-3D-059",
+      "name": "Estação pick-and-place",
+      "status": "implemented-parametric",
+      "category": "Robótica e células automatizadas"
+    },
+    {
+      "id": "ASTHA-3D-060",
+      "name": "Alimentador vibratório",
+      "status": "implemented-parametric",
+      "category": "Robótica e células automatizadas"
+    },
+    {
+      "id": "ASTHA-3D-061",
+      "name": "Mesa indexadora",
+      "status": "implemented-parametric",
+      "category": "Robótica e células automatizadas"
+    },
+    {
+      "id": "ASTHA-3D-062",
+      "name": "Magazine automático",
+      "status": "implemented-parametric",
+      "category": "Robótica e células automatizadas"
+    },
+    {
+      "id": "ASTHA-3D-063",
+      "name": "Posicionador de soldagem",
+      "status": "implemented-parametric",
+      "category": "Robótica e células automatizadas"
+    },
+    {
+      "id": "ASTHA-3D-064",
+      "name": "Manipulador industrial a vácuo",
+      "status": "implemented-parametric",
+      "category": "Robótica e células automatizadas"
+    },
+    {
+      "id": "ASTHA-3D-065",
+      "name": "Transportador de roletes livres",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-066",
+      "name": "Transportador de roletes motorizados",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-067",
+      "name": "Curva de roletes",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-068",
+      "name": "Correia inclinada",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-069",
+      "name": "Correia curva",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-070",
+      "name": "Transportador modular",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-071",
+      "name": "Transportador de corrente",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-072",
+      "name": "Transportador aéreo",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-073",
+      "name": "Transportador helicoidal",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-074",
+      "name": "Elevador de canecas",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-075",
+      "name": "Elevador vertical de carga",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-076",
+      "name": "Mesa de transferência a 90°",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-077",
+      "name": "Mesa giratória",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-078",
+      "name": "Desviador automático / sorter",
+      "status": "implemented-parametric",
+      "category": "Transportadores e transferência"
+    },
+    {
+      "id": "ASTHA-3D-079",
+      "name": "Paleteira manual",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-080",
+      "name": "Paleteira elétrica",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-081",
+      "name": "Empilhadeira retrátil",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-082",
+      "name": "Stacker elétrico",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-083",
+      "name": "Rebocador industrial",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-084",
+      "name": "Trem logístico",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-085",
+      "name": "AGV",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-086",
+      "name": "AMR",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-087",
+      "name": "Ponte rolante",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-088",
+      "name": "Pórtico rolante",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-089",
+      "name": "Talha elétrica",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-090",
+      "name": "Guindaste de coluna",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-091",
+      "name": "Mesa elevatória",
+      "status": "implemented-parametric",
+      "category": "Movimentação e elevação"
+    },
+    {
+      "id": "ASTHA-3D-092",
+      "name": "Rack porta-paletes",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-093",
+      "name": "Rack drive-in",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-094",
+      "name": "Rack push-back",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-095",
+      "name": "Rack cantilever",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-096",
+      "name": "Rack dinâmico",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-097",
+      "name": "Estante de picking",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-098",
+      "name": "Estante leve",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-099",
+      "name": "Estante para peças",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-100",
+      "name": "Mezanino de armazenagem",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-101",
+      "name": "Sistema miniload",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-102",
+      "name": "Shuttle rack",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-103",
+      "name": "Carrossel vertical",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-104",
+      "name": "Armário vertical automatizado",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-105",
+      "name": "Gaiola aramada",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-106",
+      "name": "Caixa plástica retornável",
+      "status": "implemented-parametric",
+      "category": "Armazenagem e estocagem"
+    },
+    {
+      "id": "ASTHA-3D-107",
+      "name": "Plataforma de doca",
+      "status": "implemented-parametric",
+      "category": "Recebimento e expedição"
+    },
+    {
+      "id": "ASTHA-3D-108",
+      "name": "Niveladora de doca",
+      "status": "implemented-parametric",
+      "category": "Recebimento e expedição"
+    },
+    {
+      "id": "ASTHA-3D-109",
+      "name": "Abrigo de doca",
+      "status": "implemented-parametric",
+      "category": "Recebimento e expedição"
+    },
+    {
+      "id": "ASTHA-3D-110",
+      "name": "Porta seccional",
+      "status": "implemented-parametric",
+      "category": "Recebimento e expedição"
+    },
+    {
+      "id": "ASTHA-3D-111",
+      "name": "Rampa móvel",
+      "status": "implemented-parametric",
+      "category": "Recebimento e expedição"
+    },
+    {
+      "id": "ASTHA-3D-112",
+      "name": "Balança de piso",
+      "status": "implemented-parametric",
+      "category": "Recebimento e expedição"
+    },
+    {
+      "id": "ASTHA-3D-113",
+      "name": "Balança rodoviária",
+      "status": "implemented-parametric",
+      "category": "Recebimento e expedição"
+    },
+    {
+      "id": "ASTHA-3D-114",
+      "name": "Estação de conferência",
+      "status": "implemented-parametric",
+      "category": "Recebimento e expedição"
+    },
+    {
+      "id": "ASTHA-3D-115",
+      "name": "Mesa de embalagem",
+      "status": "implemented-parametric",
+      "category": "Recebimento e expedição"
+    },
+    {
+      "id": "ASTHA-3D-116",
+      "name": "Impressora de etiquetas",
+      "status": "implemented-parametric",
+      "category": "Recebimento e expedição"
+    },
+    {
+      "id": "ASTHA-3D-117",
+      "name": "Leitor fixo de código de barras",
+      "status": "implemented-parametric",
+      "category": "Recebimento e expedição"
+    },
+    {
+      "id": "ASTHA-3D-118",
+      "name": "Estação de triagem",
+      "status": "implemented-parametric",
+      "category": "Recebimento e expedição"
+    },
+    {
+      "id": "ASTHA-3D-119",
+      "name": "Compressor de parafuso",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-120",
+      "name": "Reservatório de ar",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-121",
+      "name": "Secador de ar comprimido",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-122",
+      "name": "Chiller",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-123",
+      "name": "Torre de resfriamento",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-124",
+      "name": "Bomba centrífuga",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-125",
+      "name": "Conjunto motobomba",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-126",
+      "name": "Sistema booster",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-127",
+      "name": "Caldeira",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-128",
+      "name": "Gerador de vapor",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-129",
+      "name": "Trocador de calor de placas",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-130",
+      "name": "Unidade hidráulica",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-131",
+      "name": "Bomba de vácuo",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-132",
+      "name": "Ventilador de exaustão",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-133",
+      "name": "Skid de tratamento de água",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-134",
+      "name": "Tanque pulmão",
+      "status": "implemented-parametric",
+      "category": "Utilidades industriais"
+    },
+    {
+      "id": "ASTHA-3D-135",
+      "name": "Coletor de pó",
+      "status": "implemented-parametric",
+      "category": "Meio ambiente e tratamento"
+    },
+    {
+      "id": "ASTHA-3D-136",
+      "name": "Filtro de mangas",
+      "status": "implemented-parametric",
+      "category": "Meio ambiente e tratamento"
+    },
+    {
+      "id": "ASTHA-3D-137",
+      "name": "Ciclone separador",
+      "status": "implemented-parametric",
+      "category": "Meio ambiente e tratamento"
+    },
+    {
+      "id": "ASTHA-3D-138",
+      "name": "Lavador de gases",
+      "status": "implemented-parametric",
+      "category": "Meio ambiente e tratamento"
+    },
+    {
+      "id": "ASTHA-3D-139",
+      "name": "Tanque de decantação",
+      "status": "implemented-parametric",
+      "category": "Meio ambiente e tratamento"
+    },
+    {
+      "id": "ASTHA-3D-140",
+      "name": "Estação de tratamento de efluentes",
+      "status": "implemented-parametric",
+      "category": "Meio ambiente e tratamento"
+    },
+    {
+      "id": "ASTHA-3D-141",
+      "name": "Separador água/óleo",
+      "status": "implemented-parametric",
+      "category": "Meio ambiente e tratamento"
+    },
+    {
+      "id": "ASTHA-3D-142",
+      "name": "Compactador de resíduos",
+      "status": "implemented-parametric",
+      "category": "Meio ambiente e tratamento"
+    },
+    {
+      "id": "ASTHA-3D-143",
+      "name": "Caçamba industrial",
+      "status": "implemented-parametric",
+      "category": "Meio ambiente e tratamento"
+    },
+    {
+      "id": "ASTHA-3D-144",
+      "name": "Contentor de coleta seletiva",
+      "status": "implemented-parametric",
+      "category": "Meio ambiente e tratamento"
+    },
+    {
+      "id": "ASTHA-3D-145",
+      "name": "Cabine de pintura",
+      "status": "implemented-parametric",
+      "category": "Meio ambiente e tratamento"
+    },
+    {
+      "id": "ASTHA-3D-146",
+      "name": "Cabine de exaustão",
+      "status": "implemented-parametric",
+      "category": "Meio ambiente e tratamento"
+    },
+    {
+      "id": "ASTHA-3D-147",
+      "name": "Máquina de medição por coordenadas (CMM)",
+      "status": "implemented-parametric",
+      "category": "Metrologia e qualidade"
+    },
+    {
+      "id": "ASTHA-3D-148",
+      "name": "Braço metrológico",
+      "status": "implemented-parametric",
+      "category": "Metrologia e qualidade"
+    },
+    {
+      "id": "ASTHA-3D-149",
+      "name": "Projetor de perfil",
+      "status": "implemented-parametric",
+      "category": "Metrologia e qualidade"
+    },
+    {
+      "id": "ASTHA-3D-150",
+      "name": "Rugosímetro",
+      "status": "implemented-parametric",
+      "category": "Metrologia e qualidade"
+    },
+    {
+      "id": "ASTHA-3D-151",
+      "name": "Durômetro",
+      "status": "implemented-parametric",
+      "category": "Metrologia e qualidade"
+    },
+    {
+      "id": "ASTHA-3D-152",
+      "name": "Bancada de calibração",
+      "status": "implemented-parametric",
+      "category": "Metrologia e qualidade"
+    },
+    {
+      "id": "ASTHA-3D-153",
+      "name": "Bancada de ensaios",
+      "status": "implemented-parametric",
+      "category": "Metrologia e qualidade"
+    },
+    {
+      "id": "ASTHA-3D-154",
+      "name": "Scanner 3D",
+      "status": "implemented-parametric",
+      "category": "Metrologia e qualidade"
+    },
+    {
+      "id": "ASTHA-3D-155",
+      "name": "Sistema de visão para inspeção",
+      "status": "implemented-parametric",
+      "category": "Metrologia e qualidade"
+    },
+    {
+      "id": "ASTHA-3D-156",
+      "name": "Detector de metais",
+      "status": "implemented-parametric",
+      "category": "Metrologia e qualidade"
+    },
+    {
+      "id": "ASTHA-3D-157",
+      "name": "Balança de precisão",
+      "status": "implemented-parametric",
+      "category": "Metrologia e qualidade"
+    },
+    {
+      "id": "ASTHA-3D-158",
+      "name": "Gabarito de inspeção",
+      "status": "implemented-parametric",
+      "category": "Metrologia e qualidade"
+    },
+    {
+      "id": "ASTHA-3D-159",
+      "name": "Bancada de manutenção",
+      "status": "implemented-parametric",
+      "category": "Oficina e manutenção"
+    },
+    {
+      "id": "ASTHA-3D-160",
+      "name": "Carrinho de ferramentas",
+      "status": "implemented-parametric",
+      "category": "Oficina e manutenção"
+    },
+    {
+      "id": "ASTHA-3D-161",
+      "name": "Armário de ferramentas",
+      "status": "implemented-parametric",
+      "category": "Oficina e manutenção"
+    },
+    {
+      "id": "ASTHA-3D-162",
+      "name": "Lavadora de peças",
+      "status": "implemented-parametric",
+      "category": "Oficina e manutenção"
+    },
+    {
+      "id": "ASTHA-3D-163",
+      "name": "Tanque ultrassônico",
+      "status": "implemented-parametric",
+      "category": "Oficina e manutenção"
+    },
+    {
+      "id": "ASTHA-3D-164",
+      "name": "Balanceadora",
+      "status": "implemented-parametric",
+      "category": "Oficina e manutenção"
+    },
+    {
+      "id": "ASTHA-3D-165",
+      "name": "Bancada de testes elétricos",
+      "status": "implemented-parametric",
+      "category": "Oficina e manutenção"
+    },
+    {
+      "id": "ASTHA-3D-166",
+      "name": "Cavalete de manutenção",
+      "status": "implemented-parametric",
+      "category": "Oficina e manutenção"
+    },
+    {
+      "id": "ASTHA-3D-167",
+      "name": "Elevador tipo tesoura",
+      "status": "implemented-parametric",
+      "category": "Oficina e manutenção"
+    },
+    {
+      "id": "ASTHA-3D-168",
+      "name": "Estação de lubrificação",
+      "status": "implemented-parametric",
+      "category": "Oficina e manutenção"
+    },
+    {
+      "id": "ASTHA-3D-169",
+      "name": "Carrinho de manutenção",
+      "status": "implemented-parametric",
+      "category": "Oficina e manutenção"
+    },
+    {
+      "id": "ASTHA-3D-170",
+      "name": "Mesa de montagem",
+      "status": "implemented-parametric",
+      "category": "Oficina e manutenção"
+    },
+    {
+      "id": "ASTHA-3D-171",
+      "name": "Sensor fotoelétrico",
+      "status": "implemented-parametric",
+      "category": "Sensores e instrumentação"
+    },
+    {
+      "id": "ASTHA-3D-172",
+      "name": "Sensor indutivo",
+      "status": "implemented-parametric",
+      "category": "Sensores e instrumentação"
+    },
+    {
+      "id": "ASTHA-3D-173",
+      "name": "Sensor capacitivo",
+      "status": "implemented-parametric",
+      "category": "Sensores e instrumentação"
+    },
+    {
+      "id": "ASTHA-3D-174",
+      "name": "Leitor RFID",
+      "status": "implemented-parametric",
+      "category": "Sensores e instrumentação"
+    },
+    {
+      "id": "ASTHA-3D-175",
+      "name": "Leitor de código 2D",
+      "status": "implemented-parametric",
+      "category": "Sensores e instrumentação"
+    },
+    {
+      "id": "ASTHA-3D-176",
+      "name": "Câmera de visão industrial",
+      "status": "implemented-parametric",
+      "category": "Sensores e instrumentação"
+    },
+    {
+      "id": "ASTHA-3D-177",
+      "name": "Scanner LiDAR",
+      "status": "implemented-parametric",
+      "category": "Sensores e instrumentação"
+    },
+    {
+      "id": "ASTHA-3D-178",
+      "name": "Encoder",
+      "status": "implemented-parametric",
+      "category": "Sensores e instrumentação"
+    },
+    {
+      "id": "ASTHA-3D-179",
+      "name": "Célula de carga",
+      "status": "implemented-parametric",
+      "category": "Sensores e instrumentação"
+    },
+    {
+      "id": "ASTHA-3D-180",
+      "name": "Transdutor de pressão",
+      "status": "implemented-parametric",
+      "category": "Sensores e instrumentação"
+    },
+    {
+      "id": "ASTHA-3D-181",
+      "name": "Termopar",
+      "status": "implemented-parametric",
+      "category": "Sensores e instrumentação"
+    },
+    {
+      "id": "ASTHA-3D-182",
+      "name": "Sensor de vibração",
+      "status": "implemented-parametric",
+      "category": "Sensores e instrumentação"
+    },
+    {
+      "id": "ASTHA-3D-183",
+      "name": "Extintor",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-184",
+      "name": "Hidrante",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-185",
+      "name": "Chuveiro de emergência",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-186",
+      "name": "Lava-olhos",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-187",
+      "name": "Kit de contenção de derramamentos",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-188",
+      "name": "Sinalização de saída",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-189",
+      "name": "Guarda-corpo",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-190",
+      "name": "Cerca de proteção de máquinas",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-191",
+      "name": "Portão de segurança",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-192",
+      "name": "Cortina de luz",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-193",
+      "name": "Barreira física de proteção",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-194",
+      "name": "Balizador industrial",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-195",
+      "name": "Espelho convexo",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-196",
+      "name": "Semáforo industrial",
+      "status": "implemented-parametric",
+      "category": "Segurança industrial"
+    },
+    {
+      "id": "ASTHA-3D-197",
+      "name": "Mesa de montagem ergonômica",
+      "status": "implemented-parametric",
+      "category": "Postos operacionais e apoio"
+    },
+    {
+      "id": "ASTHA-3D-198",
+      "name": "Bancada de altura ajustável",
+      "status": "implemented-parametric",
+      "category": "Postos operacionais e apoio"
+    },
+    {
+      "id": "ASTHA-3D-199",
+      "name": "Cadeira industrial",
+      "status": "implemented-parametric",
+      "category": "Postos operacionais e apoio"
+    },
+    {
+      "id": "ASTHA-3D-200",
+      "name": "Carrinho de picking",
+      "status": "implemented-parametric",
+      "category": "Postos operacionais e apoio"
+    },
+    {
+      "id": "ASTHA-3D-201",
+      "name": "Posto de operador",
+      "status": "implemented-parametric",
+      "category": "Postos operacionais e apoio"
+    },
+    {
+      "id": "ASTHA-3D-202",
+      "name": "Torre Andon",
+      "status": "implemented-parametric",
+      "category": "Postos operacionais e apoio"
+    },
+    {
+      "id": "ASTHA-3D-203",
+      "name": "Terminal HMI",
+      "status": "implemented-parametric",
+      "category": "Postos operacionais e apoio"
+    },
+    {
+      "id": "ASTHA-3D-204",
+      "name": "Computador industrial",
+      "status": "implemented-parametric",
+      "category": "Postos operacionais e apoio"
+    },
+    {
+      "id": "ASTHA-3D-205",
+      "name": "Quadro de gestão à vista",
+      "status": "implemented-parametric",
+      "category": "Postos operacionais e apoio"
+    },
+    {
+      "id": "ASTHA-3D-206",
+      "name": "Armário de EPI",
+      "status": "implemented-parametric",
+      "category": "Postos operacionais e apoio"
+    },
+    {
+      "id": "ASTHA-3D-207",
+      "name": "Vestiário modular",
+      "status": "implemented-parametric",
+      "category": "Postos operacionais e apoio"
+    },
+    {
+      "id": "ASTHA-3D-208",
+      "name": "Cabine de supervisão",
+      "status": "implemented-parametric",
+      "category": "Postos operacionais e apoio"
+    },
+    {
+      "id": "ASTHA-3D-209",
+      "name": "Pilar",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-210",
+      "name": "Viga",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-211",
+      "name": "Parede",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-212",
+      "name": "Divisória",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-213",
+      "name": "Porta industrial",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-214",
+      "name": "Porta corta-fogo",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-215",
+      "name": "Portão",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-216",
+      "name": "Janela",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-217",
+      "name": "Cobertura",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-218",
+      "name": "Claraboia",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-219",
+      "name": "Escada",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-220",
+      "name": "Rampa",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-221",
+      "name": "Passarela",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-222",
+      "name": "Plataforma",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-223",
+      "name": "Piso técnico",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-224",
+      "name": "Laje",
+      "status": "implemented-parametric",
+      "category": "Arquitetura e estrutura"
+    },
+    {
+      "id": "ASTHA-3D-225",
+      "name": "QGBT",
+      "status": "implemented-parametric",
+      "category": "Elétrica e iluminação"
+    },
+    {
+      "id": "ASTHA-3D-226",
+      "name": "CCM",
+      "status": "implemented-parametric",
+      "category": "Elétrica e iluminação"
+    },
+    {
+      "id": "ASTHA-3D-227",
+      "name": "Painel CLP",
+      "status": "implemented-parametric",
+      "category": "Elétrica e iluminação"
+    },
+    {
+      "id": "ASTHA-3D-228",
+      "name": "Painel de comando",
+      "status": "implemented-parametric",
+      "category": "Elétrica e iluminação"
+    },
+    {
+      "id": "ASTHA-3D-229",
+      "name": "Inversor de frequência",
+      "status": "implemented-parametric",
+      "category": "Elétrica e iluminação"
+    },
+    {
+      "id": "ASTHA-3D-230",
+      "name": "Transformador",
+      "status": "implemented-parametric",
+      "category": "Elétrica e iluminação"
+    },
+    {
+      "id": "ASTHA-3D-231",
+      "name": "Nobreak",
+      "status": "implemented-parametric",
+      "category": "Elétrica e iluminação"
+    },
+    {
+      "id": "ASTHA-3D-232",
+      "name": "Gerador",
+      "status": "implemented-parametric",
+      "category": "Elétrica e iluminação"
+    },
+    {
+      "id": "ASTHA-3D-233",
+      "name": "Eletrocalha",
+      "status": "implemented-parametric",
+      "category": "Elétrica e iluminação"
+    },
+    {
+      "id": "ASTHA-3D-234",
+      "name": "Leito de cabos",
+      "status": "implemented-parametric",
+      "category": "Elétrica e iluminação"
+    },
+    {
+      "id": "ASTHA-3D-235",
+      "name": "Barramento elétrico",
+      "status": "implemented-parametric",
+      "category": "Elétrica e iluminação"
+    },
+    {
+      "id": "ASTHA-3D-236",
+      "name": "Luminária industrial",
+      "status": "implemented-parametric",
+      "category": "Elétrica e iluminação"
+    },
+    {
+      "id": "ASTHA-3D-237",
+      "name": "Tubulação de água",
+      "status": "implemented-parametric",
+      "category": "Redes e conexões"
+    },
+    {
+      "id": "ASTHA-3D-238",
+      "name": "Tubulação de ar comprimido",
+      "status": "implemented-parametric",
+      "category": "Redes e conexões"
+    },
+    {
+      "id": "ASTHA-3D-239",
+      "name": "Tubulação de vapor",
+      "status": "implemented-parametric",
+      "category": "Redes e conexões"
+    },
+    {
+      "id": "ASTHA-3D-240",
+      "name": "Tubulação de condensado",
+      "status": "implemented-parametric",
+      "category": "Redes e conexões"
+    },
+    {
+      "id": "ASTHA-3D-241",
+      "name": "Duto de exaustão",
+      "status": "implemented-parametric",
+      "category": "Redes e conexões"
+    },
+    {
+      "id": "ASTHA-3D-242",
+      "name": "Eletroduto",
+      "status": "implemented-parametric",
+      "category": "Redes e conexões"
+    },
+    {
+      "id": "ASTHA-3D-243",
+      "name": "Dreno",
+      "status": "implemented-parametric",
+      "category": "Redes e conexões"
+    },
+    {
+      "id": "ASTHA-3D-244",
+      "name": "Válvula",
+      "status": "implemented-parametric",
+      "category": "Redes e conexões"
+    },
+    {
+      "id": "ASTHA-3D-245",
+      "name": "Flange",
+      "status": "implemented-parametric",
+      "category": "Redes e conexões"
+    },
+    {
+      "id": "ASTHA-3D-246",
+      "name": "Curva de tubulação",
+      "status": "implemented-parametric",
+      "category": "Redes e conexões"
+    },
+    {
+      "id": "ASTHA-3D-247",
+      "name": "Derivação em T",
+      "status": "implemented-parametric",
+      "category": "Redes e conexões"
+    },
+    {
+      "id": "ASTHA-3D-248",
+      "name": "Suporte de tubulação",
+      "status": "implemented-parametric",
+      "category": "Redes e conexões"
+    }
+  ]
+}

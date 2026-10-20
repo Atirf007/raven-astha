@@ -1,0 +1,54 @@
+{
+  "name": "astha-raven-electron",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ASTHA RAVEN WMS — Aplicação Desktop Independente (Padrão Oficial Electron: src/main, src/renderer e dados.json)",
+  "main": "src/main/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node launch.cjs --profile=local",
+    "start:local": "node launch.cjs --profile=local",
+    "start:principal": "node launch.cjs --profile=principal",
+    "start:cotil": "node launch.cjs --profile=cotil",
+    "start:server": "node src/main/api-bootstrap.js --profile=local",
+    "start:server:cotil": "node src/main/api-bootstrap.js --profile=cotil",
+    "build": "electron-builder --win"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "4.22.3",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "2.4.0",
+    "mysql2": "^3.22.3",
+    "occt-import-js": "0.0.23"
+  },
+  "devDependencies": {
+    "electron": "^44.9.2",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.asthareven.desktop",
+    "productName": "ASTHA RAVEN Desktop",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "package.json",
+      "dados.json",
+      "src/main/**/*",
+      "src/renderer/**/*",
+      "!**/.env",
+      "!**/.env.*",
+      "!src/main/.local/**"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "src/renderer/images/app_icon.png"
+    },
+    "asar": false
+  }
+}

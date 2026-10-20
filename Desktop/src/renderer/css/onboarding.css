@@ -1,0 +1,61 @@
+/* ASTHA onboarding: shared light surfaces, black actions and restrained blue focus. */
+:root{color-scheme:light;--bg:#f0f1f5;--panel:#f8f9fb;--card:#fff;--surface:#fff;--border:#e1e4e8;--border-hi:#cbd5e1;--accent:#111;--accent-dk:#292929;--accent-lt:#eef0f3;--green:#188452;--green-lt:#edf7f1;--amber:#a8600a;--amber-lt:#fff7e8;--red:#b42318;--red-lt:#fff0ee;--blue:#365fff;--blue-lt:#edf1ff;--purple:#526078;--text:#111;--text-2:#526078;--text-3:#64748b}
+[hidden]{display:none!important}
+.ob-workspace-choice{border:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ob-workspace-choice legend{font-size:13px;font-weight:600;margin-bottom:10px}
+.ob-workspace-choice label{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-width:0}
+.ob-workspace-choice input{width:18px;height:18px;accent-color:#111}
+.ob-workspace-choice strong{font-size:17px}
+.ob-workspace-choice span,.ob-workspace-choice small{font-size:13px;line-height:1.6;color:#526078}
+.ob-workspace-choice small{padding-top:10px;border-top:1px solid #e1e4e8}
+.ob-profile-photo{display:flex;gap:18px;align-items:center;margin-bottom:24px}
+.ob-photo-preview{display:flex;align-items:center;justify-content:center;flex:0 0 80px;width:80px;height:80px;overflow:hidden;border-radius:50%;background:#eef0f3;color:#526078;font-size:28px;font-weight:600;border:1px solid #dbe1ea}
+.ob-photo-controls{min-width:0;flex:1}
+.ob-photo-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.ob-photo-controls p{font-size:12px;color:#64748b;margin:8px 0;line-height:1.5}
+.ob-photo-controls .ob-btn{flex:0 0 auto;min-height:44px;padding:10px 16px;font-size:14px;width:auto}
+.ob-btn:disabled{opacity:.5;cursor:wait;transform:none}
+@media(max-width:640px){.ob-workspace-choice{grid-template-columns:1fr}.ob-profile-photo{align-items:flex-start;gap:12px}.ob-photo-preview{flex-basis:64px;width:64px;height:64px}}
+body{padding:32px;min-height:100dvh;align-items:center}
+body::before{display:none}
+.ob-layout{grid-template-columns:250px minmax(0,1fr);max-width:1080px;min-height:min(760px,calc(100dvh - 64px));background:#fff;border:1px solid var(--border);border-radius:24px;overflow:hidden;box-shadow:0 12px 40px #1822300a}
+.ob-sidebar{position:static;top:auto;height:auto;min-height:0;padding:32px 24px;background:var(--panel)}
+.ob-logo{margin-bottom:32px}
+.ob-logo img{display:block;width:136px;height:56px;object-fit:cover;object-position:50% 44%;mix-blend-mode:multiply}
+.ob-main{min-width:0;width:100%;padding:48px;overflow:visible;align-items:center}
+.ob-step,.ob-alert{width:100%;max-width:620px}
+.ob-nav-item.active .ob-nav-dot{box-shadow:none}
+.ob-nav-label{color:var(--text-2)}
+.ob-nav-item.active{background:#e9ecf1}
+.ob-nav-connector{background:#dbe1ea}
+.ob-sidebar-footer p{font-size:12px;line-height:1.6}
+.ob-welcome{padding:12px 0}
+.ob-welcome-title{font-weight:750;letter-spacing:-1px;font-size:clamp(28px,3vw,38px)}
+.ob-welcome-title span{background:none;color:#111;-webkit-text-fill-color:currentColor}
+.ob-welcome-badge{background:#eef0f3;border-color:#e1e4e8;color:#526078;margin-bottom:22px}
+.ob-welcome-desc{max-width:100%;margin-bottom:28px}
+.ob-checklist{margin-bottom:32px;gap:12px}
+.ob-actions{gap:12px;margin-top:28px}
+.ob-btn-primary,.ob-btn-finish{background:#111;color:#fff;box-shadow:none;border:1px solid #111}
+.ob-btn-primary:hover,.ob-btn-finish:hover{background:#292929;box-shadow:none;transform:none}
+.ob-btn-ghost{color:#526078;border:1px solid #cbd5e1;background:#fff}
+.ob-btn-ghost:hover{color:#111;border-color:#a7b0be;background:#f5f6f8}
+.ob-btn-skip{color:#526078}
+.ob-btn,.ob-add-btn{min-height:44px;border-radius:10px}
+.ob-input,.ob-select{background:#fff;color:#111;border-color:#cbd5e1;min-height:44px}
+.ob-input:focus,.ob-select:focus{border-color:#365fff;box-shadow:0 0 0 3px #365fff18}
+button:focus-visible,.ob-choice-card:focus-visible{outline:3px solid #365fff;outline-offset:3px}
+.ob-icon-wrap{background:#eef0f3!important}
+.ob-icon-wrap svg{stroke:#526078}
+.ob-choice-card{background:#fff;border-color:#e1e4e8}
+.ob-choice-card:hover{background:#f8f9fb;border-color:#cbd5e1}
+.ob-choice-card.selected{background:#f5f6f8;border-color:#111}
+.ob-choice-card.selected h3{color:#111}
+.ob-choice-card.selected .ob-choice-card-icon{background:#e9ecf1}
+.ob-alert.error,.ob-invite-status.err{color:#b42318}
+.ob-alert.success,.ob-invite-status.ok{color:#188452}
+.ob-copy-btn,.ob-level-badge{color:#526078}
+.ob-copy-btn:hover{background:#e2e6ed}
+.ob-swatch.sel{border-color:#fff;box-shadow:0 0 0 2px #526078}
+@media(max-width:900px){body{padding:20px;align-items:flex-start}.ob-layout{grid-template-columns:1fr;min-height:calc(100dvh - 40px)}.ob-sidebar{flex-direction:column;align-items:stretch;gap:18px;padding:20px 24px}.ob-logo{margin:0}.ob-steps-nav{flex:none;overflow-x:auto;padding:4px 0 8px}.ob-main{padding:32px;flex:1}.ob-nav-item{min-width:72px}.ob-sidebar-footer{display:none}}
+@media(max-width:640px){body{padding:12px}.ob-layout{min-height:calc(100dvh - 24px);border-radius:18px}.ob-sidebar{padding:16px}.ob-main{padding:28px 20px}.ob-actions{margin-top:24px}.ob-actions .ob-btn{max-width:none!important}.ob-welcome-title{font-size:30px}.ob-welcome-desc{font-size:14px}.ob-nav-label{font-size:11px}.ob-nav-connector{width:12px}}

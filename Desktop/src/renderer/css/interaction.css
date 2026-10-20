@@ -1,0 +1,2 @@
+[role="button"][tabindex]:focus-visible {outline:3px solid #365fff;outline-offset:3px;}
+@media(prefers-reduced-motion:reduce) {[role="button"][tabindex] {transition:none!important;}}

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <link rel="icon" type="image/png" href="./images/astha-wordmark.png?v=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASTHA RAVEN - Cadastro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/auth-redesign.css?v=5">
+  <link rel="stylesheet" href="./css/auth-entry.css?v=2">
+  <meta name="color-scheme" content="light">
+<link rel="stylesheet" href="./css/file-upload.css?v=1">
+<link rel="stylesheet" href="./css/interaction.css?v=1">
+</head>
+<body class="auth-redesign">
+  
+  <div class="auth-box auth-register-box">
+    
+    <div class="auth-box-left" style="flex: 1.2;">
+      <div class="auth-logo" style="margin-bottom: 24px;">
+        <img src="./images/astha-wordmark.png" alt="ASTHA"> RAVEN WMS
+      </div>
+      <div id="toast" class="auth-message" role="alert" aria-live="polite" hidden></div>
+
+      <!-- WIZARD -->
+      <div id="wizard-container" style="width: 100%; display: flex; flex-direction: column;">
+        
+        <!-- STEP 1: Tipo de Conta -->
+        <div class="wizard-step" id="step1" style="display: block;">
+          <div class="google-auth" data-google-auth data-google-mode="signup"><div class="google-button-host"></div><button type="button" class="google-unavailable" disabled>Criar conta com Google</button><p class="google-auth-status" role="status" aria-live="polite">Verificando disponibilidade…</p></div>
+          <div class="wizard-header" style="margin-bottom: 20px;">
+            <h2 class="auth-title">Como você pretende usar o ASTHA?</h2>
+            <p class="auth-subtitle">Escolha o tipo de uso para começar.</p>
+          </div>
+          
+          <div class="account-type-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="type-card" aria-pressed="false" role="button" tabindex="0" aria-label="Workspace pessoal" onclick="selectType('personal', this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectType('personal',this)}" style="padding: 24px 16px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <h3 style="font-size: 16px;">Pessoal</h3>
+              <p style="font-size: 12px; margin-bottom:0;">Organize espaços 3D, pertences e tarefas.</p>
+            </div>
+            
+            <div class="type-card" aria-pressed="false" role="button" tabindex="0" aria-label="Workspace corporativo" onclick="selectType('corp', this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectType('corp',this)}" style="padding: 24px 16px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+              <h3 style="font-size: 16px;">Corporativo</h3>
+              <p style="font-size: 12px; margin-bottom:0;">Para empresas, colaborativo e multi-armazéns.</p>
+            </div>
+          </div>
+          
+          <button class="auth-btn" id="btnNext1" style="width:100%; margin-top: 24px;">Continuar</button>
+        </div>
+
+        <!-- STEP 2: Dados Pessoais -->
+        <div class="wizard-step" id="step2" style="display: none;">
+          <div class="wizard-header" style="margin-bottom: 24px;">
+            <h2 class="auth-title">Sobre você</h2>
+            <p class="auth-subtitle">Precisamos de algumas informações básicas para o seu perfil.</p>
+          </div>
+          
+          <div class="form-grid">
+            <div class="auth-input-group" style="grid-column: span 2;">
+              <label for="regName">Nome completo *</label><input type="text" id="regName" class="auth-input" placeholder="Ex.: João da Silva" autocomplete="name" required>
+            </div>
+            <div class="auth-input-group" style="grid-column: span 2;">
+              <label for="regEmail">E-mail *</label><input type="email" id="regEmail" class="auth-input" placeholder="voce@exemplo.com" autocomplete="email" required>
+            </div>
+            <div class="auth-input-group">
+              <label for="regDob">Data de nascimento</label><input type="date" id="regDob" class="auth-input" autocomplete="bday">
+            </div>
+            <div class="auth-input-group">
+              <label for="regGender">Gênero</label><select id="regGender" class="auth-input">
+                <option value="">Prefiro não informar</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Feminino">Feminino</option>
+                <option value="Outro">Outro</option>
+                <option value="Prefiro não dizer">Prefiro não dizer</option>
+              </select>
+            </div>
+            <div class="auth-input-group">
+              <label for="regCountry">País / região</label><input type="text" id="regCountry" class="auth-input" placeholder="Ex.: Brasil" autocomplete="country-name">
+            </div>
+            <div class="auth-input-group">
+              <label for="regPhone">Telefone</label><input type="tel" id="regPhone" class="auth-input" placeholder="(00) 00000-0000" autocomplete="tel">
+            </div>
+          </div>
+          
+          <button class="auth-btn" style="width:100%; margin-top: 24px;" onclick="continueToPassword()">Avançar</button>
+          <div class="back-link" style="text-align:center; margin-top:16px; font-size:13px; color:var(--astha-text-muted); cursor:pointer;" onclick="prevStep(1)" role="button" tabindex="0">Voltar</div>
+        </div>
+
+        <!-- STEP 3: Senha e Conclusão -->
+        <div class="wizard-step" id="step3" style="display: none;">
+          <div class="wizard-header" style="margin-bottom: 24px;">
+            <h2 class="auth-title">Segurança da Conta</h2>
+            <p class="auth-subtitle">Crie uma senha forte para proteger seus dados.</p>
+          </div>
+          
+          <div class="form-grid">
+            <div class="auth-input-group">
+              <label for="regPass">Senha *</label><div class="password-field"><input type="password" id="regPass" class="auth-input" placeholder="Pelo menos 15 caracteres" autocomplete="new-password"><button type="button" class="password-visibility" onclick="togglePassword('regPass', this)" aria-label="Mostrar senha" aria-pressed="false">Mostrar</button></div>
+            </div>
+            <div class="auth-input-group">
+              <label for="regPassConfirm">Confirmar senha *</label><div class="password-field"><input type="password" id="regPassConfirm" class="auth-input" placeholder="Digite a senha novamente" autocomplete="new-password"><button type="button" class="password-visibility" onclick="togglePassword('regPassConfirm', this)" aria-label="Mostrar confirmação da senha" aria-pressed="false">Mostrar</button></div>
+            </div>
+          </div>
+          
+          <button class="auth-btn" id="createAccountButton" style="width:100%; margin-top: 24px;" onclick="finishRegistration()">Criar conta</button>
+          <div class="back-link" style="text-align:center; margin-top:16px; font-size:13px; color:var(--astha-text-muted); cursor:pointer;" onclick="prevStep(2)" role="button" tabindex="0">Voltar</div>
+        </div>
+
+        <!-- STEP 4: Success -->
+        <div class="wizard-step" id="step4" style="display: none;">
+          <div class="wizard-success" style="text-align: center;">
+            <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="#10b981" stroke-width="2" style="margin: 0 auto 20px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <h2 class="auth-title">Conta Criada com Sucesso!</h2>
+            <p class="auth-subtitle">Agora vamos concluir a configuração do seu workspace.</p>
+            
+            <button class="auth-btn" style="width:100%; margin-top: 32px;" onclick="window.location.href='./onboarding.html'">Configurar workspace</button>
+          </div>
+        </div>
+
+      </div> <!-- /wizard-container -->
+
+    </div>
+
+    <!-- Lado Direito: Branding -->
+    <div class="auth-box-right register-story" style="flex: 0.8; background: #faf8ff; border-left: 1px solid var(--astha-border);">
+      <h2 class="auth-hero-title" style="font-size: 24px;">
+        Organize tudo<br>
+        <strong>em um só lugar.</strong>
+      </h2>
+      <div class="register-art" aria-hidden="true">
+        <svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="200" cy="296" rx="170" ry="22" fill="#dce5f7"/>
+          <path d="M52 126 200 42 348 126v151H52Z" fill="#edf2ff" stroke="#8098c2" stroke-width="3"/>
+          <path d="M40 130 200 38l160 92" fill="none" stroke="#355781" stroke-width="9" stroke-linecap="round"/>
+          <path d="M83 144h234v139H83Z" fill="#fff"/>
+          <g stroke="#355781" stroke-width="7" fill="none"><path d="M99 151v132M199 151v132M301 151v132M99 198h202M99 250h202M99 282h202"/></g>
+          <g fill="#e6b774" stroke="#ae7837" stroke-width="2">
+            <rect x="110" y="159" width="66" height="35" rx="4"/><rect x="216" y="159" width="62" height="35" rx="4"/>
+            <rect x="111" y="212" width="67" height="34" rx="4"/><rect x="215" y="213" width="63" height="33" rx="4"/>
+            <rect x="121" y="260" width="48" height="19" rx="3"/>
+          </g>
+          <g stroke="#fff7e8" stroke-width="5"><path d="M143 160v14M247 160v14M144 213v13M247 214v13"/></g>
+          <g class="register-art-card">
+            <rect x="232" y="72" width="145" height="75" rx="16" fill="white" stroke="#c3d0e6" stroke-width="2"/>
+            <circle cx="256" cy="96" r="9" fill="#19845b"/><path d="m252 96 3 3 5-6" fill="none" stroke="white" stroke-width="2"/>
+            <path d="M277 93h75M277 101h49" stroke="#6881a5" stroke-width="4" stroke-linecap="round"/>
+            <path d="m252 129 23-10 24 4 22-14 30 5" fill="none" stroke="#4473ee" stroke-width="4" stroke-linecap="round"/>
+          </g>
+          <g class="register-art-box"><rect x="29" y="239" width="58" height="50" rx="7" fill="#7397f4"/><path d="M58 239v19" stroke="#dce6ff" stroke-width="9"/><path d="M41 277h18" stroke="white" stroke-width="3" stroke-linecap="round"/></g>
+        </svg>
+        <span class="register-art-caption">Cada item no seu lugar. Tudo conectado.</span>
+      </div>
+      <p class="auth-hero-subtitle" style="font-size: 15px; margin-top: 16px;">
+        O ASTHA foi pensado para ajudar você a ter controle total sobre seus itens pessoais ou inventário profissional. Comece pequeno e expanda conforme sua necessidade.
+      </p>
+    </div>
+
+  </div>
+
+  <style>
+    .auth-register-box .register-story { justify-content: center; gap: 24px; }
+    .register-story .auth-hero-title { margin: 0; text-align: center; }
+    .register-story .auth-hero-subtitle { margin: 0 !important; color: #435975; line-height: 1.6; }
+    .register-art { width: 100%; max-width: 420px; margin: auto; text-align: center; }
+    .register-art svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .register-art-caption { display: block; margin-top: 8px; color: #435975; font-size: 13px; }
+    .register-art-card { animation: register-float 5s ease-in-out infinite; }
+    .register-art-box { animation: register-float 5s ease-in-out 1s infinite; }
+    @keyframes register-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @media (max-width: 760px) { .register-art { max-width: 280px; } .auth-register-box .register-story { gap: 16px; } }
+    @media (prefers-reduced-motion: reduce) { .register-art-card, .register-art-box { animation: none; } }
+  </style>
+
+  <script src="./js/api.js?v=10"></script>
+  <script src="./js/google-auth.js?v=2"></script>
+  <script src="./js/register-wizard.js?v=8"></script>
+<script src="./js/keyboard-actions.js?v=1"></script>
+</body>
+</html>
+

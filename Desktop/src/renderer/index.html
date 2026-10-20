@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASTHA RAVEN WMS — Edição Desktop (Electron)</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080c14;
+      --card: #101726;
+      --border: #1e2a44;
+      --accent: #38bdf8;
+      --ok: #22c55e;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #132038 0%, var(--bg) 70%);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      padding: 24px;
+    }
+    .desktop-shell {
+      width: 100%;
+      max-width: 640px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 999px;
+      padding: 6px 14px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    p.subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+    .status-box {
+      background: rgba(8, 12, 20, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    .status-line {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ok);
+      margin-bottom: 6px;
+    }
+    .meta-line {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #172237;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 11px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+    .btn:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      border-color: transparent;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <main class="desktop-shell">
+    <div class="badge">ASTHA RAVEN • Electron Desktop Standalone</div>
+    <h1>ASTHA RAVEN WMS</h1>
+    <p class="subtitle">
+      Aplicação Desktop independente (<code>src/main</code> + <code>src/renderer</code> + <code>dados.json</code>)
+      integrada em tempo real com o Web App através do mesmo banco de dados MySQL.
+    </p>
+
+    <section class="status-box" aria-live="polite">
+      <div id="desktop-db-status" class="status-line">Sincronizando com A Cozinha (src/main/index.js)...</div>
+      <div id="desktop-db-profile" class="meta-line">Carregando perfil de conexão...</div>
+      <div id="desktop-db-counters" class="meta-line">Consultando estatísticas do banco compartilhado...</div>
+    </section>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="/app/login.html">Entrar no ASTHA RAVEN WMS</a>
+      <button id="btn-sync-dados" type="button" class="btn">Sincronizar dados.json + MySQL</button>
+    </div>
+  </main>
+
+  <script src="/renderer.js"></script>
+  <script>
+    // Redireciona automaticamente para o fluxo principal após carregar a ponte do Cliente
+    setTimeout(function () {
+      if (!window.location.search.includes('stay=1')) {
+        window.location.replace('/app/login.html');
+      }
+    }, 900);
+  </script>
+</body>
+</html>

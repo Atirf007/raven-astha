@@ -1,0 +1,6 @@
+(() => {
+ const form=document.getElementById('recoverAccountForm'),notice=document.getElementById('recoveryNotice');let busy=false;
+ form.addEventListener('submit',async event=>{event.preventDefault();if(busy)return;const data=new FormData(form);notice.hidden=false;if(data.get('new_password')!==data.get('confirm_password')){notice.textContent='A confirmação da senha não corresponde.';return;}busy=true;const button=form.querySelector('button');button.disabled=true;
+  try{const response=await fetch('/api/account/recover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:data.get('email'),code:data.get('code').trim(),new_password:data.get('new_password')})});const result=await response.json();if(!response.ok)throw Error(result.error||'Não foi possível recuperar o acesso.');form.reset();notice.textContent=result.message;form.hidden=true;const link=document.createElement('a');link.href='./login.html';link.textContent='Entrar com a nova senha';link.className='account-link';notice.hidden=false;form.before(notice);notice.after(link);}catch(error){notice.textContent=error.message||'Não foi possível recuperar o acesso.';form.elements.code.value='';form.elements.new_password.value='';form.elements.confirm_password.value='';}finally{busy=false;button.disabled=false;}
+ });
+})();

@@ -1,0 +1,16 @@
+'use strict';
+const router=require('express').Router(),{pool}=require('../database/connection'),service=require('../services/personal-spaces');
+router.use(...require('../middleware/workspaceMode').personalOnly);
+const handle=fn=>async(req,res)=>{try{res.json(await fn(req));}catch(e){res.status(e.status||503).json({error:e.status?e.message:'Não foi possível acessar seus espaços agora.'});}};
+const finderLimit=require('express-rate-limit')({windowMs:60000,max:8,keyGenerator:req=>`${req.user.org_id}:${req.user.id}`,standardHeaders:true,legacyHeaders:false,message:{error:'Aguarde um minuto antes de pesquisar novamente.'}});
+router.post('/find',finderLimit,handle(req=>require('../services/personal-finder').answer(pool,req.user,req.body)));
+router.get('/spaces',handle(req=>service.list(pool,req.user)));
+router.get('/spaces/:id',handle(req=>service.get(pool,req.user,req.params.id)));
+router.get('/spaces/:id/objects/:objectId/photo',handle(async req=>{const space=await service.get(pool,req.user,req.params.id),object=space.objects.find(o=>o.id===req.params.objectId);if(!object)throw Object.assign(new Error('Objeto não encontrado.'),{status:404});return {photo:object.photo||null};}));
+router.get('/spaces/:id/belongings/:itemId/photo',handle(async req=>{const space=await service.get(pool,req.user,req.params.id),item=(space.belongings||[]).find(i=>i.id===req.params.itemId);if(!item)throw Object.assign(new Error('Pertence não encontrado.'),{status:404});return {photo:item.photo||null};}));
+router.post('/spaces/:id/belongings/:itemId/move',handle(req=>service.moveBelonging(pool,req.user,req.params.id,req.params.itemId,req.body)));
+router.post('/spaces',handle(req=>service.create(pool,req.user,req.body)));
+router.put('/spaces/:id',handle(req=>service.save(pool,req.user,req.params.id,req.body)));
+router.post('/spaces/:id/archive',handle(req=>service.archive(pool,req.user,req.params.id,req.body?.version,true)));
+router.post('/spaces/:id/restore',handle(req=>service.archive(pool,req.user,req.params.id,req.body?.version,false)));
+module.exports=router;

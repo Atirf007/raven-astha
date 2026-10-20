@@ -1,0 +1,93 @@
+:root,html.light-mode,html.dark-mode {color-scheme:light;--surface-default:#fff;--surface-elevated:#fff;--surface-border:rgba(0,0,0,.1);--text-primary:#111;--text-secondary:#475569;--text-tertiary:#64748b;}
+.warehouse-create {width:640px;max-width:calc(100vw - 32px);background:#fff;color:#111;padding:0;}
+.warehouse-create form {padding:24px;display:grid;gap:14px;}
+.warehouse-create p {margin:0;color:#64748b;line-height:1.6;}
+.warehouse-create label {font-weight:600;}
+.warehouse-create form{row-gap:12px}
+.warehouse-create form>label:not(:first-child){margin-top:8px}
+.warehouse-create form>p:first-child{margin-bottom:8px!important}
+.warehouse-create form>button[type=submit],#warehouseCreateSubmit{margin-top:12px}
+.warehouse-create input[type=file]{padding:10px 0;line-height:1.5}
+.warehouse-create input[type=file]::file-selector-button{margin-right:12px;padding:9px 12px;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc;color:#111;cursor:pointer}
+.warehouse-modal-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;margin-top:20px}
+#stockTableBody .stock-image-cell{width:64px;min-width:64px;padding:12px}
+#stockTableBody .eo-thumb,#stockTableBody .eo-thumb-placeholder{display:flex;width:48px;min-width:48px;height:48px;border-radius:8px;background:#f6f7f9;object-fit:contain;backdrop-filter:none;-webkit-backdrop-filter:none}
+#stockTableBody .eo-thumb-placeholder svg{width:22px;height:22px;fill:none;stroke:#94a3b8;stroke-width:1.5}
+#warehouseCreateError {color:#b91c1c;}
+#warehouseContextSummary {color:#64748b;font-size:14px;margin:0 0 20px;}
+#warehouseTabs {flex-wrap:wrap;}
+.material-position-fields {display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;}
+#matPositionHint {grid-column:1/-1;font-size:13px;color:#64748b;line-height:1.5;margin:0;}
+#modal-cad-shelf .eo-modal {background:#fff!important;color:#111;}
+#modal-cad-shelf label {color:#475569;}
+#modal-cad-shelf .eo-btn-primary,.warehouse-create .eo-btn-primary {background:#000;color:#fff;}
+@media(max-width:650px){.material-position-fields{grid-template-columns:1fr;}}
+
+.eo-modal {backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+.eo-modal-overlay {backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);}
+.cad-object-panel{flex:0 0 auto;max-height:240px;overflow:auto;padding:12px 16px;background:#fff;border-top:1px solid #94a3b8;color:#111827;display:flex;flex-wrap:wrap;align-items:center;gap:12px;font:13px Inter,sans-serif}
+.cad-object-panel>label{display:flex;align-items:center;gap:8px}
+.cad-object-panel select,.cad-object-panel input{background:#fff;color:#111827;border:1px solid #94a3b8;border-radius:6px;padding:6px;min-width:0}
+.cad-object-panel p{margin:0;color:#475569;flex-basis:100%}
+.cad-object-fields{display:flex;flex-wrap:wrap;gap:8px;width:100%;align-items:end}
+.cad-object-fields[hidden]{display:none}
+.cad-object-fields label{display:flex;flex-direction:column;gap:4px;flex:1 1 110px}
+.cad-object-fields input{width:100%;box-sizing:border-box}
+.cad-object-fields button{background:#000;color:#fff;border:0;border-radius:8px;padding:9px 14px}
+.eo-cad-container>.eo-cad-workspace{min-height:0}
+.warehouse-create .eo-modal-header{padding:22px 24px;gap:16px;display:flex;align-items:center;justify-content:space-between}
+.warehouse-create .eo-modal-header h2,#warehouseCreateTitle{font-size:22px!important;line-height:1.3!important;margin:0!important;letter-spacing:-.3px;font-weight:700}
+.warehouse-create .eo-modal-close{flex:0 0 36px;width:36px;height:36px;border-radius:8px}
+.warehouse-create .eo-btn{min-height:44px;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:600;border:1px solid #cbd5e1;background:#fff;color:#111;cursor:pointer}
+.warehouse-create .eo-btn:not(.eo-btn-primary):hover{background:#f3f4f6;border-color:#9ca3af}
+.warehouse-create .eo-btn.eo-btn-primary{border-color:#000;background:#000;color:#fff}
+.warehouse-create .eo-btn.eo-btn-primary:hover{border-color:#262626;background:#262626}
+.warehouse-create .eo-btn.eo-btn-primary:disabled{opacity:.55;cursor:not-allowed}
+.warehouse-create .eo-input{min-height:44px;border-radius:9px;border:1px solid #cbd5e1;padding:10px 12px;font-size:14px;box-sizing:border-box;width:100%}
+.warehouse-create{max-height:calc(100dvh - 40px);overflow:auto}
+.warehouse-create form{gap:10px;font-size:14px}
+#warehouseCreatePreview{max-height:120px;max-width:100%;border-radius:10px;object-fit:cover}
+#warehouseTabs{display:flex;align-items:center;gap:12px;padding:16px!important;background:#fff;border:1px solid #dbe1ea;border-radius:14px}
+#warehouseTabs>label{display:flex;align-items:center;gap:12px;flex:1;min-width:220px;font-weight:600}
+#warehouseTabs select{max-width:600px;width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;color:#111;font-size:14px}
+#warehouseTabs>.eo-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border:1px solid #d1d5db;border-radius:10px;background:#fff;color:#1f2937;font-family:inherit;font-size:14px;font-weight:600;line-height:1.2;white-space:nowrap;cursor:pointer;transition:background .16s ease,border-color .16s ease,transform .16s ease}
+#warehouseTabs>.eo-btn:hover{background:#f3f4f6;border-color:#9ca3af}
+#warehouseTabs>.eo-btn:active{transform:translateY(1px)}
+#warehouseTabs>.eo-btn:focus-visible{outline:3px solid #94a3b8;outline-offset:2px}
+#warehouseTabs>.eo-btn.eo-btn-primary{border-color:#000;background:#000;color:#fff}
+#warehouseTabs>.eo-btn.eo-btn-primary:hover{border-color:#262626;background:#262626}
+#warehouseTabs>.eo-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.warehouse-create h2{font-size:22px!important;line-height:1.3!important}
+.warehouse-create input[type=file]{font-size:14px;max-width:100%}
+
+.warehouse-create [hidden]{display:none!important}
+.warehouse-create form>p:first-child{margin:0 0 8px!important}
+.warehouse-create .eo-modal-header{min-height:0!important}
+
+.warehouse-create *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+
+/* Restore the warehouse map cards while keeping the same map selection action. */
+#mhSidebar.maphub-sidebar{width:300px;min-width:260px;flex:0 0 300px;min-height:0;max-height:100%;overflow-y:auto;overflow-x:hidden}
+#mhCorpList,#mhStockList{flex:0 0 auto;min-width:0}
+.maphub-map-list{display:flex;flex-direction:column}
+.maphub-sidebar .maphub-map-card{box-sizing:border-box;width:100%;min-width:0;margin:0;padding:12px 16px;border:0;border-bottom:1px solid #f0f0f0;border-left:3px solid transparent;border-radius:0;background:#fff;color:#1a1a1a;font:inherit;text-align:left}
+.maphub-sidebar .maphub-map-card:hover{background:#f7f8fa}
+.maphub-sidebar .maphub-map-card.active{background:#ebf5f0;border-left-color:#188452}
+.maphub-map-card .map-thumb svg{width:24px;height:24px;color:#c6c9ce}
+.maphub-map-copy{display:flex;flex:1;flex-direction:column;align-items:flex-start;gap:6px;min-width:0}
+.maphub-map-name{display:block;max-width:100%;overflow:hidden;color:#1a1a1a;font-size:14px;font-weight:650;line-height:1.35;text-overflow:ellipsis;white-space:nowrap}
+.maphub-map-card .maphub-badge{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:900px){#mhSidebar.maphub-sidebar{width:260px;min-width:230px;flex-basis:260px}}
+@media(max-width:650px){#mhSidebar.maphub-sidebar{width:220px;min-width:200px;flex-basis:220px}.maphub-sidebar .maphub-map-card{gap:9px;padding:10px}.maphub-map-card .map-thumb{width:40px;height:40px}}
+@media(max-width:760px){#warehouseTabs{gap:10px}#warehouseTabs>label{flex:1 1 100%;min-width:0}#warehouseTabs>.eo-btn{flex:1 1 auto}}
+.map-delete-overlay{z-index:12000;padding:20px;box-sizing:border-box}
+.map-delete-dialog{width:520px;max-width:100%;padding:28px;background:#fff;color:#111;border:1px solid #dbe1ea;border-radius:18px;box-shadow:0 24px 70px rgba(15,23,42,.24)}
+.map-delete-dialog h2{margin:0 0 14px;font-size:22px;line-height:1.3;letter-spacing:-.3px}
+.map-delete-dialog p{margin:0;color:#475569;font-size:15px;line-height:1.6}
+.map-delete-dialog .map-delete-name{margin-top:12px;padding:12px 14px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;color:#111;font-weight:650;overflow-wrap:anywhere}
+.map-delete-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+.map-delete-actions .eo-btn{min-height:42px;padding:10px 18px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#111;font:inherit;font-weight:600;cursor:pointer}
+.map-delete-actions .eo-btn:focus-visible{outline:3px solid #94a3b8;outline-offset:2px}
+.map-delete-actions .map-delete-confirm{border-color:#b42318;background:#b42318;color:#fff}
+.map-delete-actions .map-delete-confirm:hover{background:#912018}
+@media(max-width:480px){.map-delete-dialog{padding:22px;border-radius:14px}.map-delete-dialog h2{font-size:20px}.map-delete-actions{flex-direction:column-reverse}.map-delete-actions .eo-btn{width:100%}}

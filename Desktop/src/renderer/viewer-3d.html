@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ASTHA RAVEN — Visualizador 3D</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background-color: #f5f7f9;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #viewer-container {
+      width: 100%; height: 100%;
+      position: absolute; top: 0; left: 0;
+      overflow: hidden;
+    }
+    #viewer-container canvas {
+      display: block; width: 100% !important; height: 100% !important;
+      outline: none;
+    }
+    .hud-controls {
+      position: absolute; bottom: 16px; right: 16px;
+      display: flex; flex-direction: column; gap: 8px;
+      z-index: 20;
+    }
+    .hud-btn {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+      color: #334155;
+      font-size: 16px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.15s ease;
+    }
+    .hud-btn:active {
+      transform: scale(0.92);
+      background: #e2e8f0;
+    }
+    .hud-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .hud-info {
+      position: absolute; top: 14px; left: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      border-radius: 12px;
+      padding: 8px 14px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+      font-size: 13px; font-weight: 600; color: #1e293b;
+      display: flex; align-items: center; gap: 8px;
+      z-index: 20;
+      pointer-events: none;
+    }
+    .hud-badge {
+      display: inline-block; width: 8px; height: 8px;
+      border-radius: 50%; background: #10b981;
+    }
+    .loading-overlay {
+      position: absolute; inset: 0;
+      background: #f5f7f9;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 14px; z-index: 30;
+      transition: opacity 0.3s ease;
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #10b981;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 13px; font-weight: 500; color: #64748b; }
+    .shelf-toast {
+      position: absolute; bottom: 20px; left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a; color: #ffffff;
+      padding: 10px 18px; border-radius: 20px;
+      font-size: 13px; font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 25; pointer-events: none;
+    }
+    .shelf-toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="./js/sistema-map-model.js"></script>
+  <script src="./js/sistema-industrial-catalog.js"></script>
+  <script src="./js/sistema-industrial-generators.js"></script>
+  <script src="./js/sistema-object-library.js"></script>
+<link rel="stylesheet" href="./css/file-upload.css?v=1">
+</head>
+<body>
+  <div id="viewer-container"></div>
+
+  <div id="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loading-msg">Carregando armazém 3D...</div>
+  </div>
+
+  <div class="hud-info" id="hud-info" style="display:none;">
+    <span class="hud-badge"></span>
+    <span id="hud-name">Armazém</span>
+  </div>
+
+  <div class="hud-controls">
+    <button class="hud-btn" id="btn-zoom-in" title="Aproximar">+</button>
+    <button class="hud-btn" id="btn-zoom-out" title="Afastar">-</button>
+    <button class="hud-btn" id="btn-reset" title="Restaurar visão">
+      <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    </button>
+  </div>
+
+  <div class="shelf-toast" id="shelf-toast">Prateleira selecionada</div>
+
+  <script>
+    (function() {
+      const container = document.getElementById('viewer-container');
+      const loadingEl = document.getElementById('loading');
+      const loadingMsg = document.getElementById('loading-msg');
+      const hudInfo = document.getElementById('hud-info');
+      const hudName = document.getElementById('hud-name');
+      const shelfToast = document.getElementById('shelf-toast');
+
+      let scene, camera, renderer, controls;
+      let floorMesh;
+      let currentBlueprint = null;
+      let currentItems = [];
+      let currentFloor = 0;
+      let shelfMeshes = [];
+      let raycaster = new THREE.Raycaster();
+      let mouse = new THREE.Vector2();
+      let pointerDownPos = { x: 0, y: 0 };
+      let defaultCamPos = { x: 20, y: 25, z: 30 };
+      let defaultTarget = { x: 0, y: 0, z: 0 };
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const warehouseId = urlParams.get('warehouse_id');
+      const token = urlParams.get('token');
+      const apiBase = urlParams.get('api_base') || '';
+
+      function hexToInt(hex) {
+        if (!hex || typeof hex !== 'string') return 0x3b82f6;
+        const clean = hex.replace('#', '');
+        return parseInt(clean, 16) || 0x3b82f6;
+      }
+
+      function initThree() {
+        const w = container.clientWidth || window.innerWidth;
+        const h = container.clientHeight || window.innerHeight;
+
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf5f7f9);
+
+        camera = new THREE.PerspectiveCamera(46, w / h, 0.1, 5000);
+        camera.position.set(defaultCamPos.x, defaultCamPos.y, defaultCamPos.z);
+
+        renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+        renderer.setSize(w, h);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        try { renderer.outputEncoding = THREE.sRGBEncoding; } catch(e) {}
+        container.appendChild(renderer.domElement);
+
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.08;
+        controls.maxPolarAngle = Math.PI / 2 - 0.02;
+        controls.minDistance = 2;
+        controls.maxDistance = 500;
+        controls.target.set(0, 0, 0);
+        controls.update();
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.48));
+
+        const sun = new THREE.DirectionalLight(0xffffff, 0.52);
+        sun.position.set(30, 50, 30);
+        sun.castShadow = true;
+        sun.shadow.mapSize.width = 2048;
+        sun.shadow.mapSize.height = 2048;
+        sun.shadow.camera.near = 0.5;
+        sun.shadow.camera.far = 300;
+        const d = 40;
+        sun.shadow.camera.left = -d;
+        sun.shadow.camera.right = d;
+        sun.shadow.camera.top = d;
+        sun.shadow.camera.bottom = -d;
+        scene.add(sun);
+
+        const fill = new THREE.DirectionalLight(0xffffff, 0.18);
+        fill.position.set(-30, 25, -30);
+        scene.add(fill);
+
+        floorMesh = new THREE.Mesh(
+          new THREE.PlaneGeometry(2000, 2000),
+          new THREE.MeshStandardMaterial({ color: 0xf2f4f6, roughness: 1 })
+        );
+        floorMesh.rotation.x = -Math.PI / 2;
+        floorMesh.position.y = -0.01;
+        floorMesh.receiveShadow = true;
+        scene.add(floorMesh);
+
+        window.addEventListener('resize', onResize);
+        renderer.domElement.addEventListener('pointerdown', onPointerDown);
+        renderer.domElement.addEventListener('pointerup', onPointerUp);
+
+        document.getElementById('btn-zoom-in').addEventListener('click', () => zoomCamera(0.8));
+        document.getElementById('btn-zoom-out').addEventListener('click', () => zoomCamera(1.25));
+        document.getElementById('btn-reset').addEventListener('click', resetCamera);
+
+        animate();
+      }
+
+      function onResize() {
+        if (!container || !camera || !renderer) return;
+        const w = container.clientWidth || window.innerWidth;
+        const h = container.clientHeight || window.innerHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      }
+
+      function zoomCamera(factor) {
+        if (!camera || !controls) return;
+        const offset = camera.position.clone().sub(controls.target);
+        offset.multiplyScalar(factor);
+        camera.position.copy(controls.target).add(offset);
+        controls.update();
+      }
+
+      function resetCamera() {
+        if (!camera || !controls) return;
+        camera.position.set(defaultCamPos.x, defaultCamPos.y, defaultCamPos.z);
+        controls.target.set(defaultTarget.x, defaultTarget.y, defaultTarget.z);
+        controls.update();
+      }
+
+      function onPointerDown(e) {
+        pointerDownPos = { x: e.clientX, y: e.clientY };
+      }
+
+      function onPointerUp(e) {
+        const dx = Math.abs(e.clientX - pointerDownPos.x);
+        const dy = Math.abs(e.clientY - pointerDownPos.y);
+        if (dx > 5 || dy > 5) return;
+
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+
+        const hits = raycaster.intersectObjects(shelfMeshes, true);
+        if (hits.length > 0) {
+          let root = hits[0].object;
+          while (root && !root.userData?.shelfId && root.parent) {
+            root = root.parent;
+          }
+          if (root && root.userData?.shelfId) {
+            selectShelf(root.userData.shelfId);
+          }
+        }
+      }
+
+      function selectShelf(shelfId) {
+        const count = currentItems.filter(i => (i.location || '').startsWith(shelfId)).length;
+        shelfToast.textContent = `Prateleira ${shelfId} · ${count} item${count === 1 ? '' : 's'}`;
+        shelfToast.classList.add('show');
+        setTimeout(() => shelfToast.classList.remove('show'), 2200);
+
+        try {
+          if (window.FlutterBridge && window.FlutterBridge.postMessage) {
+            window.FlutterBridge.postMessage(shelfId);
+          }
+        } catch(e) {}
+
+        try {
+          window.parent.postMessage({
+            type: 'SHELF_SELECTED',
+            shelfId: shelfId,
+            itemCount: count
+          }, '*');
+        } catch(e) {}
+      }
+
+      function clearSceneEntities() {
+        const toRemove = [];
+        scene.children.forEach(c => {
+          if (c !== floorMesh && !(c instanceof THREE.Light)) {
+            toRemove.push(c);
+          }
+        });
+        toRemove.forEach(c => scene.remove(c));
+        shelfMeshes = [];
+      }
+
+      function buildScene(blueprint, items) {
+        clearSceneEntities();
+        currentBlueprint = blueprint;
+        currentItems = items || [];
+
+        const scale = 0.06;
+        const plan = window.ASTHAMapModel
+          ? window.ASTHAMapModel.createScenePlan(blueprint || {}, { scale: scale, floorHeight: 160 })
+          : { entities: [] };
+
+        const cadBlueprint = plan.blueprint || blueprint;
+        const cadShelves = (cadBlueprint && cadBlueprint.floors)
+          ? Object.keys(cadBlueprint.floors).flatMap(level => {
+              return (cadBlueprint.floors[level].shelves || [])
+                .filter(s => s.visible !== false)
+                .map(s => Object.assign({ _floorLevel: Number(level) || 0 }, s));
+            })
+          : [];
+
+        const nonShelfEntities = plan.entities.filter(e => e.type !== 'shelf');
+
+        let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity, maxH = 3;
+
+        const postMat = new THREE.MeshStandardMaterial({ color: 0x163e79, metalness: 0.15, roughness: 0.7 });
+        const beamMat = new THREE.MeshStandardMaterial({ color: 0xb45309, metalness: 0.1, roughness: 0.7 });
+        const boardMat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.9 });
+        const archMat = new THREE.MeshStandardMaterial({ color: 0x78879a, roughness: 1 });
+        const glassMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.35, transparent: true, opacity: 0.65 });
+        const dockMat = new THREE.MeshStandardMaterial({ color: 0x0ea5e9, roughness: 0.7 });
+
+        const geomCache = new Map();
+        function getBox(w, h, d) {
+          const key = [w, h, d].map(n => Number(n).toFixed(3)).join(':');
+          if (!geomCache.has(key)) geomCache.set(key, new THREE.BoxGeometry(w, h, d));
+          return geomCache.get(key);
+        }
+
+        // Render non-shelf entities
+        nonShelfEntities.forEach(entity => {
+          try {
+            let mesh;
+            const w = Math.max(entity.width || 0.3, 0.08);
+            const d = Math.max(entity.depth || 0.3, 0.08);
+            const h = Math.max(entity.height || 3, 0.08);
+            let y = entity.position.y;
+
+            if (entity.type === 'wall') {
+              const length = Math.max(entity.length || 0.1, 0.1);
+              const depth = (entity.source.wallThickness || 10) * scale;
+              const height = entity.height;
+              y += height / 2;
+              mesh = new THREE.Mesh(getBox(length, height, depth), archMat);
+              mesh.rotation.y = -entity.lineAngle;
+              mesh.castShadow = true;
+              mesh.receiveShadow = true;
+            } else if (entity.type === 'door') {
+              y += h / 2;
+              mesh = new THREE.Mesh(getBox(w, h, d), new THREE.MeshStandardMaterial({ color: 0x8b5a2b }));
+            } else if (entity.type === 'window') {
+              y += 40 * scale + h / 2;
+              mesh = new THREE.Mesh(getBox(w, h, d), glassMat);
+            } else if (entity.type === 'pillar') {
+              y += h / 2;
+              mesh = new THREE.Mesh(getBox(w, h, d), archMat);
+              mesh.castShadow = true;
+              mesh.receiveShadow = true;
+            } else if (entity.type === 'zone') {
+              const zw = Math.max(Math.abs(entity.source.x2 - entity.source.x1) * scale, 0.1);
+              const zd = Math.max(Math.abs(entity.source.y2 - entity.source.y1) * scale, 0.1);
+              mesh = new THREE.Mesh(
+                new THREE.PlaneGeometry(zw, zd),
+                new THREE.MeshBasicMaterial({ color: entity.color || 0xf97316, transparent: true, opacity: 0.28, depthWrite: false })
+              );
+              mesh.rotation.x = -Math.PI / 2;
+              y += 0.02;
+            } else if (entity.type === 'path') {
+              const length = Math.max(entity.length || 1, 0.1);
+              mesh = new THREE.Mesh(
+                new THREE.PlaneGeometry(length, 0.5),
+                new THREE.MeshBasicMaterial({ color: 0xeab308, depthWrite: false })
+              );
+              mesh.rotation.x = -Math.PI / 2;
+              mesh.rotation.z = -entity.lineAngle;
+              y += 0.04;
+            } else if (entity.type === 'stairs') {
+              const length = Math.max(entity.length || 1, 0.1);
+              mesh = new THREE.Mesh(getBox(length, 2.8, 1.2), archMat);
+              mesh.rotation.y = -entity.lineAngle;
+              mesh.rotation.z = 0.16;
+              y += 1.4;
+            } else if (entity.type === 'machine' || entity.type === 'forklift') {
+              if (window.ASTHAObjectLibrary) {
+                mesh = window.ASTHAObjectLibrary.create(
+                  entity.type === 'forklift' ? 'FORKLIFT' : entity.source.machineType,
+                  w, h, d, entity.source
+                );
+              }
+            } else if (entity.type === 'dock') {
+              y += h / 2;
+              mesh = new THREE.Mesh(getBox(w, h, d), dockMat);
+            }
+
+            if (!mesh) return;
+
+            mesh.position.set(entity.position.x, y, entity.position.z);
+            if (!['wall', 'path', 'stairs', 'zone'].includes(entity.type)) {
+              mesh.rotation.y = entity.rotationY;
+            }
+
+            mesh.traverse(child => {
+              if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+              }
+            });
+
+            scene.add(mesh);
+
+            if (['wall', 'path', 'stairs'].includes(entity.type)) {
+              minX = Math.min(minX, entity.source.x1 * scale, entity.source.x2 * scale) - d / 2;
+              maxX = Math.max(maxX, entity.source.x1 * scale, entity.source.x2 * scale) + d / 2;
+              minZ = Math.min(minZ, entity.source.y1 * scale, entity.source.y2 * scale) - d / 2;
+              maxZ = Math.max(maxZ, entity.source.y1 * scale, entity.source.y2 * scale) + d / 2;
+            } else {
+              const boundsYaw = entity.type === 'zone' ? 0 : (entity.rotationY || 0);
+              const halfX = Math.abs(Math.cos(boundsYaw)) * w / 2 + Math.abs(Math.sin(boundsYaw)) * d / 2;
+              const halfZ = Math.abs(Math.sin(boundsYaw)) * w / 2 + Math.abs(Math.cos(boundsYaw)) * d / 2;
+              minX = Math.min(minX, entity.position.x - halfX);
+              maxX = Math.max(maxX, entity.position.x + halfX);
+              minZ = Math.min(minZ, entity.position.z - halfZ);
+              maxZ = Math.max(maxZ, entity.position.z + halfZ);
+            }
+            maxH = Math.max(maxH, y + h);
+          } catch(err) {
+            console.warn('[3D entity error]', entity.id, err);
+          }
+        });
+
+        // Group items by shelf location
+        const itemsByShelf = {};
+        (items || []).forEach(item => {
+          const loc = (item.location || '').split('-')[0].trim();
+          if (loc) {
+            if (!itemsByShelf[loc]) itemsByShelf[loc] = [];
+            itemsByShelf[loc].push(item);
+          }
+        });
+
+        // Render shelves
+        cadShelves.forEach(sh => {
+          const shelfGroup = new THREE.Group();
+          shelfGroup.userData = { shelfId: sh.id };
+
+          const rx = sh.x * scale;
+          const rz = sh.y * scale;
+          const RW = sh.w * scale;
+          const RD = sh.h * scale;
+          const NS = sh.levels || 3;
+          const rackHeight = (sh.shelfHeight || (15 + NS * 30)) * scale;
+          const SH = (rackHeight - 15 * scale) / NS;
+          const rackBase = 15 * scale;
+          const baseY = (sh._floorLevel || 0) * (plan.dimensions?.floorHeight || 160) * scale;
+          const loc = sh.id || 'Sem Nome';
+          const shelfYaw = -(sh.angle || 0);
+          const shelfCx = rx + RW / 2;
+          const shelfCz = rz + RD / 2;
+
+          const halfX = Math.abs(Math.cos(shelfYaw)) * RW / 2 + Math.abs(Math.sin(shelfYaw)) * RD / 2;
+          const halfZ = Math.abs(Math.sin(shelfYaw)) * RW / 2 + Math.abs(Math.cos(shelfYaw)) * RD / 2;
+          minX = Math.min(minX, shelfCx - halfX);
+          maxX = Math.max(maxX, shelfCx + halfX);
+          minZ = Math.min(minZ, shelfCz - halfZ);
+          maxZ = Math.max(maxZ, shelfCz + halfZ);
+          maxH = Math.max(maxH, baseY + rackHeight);
+
+          // Upright posts (4 corners)
+          const postH = rackHeight;
+          [[rx + 0.08, rz + 0.08], [rx + RW - 0.08, rz + 0.08], [rx + 0.08, rz + RD - 0.08], [rx + RW - 0.08, rz + RD - 0.08]].forEach(p => {
+            const post = new THREE.Mesh(new THREE.BoxGeometry(0.12, postH, 0.12), postMat);
+            post.position.set(p[0], baseY + postH / 2, p[1]);
+            post.castShadow = true;
+            shelfGroup.add(post);
+          });
+
+          // Horizontal beams & decks
+          for (let s = 0; s < NS; s++) {
+            const by = rackBase + s * SH;
+            [rz + 0.08, rz + RD - 0.08].forEach(bz => {
+              const beam = new THREE.Mesh(new THREE.BoxGeometry(RW, 0.1, 0.1), beamMat);
+              beam.position.set(rx + RW / 2, baseY + by + 0.05, bz);
+              beam.castShadow = true;
+              shelfGroup.add(beam);
+            });
+            const board = new THREE.Mesh(new THREE.BoxGeometry(RW - 0.1, 0.07, RD - 0.1), boardMat);
+            board.position.set(rx + RW / 2, baseY + by + 0.08, rz + RD / 2);
+            board.receiveShadow = true;
+            shelfGroup.add(board);
+          }
+
+          // Placard badge (canvas texture)
+          const lc = document.createElement('canvas');
+          lc.width = 256; lc.height = 56;
+          const lx = lc.getContext('2d');
+          lx.fillStyle = '#0f172a';
+          if (lx.roundRect) lx.roundRect(0, 0, 256, 56, 10); else lx.rect(0, 0, 256, 56);
+          lx.fill();
+          lx.fillStyle = '#f8fafc';
+          lx.font = 'bold 20px Inter, -apple-system, sans-serif';
+          lx.textAlign = 'center'; lx.textBaseline = 'middle';
+          const rackLabel = sh.label || loc;
+          lx.fillText(rackLabel.length > 18 ? rackLabel.substring(0, 17) + '…' : rackLabel, 128, 28);
+          const ltex = new THREE.CanvasTexture(lc);
+          const lbl = new THREE.Mesh(
+            new THREE.PlaneGeometry(RW * 0.6, (RW * 0.6) * 56 / 256),
+            new THREE.MeshBasicMaterial({ map: ltex, transparent: true, side: THREE.DoubleSide })
+          );
+          lbl.position.set(rx + RW / 2, baseY + rackHeight + 0.5, rz + RD / 2);
+          shelfGroup.add(lbl);
+
+          // Boxes on shelves
+          const itemsInLoc = itemsByShelf[loc] || [];
+          const cols = sh.positions || 4;
+          const perShelf = Math.max(1, cols);
+          const slotW = (RW - 0.3) / perShelf;
+          const boxW = Math.min(slotW * 0.78, 1.1);
+          const boxH = SH * 0.45;
+          const boxD = RD * 0.55;
+
+          itemsInLoc.forEach((item, ii) => {
+            let shelf = typeof item.level === 'number' && !isNaN(item.level) ? item.level : Math.floor(ii / perShelf);
+            let col = typeof item.position === 'number' && !isNaN(item.position) ? item.position : ii % perShelf;
+            if (shelf >= NS) shelf = NS - 1;
+            if (col >= perShelf) col = perShelf - 1;
+
+            const bx = rx + 0.15 + slotW * (col + 0.5);
+            const by2 = baseY + rackBase + shelf * SH + 0.08 + boxH / 2;
+            const bz2 = rz + RD / 2;
+
+            const color = hexToInt(item.color);
+            const imat = new THREE.MeshStandardMaterial({ color: color, metalness: 0.15, roughness: 0.55 });
+            const box = new THREE.Mesh(new THREE.BoxGeometry(boxW, boxH, boxD), imat);
+            box.position.set(bx, by2, bz2);
+            box.castShadow = true;
+            shelfGroup.add(box);
+
+            // Item code placard
+            const ic = document.createElement('canvas');
+            ic.width = 128; ic.height = 32;
+            const ix = ic.getContext('2d');
+            ix.fillStyle = 'rgba(255,255,255,0.95)';
+            if (ix.roundRect) ix.roundRect(0, 0, 128, 32, 6); else ix.rect(0, 0, 128, 32);
+            ix.fill();
+            ix.fillStyle = '#1e293b';
+            ix.font = 'bold 13px Inter, sans-serif';
+            ix.textAlign = 'center'; ix.textBaseline = 'middle';
+            const code = (item.material || item.code || '').split('—')[0].trim().substring(0, 10);
+            ix.fillText(code, 64, 16);
+            const itex = new THREE.CanvasTexture(ic);
+            const ilbl = new THREE.Mesh(
+              new THREE.PlaneGeometry(boxW * 0.9, boxH * 0.4),
+              new THREE.MeshBasicMaterial({ map: itex, transparent: true, side: THREE.DoubleSide })
+            );
+            ilbl.position.set(bx, by2 + boxH / 2 + boxH * 0.22, bz2 + boxD / 2 + 0.01);
+            shelfGroup.add(ilbl);
+          });
+
+          // Rotate around shelf center
+          if (shelfYaw) {
+            shelfGroup.children.forEach(obj => {
+              const dx = obj.position.x - shelfCx;
+              const dz = obj.position.z - shelfCz;
+              obj.position.x = shelfCx + Math.cos(shelfYaw) * dx + Math.sin(shelfYaw) * dz;
+              obj.position.z = shelfCz - Math.sin(shelfYaw) * dx + Math.cos(shelfYaw) * dz;
+              obj.rotation.y += shelfYaw;
+            });
+          }
+
+          scene.add(shelfGroup);
+          shelfMeshes.push(shelfGroup);
+        });
+
+        if (!isFinite(minX)) {
+          minX = -10; maxX = 10; minZ = -10; maxZ = 10; maxH = 4;
+        }
+
+        const centerX = (minX + maxX) / 2;
+        const centerZ = (minZ + maxZ) / 2;
+        const span = Math.max(maxX - minX, maxZ - minZ, 12);
+
+        // Adjust floor and fog
+        floorMesh.geometry.dispose();
+        floorMesh.geometry = new THREE.PlaneGeometry(Math.max(2000, span * 40), Math.max(2000, span * 40));
+        floorMesh.position.set(centerX, -0.01, centerZ);
+        scene.fog = new THREE.Fog(0xf5f7f9, Math.max(40, span * 2), Math.max(300, span * 12));
+
+        // Adjust camera framing
+        const fitDistance = Math.max(span / (2 * Math.tan(camera.fov * Math.PI / 360)) * Math.max(1, 1 / camera.aspect) * 1.25, maxH * 2.2);
+        defaultCamPos = {
+          x: centerX + fitDistance * 0.55,
+          y: maxH * 0.4 + fitDistance * 0.75,
+          z: centerZ + fitDistance
+        };
+        defaultTarget = { x: centerX, y: maxH * 0.4, z: centerZ };
+
+        resetCamera();
+
+        loadingEl.style.opacity = '0';
+        setTimeout(() => loadingEl.style.display = 'none', 300);
+
+        try {
+          window.parent.postMessage({ type: 'VIEWER_READY' }, '*');
+        } catch(e) {}
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        if (controls) controls.update();
+        if (renderer && scene && camera) {
+          renderer.render(scene, camera);
+        }
+      }
+
+      async function loadFromApi() {
+        if (!warehouseId || !token) {
+          loadingMsg.textContent = 'Aguardando dados da planta...';
+          return;
+        }
+        try {
+          loadingMsg.textContent = 'Carregando planta industrial...';
+          const headers = { 'Authorization': 'Bearer ' + token };
+          const base = apiBase || window.location.origin;
+
+          const [layoutRes, materialsRes] = await Promise.all([
+            fetch(`${base}/api/warehouse/layout?warehouse_id=${warehouseId}`, { headers }),
+            fetch(`${base}/api/materials?warehouse_id=${warehouseId}`, { headers })
+          ]);
+
+          const layoutData = await layoutRes.json();
+          const materialsData = await materialsRes.json();
+
+          const bp = layoutData.blueprint_data || {};
+          const items = Array.isArray(materialsData) ? materialsData : (materialsData.materials || []);
+
+          if (layoutData.name) {
+            hudName.textContent = layoutData.name;
+            hudInfo.style.display = 'flex';
+          }
+
+          buildScene(bp, items);
+        } catch(err) {
+          console.error('[Viewer 3D] Erro ao carregar dados:', err);
+          loadingMsg.textContent = 'Não foi possível carregar a planta.';
+        }
+      }
+
+      window.addEventListener('message', e => {
+        if (!e.data || typeof e.data !== 'object') return;
+        if (e.data.type === 'LOAD_DATA') {
+          if (e.data.name) {
+            hudName.textContent = e.data.name;
+            hudInfo.style.display = 'flex';
+          }
+          buildScene(e.data.blueprint, e.data.items);
+        } else if (e.data.type === 'RESET_CAMERA') {
+          resetCamera();
+        } else if (e.data.type === 'SET_FLOOR') {
+          currentFloor = Number(e.data.floor) || 0;
+          if (currentBlueprint) buildScene(currentBlueprint, currentItems);
+        }
+      });
+
+      initThree();
+      loadFromApi();
+    })();
+  </script>
+</body>
+</html>

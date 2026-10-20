@@ -1,0 +1,974 @@
+/* Sistema Features — Modals, Entry/Exit, Components, Users, Map, PDF */
+
+// â⬝??â⬝?? Modal Helpers â⬝??â⬝??
+function switchModalTab(btn,panelId){
+  btn.closest('.eo-modal').querySelectorAll('.eo-inline-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  btn.closest('.eo-modal').querySelectorAll('.eo-inline-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+}
+function previewImage(input,previewId,dataId){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{const img=document.getElementById(previewId);img.src=e.target.result;img.style.display='block';document.getElementById(dataId).value=e.target.result;};
+  reader.readAsDataURL(file);
+}
+function handleManualUpload(input){
+  const file=input.files[0];if(!file)return;
+  document.getElementById('matManualName').textContent=file.name;
+  const reader=new FileReader();
+  reader.onload=e=>{document.getElementById('matManualData').value=e.target.result;};
+  reader.readAsDataURL(file);
+}
+
+// â⬝??â⬝?? File Attachment System â⬝??â⬝??
+let matPendingFiles = []; // {category, filename, mime_type, file_data, description, file_size_kb}
+let matFileGeneration = 0, matFileReads = 0;
+function resetMaterialFileQueue(){matFileGeneration++;matFileReads=0;matPendingFiles=[];const button=document.getElementById('materialSubmitBtn');if(button)button.disabled=false;const form=document.getElementById('materialForm');if(form)delete form.dataset.submitting;const status=document.getElementById('materialFileStatus');if(status)status.textContent='';}
+
+const FILE_ICONS = {pdf:'PDF',stl:'3D',obj:'3D',gltf:'3D',glb:'3D','3ds':'3D',step:'3D',stp:'3D',iges:'3D',igs:'3D',dwg:'CAD',dxf:'CAD',svg:'IMG',jpg:'IMG',png:'IMG',default:'ARQ'};
+function getFileIcon(filename){
+  const ext = (filename||'').split('.').pop().toLowerCase();
+  return FILE_ICONS[ext] || FILE_ICONS.default;
+}
+function formatFileSize(kb){
+  if(!kb) return '';
+  return kb < 1024 ? `${kb} KB` : `${(kb/1024).toFixed(1)} MB`;
+}
+
+function readFileAsBase64(file){
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=e=>resolve(e.target.result);
+    r.onerror=reject;
+    r.readAsDataURL(file);
+  });
+}
+
+async function addFilesToQueue(files, category){
+  if(document.getElementById('materialForm')?.dataset.submitting==='true'){showToast('Aguarde o salvamento antes de selecionar novos anexos.','info');return;}
+  const generation=matFileGeneration;
+  matFileReads++;
+  document.getElementById('materialSubmitBtn').disabled=true;
+  try{
+  for(const file of files){
+    const sizekb = Math.round(file.size/1024);
+    if(file.size > 10*1024*1024){ showToast(`Arquivo "${file.name}" muito grande (máximo 10 MiB)`,'error'); continue; }
+    const data = await readFileAsBase64(file);
+    if(generation!==matFileGeneration)return;
+    matPendingFiles.push({ category, filename:file.name, mime_type:file.type, file_data:data, description:'', file_size_kb:sizekb, _temp_id: Date.now()+Math.random() });
+  }
+  renderPendingFileLists();
+  }catch(_){if(generation===matFileGeneration)showToast('Não foi possível ler o anexo. Selecione o arquivo novamente.','error');}
+  finally{if(generation===matFileGeneration){matFileReads--;document.getElementById('materialSubmitBtn').disabled=matFileReads>0;}}
+}
+
+function handleFileInput(input, category){
+  if(input.files && input.files.length) addFilesToQueue(Array.from(input.files), category);
+  input.value = '';
+}
+
+function handleFileDrop(event, category){
+  event.preventDefault();
+  const files = Array.from(event.dataTransfer.files);
+  if(files.length) addFilesToQueue(files, category);
+}
+
+function renderPendingFileLists(){
+  ['product_3d','machinery_3d','manual','electrical','mechanical'].forEach(cat=>{
+    const el = document.getElementById('filelist-'+cat);
+    if(!el) return;
+    const pend = matPendingFiles.filter(f=>f.category===cat && !f._saved_id);
+    const saved = matPendingFiles.filter(f=>f.category===cat && f._saved_id);
+    el.innerHTML = [...saved.map(f=>renderFileItem(f, cat, true)), ...pend.map(f=>renderFileItem(f, cat, false))].join('');
+  });
+}
+
+function renderFileItem(f, category, isSaved){
+  const icon = getFileIcon(f.filename);
+  const size = formatFileSize(f.file_size_kb);
+  const key = isSaved ? `saved_${f._saved_id}` : `pend_${f._temp_id}`;
+  const deleteCall = isSaved ? `deleteExistingFile(${f._saved_id},'${category}')` : `removePendingFile('${f._temp_id}','${category}')`;
+  const badge = isSaved ? '<span class="eo-file-badge saved">Salvo</span>' : '<span class="eo-file-badge pending">Pendente</span>';
+  const openBtn = (f.file_data || f.file_url) ? `<button type="button" class="eo-file-action" onclick="openFileFromPending('${f._temp_id||''}','${f._saved_id||''}','${category}')" title="Abrir">&#128065;</button>` : '';
+  return `<div class="eo-file-item" id="fi-${key}">
+    <span class="eo-file-icon">${icon}</span>
+    <div class="eo-file-info">
+      <div class="eo-file-name">${Security.escapeHTML(f.filename)}</div>
+      <div class="eo-file-meta">${size} ${badge}</div>
+    </div>
+    ${openBtn}
+    <button type="button" class="eo-file-action danger" onclick="${deleteCall}" title="Remover">&#10005;</button>
+  </div>`;
+}
+
+function removePendingFile(tempId, category){
+  matPendingFiles = matPendingFiles.filter(f=>String(f._temp_id)!==String(tempId));
+  renderPendingFileLists();
+}
+
+async function deleteExistingFile(fileId, category){
+  const res = await API.delete('/materials/files/'+fileId);
+  if(res.success){
+    matPendingFiles = matPendingFiles.filter(f=>f._saved_id!==fileId);
+    renderPendingFileLists();
+    showToast('Arquivo removido','success');
+  } else showToast('Erro ao remover arquivo','error');
+}
+
+function openFileFromPending(tempId, savedId, category){
+  let f;
+  if(tempId) f = matPendingFiles.find(x=>String(x._temp_id)===String(tempId));
+  else if(savedId) f = matPendingFiles.find(x=>x._saved_id===parseInt(savedId));
+  if(!f) return showToast('Arquivo não encontrado','info');
+  if(f._saved_id) return _openInfoFile(f._saved_id,f.material_code||document.getElementById('matEditCode').value,f.filename,f.source_url);
+  if(f.file_data) _openManualUrl(f.file_data,f.filename);
+  else if(f.file_url) {const url=Security.webURL(f.file_url);if(url)window.open(url,'_blank','noopener');}
+  else showToast('Sem dados para abrir','info');
+}
+
+async function uploadPendingFiles(materialCode){
+  const generation=matFileGeneration;
+  const pending = matPendingFiles.filter(f=>!f._saved_id);
+  if(!pending.length) return true;
+  let count=0,failures=0,failureReason='';
+  for(const f of pending){
+    if(generation!==matFileGeneration)return false;
+    const res = await API.post(`/materials/${materialCode}/files`, {
+      category:f.category, filename:f.filename, mime_type:f.mime_type,
+      file_data:f.file_data, description:f.description, file_size_kb:f.file_size_kb
+    });
+    if(generation!==matFileGeneration)return false;
+    if(res.success){ f._saved_id=res.data.id;f.material_code=materialCode;count++; }
+    else {failures++;failureReason=res.error||'Não foi possível confirmar o envio.';}
+  }
+  if(count) showToast(`${count} arquivo(s) anexado(s)`,'success');
+  renderPendingFileLists();
+  if(failures){const message=`Material salvo; ${failures} anexo(s) não foram enviados. ${failureReason} Os arquivos continuam nesta janela para tentar novamente.`;showToast(message,'error');const status=document.getElementById('materialFileStatus');if(status)status.textContent=message;}
+  return failures===0;
+}
+
+async function loadExistingFiles(materialCode){
+  const generation=matFileGeneration;
+  matPendingFiles = matPendingFiles.filter(f=>!f._saved_id); // keep pending only
+  const res = await API.get(`/materials/${materialCode}/files`);
+  if(generation!==matFileGeneration)return;
+  if(res.success && res.data){
+    res.data.forEach(f=>{
+      matPendingFiles.push({ category:f.category, filename:f.filename, mime_type:f.mime_type,
+        file_url:`/api/materials/${encodeURIComponent(materialCode)}/files/${encodeURIComponent(f.id)}/data`,
+        source_url:f.file_url||null,
+        description:f.description||'', file_size_kb:f.file_size_kb, _saved_id:f.id, material_code:materialCode, _temp_id:null });
+    });
+  }
+  renderPendingFileLists();
+}
+
+// â⬝??â⬝?? Material Modal (Create/Edit) â⬝??â⬝??
+async function openNewMaterialModal(){
+  if(!currentWarehouseId){await WarehouseUI.openCreate();return;}
+  resetMaterialFileQueue();
+  document.getElementById('matEditCode').value='';
+  document.getElementById('materialModalTitle').textContent='+ Novo Material (MM01)';
+  document.getElementById('materialSubmitBtn').textContent='Criar Material';
+  document.getElementById('materialForm').reset();
+  document.getElementById('matImagePreview').style.display='none';
+  document.getElementById('matMachImagePreview').style.display='none';
+  document.getElementById('materialModal').classList.add('active');
+  renderPendingFileLists();
+  document.querySelector('#materialModal .eo-inline-tab').click();
+  await WarehouseUI.preparePositions();
+}
+function closeMaterialModal(){document.getElementById('materialModal').classList.remove('active');resetMaterialFileQueue();}
+
+async function openEditMaterial(code){
+  const m=materials.find(x=>x.code===code);if(!m)return;
+  resetMaterialFileQueue();
+  document.getElementById('matEditCode').value=m.code;
+  document.getElementById('materialModalTitle').textContent=`Editar: ${m.code}`;
+  document.getElementById('materialSubmitBtn').textContent='Salvar Alterações';
+  document.getElementById('matDesc').value=m.desc;
+  document.getElementById('matBrand').value=m.brand||'';
+  document.getElementById('matOriginCountry').value=m.originCountry||'';
+  document.getElementById('matModel').value=m.model;
+  document.getElementById('matSector').value=m.sector;
+  await WarehouseUI.preparePositions(m.location);
+  document.getElementById('matInitQty').value=m.qty;
+  document.getElementById('matMin').value=m.min;
+  document.getElementById('matMax').value=m.max;
+  document.getElementById('matPrice').value=m.price;
+  document.getElementById('matManufacturerUrl').value=m.manufacturerUrl||'';
+  document.getElementById('matUsageDesc').value=m.usageDesc||'';
+  document.getElementById('matMachineryName').value=m.machineryName||'';
+  document.getElementById('matMachineryDesc').value=m.machineryDesc||'';
+  const notesEl = document.getElementById('matNotes');
+  if(notesEl) notesEl.value = m.notes||'';
+  const icEl=document.getElementById('matInterchangeable');
+  if(icEl) icEl.checked=!!m.interchangeable;
+  const icWith=document.getElementById('matInterchangeWith');
+  if(icWith) icWith.value=m.interchangeWith||'';
+  // Images
+  if(m.image){document.getElementById('matImagePreview').src=m.image;document.getElementById('matImagePreview').style.display='block';document.getElementById('matImageData').value=m.image;}
+  else{document.getElementById('matImagePreview').style.display='none';document.getElementById('matImageData').value='';}
+  if(m.machineryImage){document.getElementById('matMachImagePreview').src=m.machineryImage;document.getElementById('matMachImagePreview').style.display='block';document.getElementById('matMachImageData').value=m.machineryImage;}
+  else{document.getElementById('matMachImagePreview').style.display='none';document.getElementById('matMachImageData').value='';}
+  // Legacy manual â⬠? show as "manual" file in list
+  if(m.manualUrl){const status=document.getElementById('materialFileStatus');if(status)status.textContent='Este material possui um manual legado. Ele será preservado e continua disponível em Mais Info.';}
+  document.getElementById('materialModal').classList.add('active');
+  document.querySelector('#materialModal .eo-inline-tab').click();
+  // Load files from API in background
+  await loadExistingFiles(m.code);
+}
+
+async function handleMaterialSubmit(e){
+  e.preventDefault();
+  const form=e.target,generation=matFileGeneration,submit=document.getElementById('materialSubmitBtn');
+  if(form.dataset.submitting==='true')return;
+  if(matFileReads){showToast('Aguarde a leitura dos anexos antes de salvar.','info');return;}
+  const editCode=document.getElementById('matEditCode').value;
+  const icEl=document.getElementById('matInterchangeable');
+  const icWith=document.getElementById('matInterchangeWith');
+  const desc=document.getElementById('matDesc').value.trim();
+  if(!desc){
+    showToast('A Descrição do material é obrigatória!','error');
+    document.querySelector('#materialModal .eo-inline-tab').click();
+    return;
+  }
+  const notesEl = document.getElementById('matNotes');
+  const data={
+    desc, brand:document.getElementById('matBrand').value.trim(),
+    originCountry:document.getElementById('matOriginCountry').value.trim(),
+    model:document.getElementById('matModel').value.trim(),
+    sector:document.getElementById('matSector').value,
+    warehouse_id:currentWarehouseId,
+    location:document.getElementById('matLocation').value.trim()||null,
+    qty:Number(document.getElementById('matInitQty').value)||0,
+    min:Number(document.getElementById('matMin').value)||0,
+    max:Number(document.getElementById('matMax').value)||0,
+    price:parseFloat(document.getElementById('matPrice').value)||0,
+    image:document.getElementById('matImageData').value||'',
+    manufacturerUrl:document.getElementById('matManufacturerUrl').value.trim(),
+    usageDesc:document.getElementById('matUsageDesc').value.trim(),
+    machineryName:document.getElementById('matMachineryName').value.trim(),
+    machineryImage:document.getElementById('matMachImageData').value||'',
+    machineryDesc:document.getElementById('matMachineryDesc').value.trim(),
+    notes: notesEl?notesEl.value.trim():'',
+    interchangeable:icEl?icEl.checked:false,
+    interchangeWith:icWith?icWith.value.trim():''
+  };
+
+  const backendData={
+    description:data.desc, brand:data.brand, origin_country:data.originCountry, model:data.model, sector:data.sector,
+    warehouse_id:data.warehouse_id, location:data.location, quantity:data.qty, min_qty:data.min, max_qty:data.max,
+    unit_price:data.price,
+    image_data:data.image&&data.image.startsWith('data:')?data.image:null,
+    image_url:data.image&&!data.image.startsWith('data:')?data.image:null,
+    machinery:data.machineryName,
+    machinery_image:data.machineryImage||null, machinery_desc:data.machineryDesc||null,
+    usage_desc:data.usageDesc||null, manufacturer_url:data.manufacturerUrl||null,
+    interchangeable:data.interchangeable?1:0, interchange_with:data.interchangeWith,
+    notes:data.notes||null
+  };
+
+  form.dataset.submitting='true';submit.disabled=true;
+  try{
+  let res, savedCode;
+  if(editCode){
+    res=await API.put('/materials/'+editCode, backendData);
+    if(res.success) showToast(`Material ${editCode} atualizado!`,'success');
+    savedCode=editCode;
+  } else {
+    res=await API.post('/materials', backendData);
+    if(res.success){ showToast(`Material ${res.data.code} criado!`,'success'); savedCode=res.data.code; }
+  }
+
+  if(generation!==matFileGeneration)return;
+  if(res.success){
+    if(generation!==matFileGeneration)return;
+    document.getElementById('matEditCode').value=savedCode;
+    document.getElementById('materialModalTitle').textContent=`Editar: ${savedCode}`;
+    submit.textContent='Salvar alterações';
+    const uploaded=savedCode?await uploadPendingFiles(savedCode):true;
+    await initAppData();
+    if(uploaded&&generation===matFileGeneration)closeMaterialModal();
+  } else {
+    showToast(`Erro ao salvar material: ${res.error}`,'error');
+  }
+  }catch(_){if(generation===matFileGeneration)showToast('Não foi possível confirmar o salvamento. Confira os dados antes de tentar novamente.','error');}
+  finally{if(generation===matFileGeneration){delete form.dataset.submitting;submit.disabled=false;}}
+}
+// â⬝??â⬝?? More Info Modal â⬝??â⬝??
+let infoLoadVersion = 0;
+async function openMoreInfo(code){
+  const m=materials.find(x=>x.code===code);if(!m)return;
+  const loadVersion = ++infoLoadVersion;
+  currentInfoMaterial=m;
+  document.getElementById('infoModalTitle').textContent=`${m.code} — ${m.desc}`;
+  
+  const contentEl = document.getElementById('infoContent');
+  contentEl.className = ''; // Remove .eo-info-grid or any inherited classes that restrict width
+  contentEl.style.display = 'block';
+  const modalEl = contentEl.closest('.eo-modal');
+  if (modalEl) modalEl.scrollTop = 0;
+  
+  contentEl.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-tertiary);">Carregando dados estruturais...</div>';
+  document.getElementById('moreInfoModal').classList.add('active');
+
+  const filesRes = await API.get(`/materials/${encodeURIComponent(code)}/files`);
+  if (loadVersion !== infoLoadVersion || !document.getElementById('moreInfoModal').classList.contains('active')) return;
+  const files = filesRes.success && Array.isArray(filesRes.data) ? filesRes.data : [];
+  
+  const prod3D = files.find(f => f.category === 'product_3d' && f.filename.match(/\.(stl|obj|gltf|glb)$/i));
+
+  const imgSrc=m.image||'';
+  const machImg=m.machineryImage||'';
+  const s=getStatus(m);
+  const pct = m.max > 0 ? Math.min(100, Math.round((m.qty / m.max) * 100)) : (m.qty > 0 ? 100 : 0);
+  const barColor=m.qty===0?'#FF4757':m.qty<=m.min?'#FFB830':'#00FF88';
+  
+  const isOldDesign = window.useOldDesign || false;
+
+  const formatBRL = (val) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
+
+  const oldDesignHTML = `
+    <div style="display:grid;grid-template-columns:minmax(300px, 380px) 1fr;gap:24px;align-items:start;" id="infoModernGrid">
+      <div style="position:sticky;top:0;display:flex;flex-direction:column;gap:16px;">
+        <div class="eo-media-gallery" id="eoMediaGallery" style="margin:0;height:320px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.05);background:var(--bg-secondary);">
+          <div class="eo-media-controls">
+            <button class="eo-media-btn" id="eoMediaToggleBtn" onclick="toggleInfoMedia()" style="display:none;">Alternar 2D/3D</button>
+            <button class="eo-media-btn" data-info-fullscreen onclick="expandMiniViewer()" title="Expandir Tela Cheia">Tela cheia</button>
+          </div>
+          ${imgSrc ? `<img id="eoMediaImage" class="eo-media-image" src="${Security.escapeHTML(imgSrc)}" style="display:none;object-fit:cover;">` : `<div id="eoMediaImage" style="display:none;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text-tertiary);font-size:13px;">Sem foto 2D</div>`}
+          <div id="eoMediaCanvas" class="eo-media-canvas" style="display:none;"></div>
+          <div id="eoMediaLoading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:12px;display:none;background:rgba(0,0,0,0.7);padding:8px 16px;border-radius:20px;backdrop-filter:blur(4px);">Renderizando Motor 3D...</div>
+        </div>
+        <div style="background:var(--bg-elevated, var(--bg-secondary));border:1px solid var(--surface-border);border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.03);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <span style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;">Disponibilidade</span>
+            <span class="eo-status ${s.cls}" style="font-size:11px;padding:4px 8px;">${s.text}</span>
+          </div>
+          <div style="font-size:28px;font-weight:800;color:var(--text-primary);line-height:1;margin-bottom:12px;">
+            ${Security.escapeHTML(Number(m.qty).toLocaleString('pt-BR', {maximumFractionDigits:3}))} <span style="font-size:14px;font-weight:500;color:var(--text-tertiary);">und.</span>
+          </div>
+          <div style="background:var(--surface-border);border-radius:99px;height:6px;overflow:hidden;margin-bottom:8px;">
+            <div style="width:${pct}%;height:100%;background:${barColor};border-radius:99px;transition:width 0.6s ease;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);font-weight:600;">
+            <span>Mín: ${Security.escapeHTML(m.min)}</span><span>Máx: ${Security.escapeHTML(m.max > 0 ? m.max : 'Sem limite')}</span>
+          </div>
+          <button class="btn btn-primary btn-block" data-info-action="locate" style="margin-top:20px;border-radius:12px;padding:10px;">Localizar no Mapa</button>
+        </div>
+      </div>
+      <button class="btn btn-secondary" data-info-action="modern" style="grid-column:1/-1;justify-self:start;">Visualização detalhada</button>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="eo-info-section" style="margin:0;border-radius:16px;">
+          <h4 style="margin-bottom:16px;font-size:14px;color:var(--text-secondary);">Especificações Técnicas</h4>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:12px;">
+            <div class="eo-chip" style="width:100%;"><span class="eo-chip-label">Código</span><span class="eo-chip-val mono">${Security.escapeHTML(m.code)}</span></div>
+            <div class="eo-chip" style="width:100%;"><span class="eo-chip-label">Marca</span><span class="eo-chip-val">${Security.escapeHTML(m.brand||'N/A')}</span></div>
+            <div class="eo-chip" style="width:100%;"><span class="eo-chip-label">Modelo</span><span class="eo-chip-val">${Security.escapeHTML(m.model||'—')}</span></div>
+            <div class="eo-chip" style="width:100%;"><span class="eo-chip-label">Setor / Local</span><span class="eo-chip-val">${Security.escapeHTML(m.sector)} — ${Security.escapeHTML(m.location)}</span></div>
+            <div class="eo-chip" style="width:100%;grid-column:1/-1;background:rgba(var(--color-primary-rgb,108,99,255),0.05);border-color:rgba(var(--color-primary-rgb,108,99,255),0.2);">
+              <span class="eo-chip-label">Valor Unitário</span>
+              <span class="eo-chip-val" style="color:var(--color-primary);font-weight:800;font-size:16px;">${formatBRL(m.price)}</span>
+            </div>
+          </div>
+        </div>
+        <div class="eo-info-section" style="margin:0;border-radius:16px;">
+          <h4 style="margin-bottom:16px;font-size:14px;color:var(--text-secondary);">Aplicação / Equipamento</h4>
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            ${machImg?`<img src="${Security.escapeHTML(machImg)}" style="width:90px;height:90px;object-fit:cover;border-radius:12px;border:1px solid var(--surface-border);box-shadow:0 2px 8px rgba(0,0,0,0.05);">`:`<div style="width:90px;height:90px;background:var(--bg-secondary);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--text-tertiary);font-size:11px;text-align:center;padding:8px;border:1px dashed var(--surface-border);">Sem imagem</div>`}
+            <div style="flex:1;">
+              <div style="font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:4px;">${Security.escapeHTML(m.machineryName||'Equipamento não especificado')}</div>
+              <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin:0;">${Security.escapeHTML(m.machineryDesc||'Nenhuma descrição detalhada do equipamento.')}</p>
+            </div>
+          </div>
+        </div>
+        <div class="eo-info-section" style="margin:0;border-radius:16px;">
+          <h4 style="margin-bottom:16px;font-size:14px;color:var(--text-secondary);">Instruções e Equivalência</h4>
+          <div style="margin-bottom:16px;">
+            <span style="display:block;font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:6px;">Como Utilizar</span>
+            <p style="font-size:13px;color:var(--text-primary);line-height:1.6;margin:0;">${Security.escapeHTML(m.usageDesc||'Nenhuma instrução cadastrada.')}</p>
+          </div>
+          ${m.notes?`<div style="margin-bottom:16px;background:rgba(255,184,48,0.08);border-left:3px solid #FFB830;padding:12px 16px;border-radius:0 12px 12px 0;">
+            <strong style="display:block;font-size:11px;color:#b37d1a;text-transform:uppercase;margin-bottom:4px;">Observações Técnicas</strong>
+            <p style="font-size:13px;color:var(--text-secondary);margin:0;line-height:1.5;">${Security.escapeHTML(m.notes)}</p>
+          </div>`:''}
+          <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+            <div class="eo-chip" style="margin:0;"><span class="eo-chip-label">Intercambiável</span><span class="eo-chip-val" style="color:${Security.escapeHTML(m.interchangeable?'#00FF88':'#FF4757')};">${Security.escapeHTML(m.interchangeable?'Sim':'Não')}</span></div>
+            ${m.interchangeable&&m.interchangeWith?`<div class="eo-chip" style="margin:0;"><span class="eo-chip-label">Peças Substitutas</span><span class="eo-chip-val mono">${Security.escapeHTML(m.interchangeWith)}</span></div>`:''}
+            ${m.manufacturerUrl?`<a href="${Security.escapeHTML(Security.webURL(m.manufacturerUrl))}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="margin-left:auto;">Site do fabricante</a>`:''}
+          </div>
+        </div>
+        <div class="eo-info-section" style="margin:0;border-radius:16px;flex:1;">
+          <h4 style="margin-bottom:16px;font-size:14px;color:var(--text-secondary);">Documentos, Manuais & Modelos 3D</h4>
+          <div id="infoFilesList" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;"><span style="color:var(--text-tertiary);font-size:13px;">Carregando arquivos...</span></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modalEl?.classList.toggle('material-details-modern', !isOldDesign);
+
+  // Novo Design Variables
+  const newStatusBg = m.qty === 0 ? '#FFE5E8' : m.qty <= m.min ? '#FFF4E5' : '#E6F4EE';
+  const newStatusColor = m.qty === 0 ? '#FF4757' : m.qty <= m.min ? '#FFB830' : '#1B7A4E';
+  const newStatusText = m.qty === 0 ? 'Sem Estoque' : m.qty <= m.min ? 'Estoque Crítico' : 'Em Estoque';
+  const newBarColor = '#1B7A4E';
+
+  const newDesignHTML = `
+
+
+    <!-- Top Bar -->
+    <div class="material-details-toolbar">
+      <div style="display:flex;gap:16px;align-items:flex-start;">
+        <button type="button" aria-label="Fechar detalhes do material" data-info-close onclick="closeMoreInfoModal()" style="width:40px;height:40px;border-radius:12px;background:#FFF;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.05);color:#1A1A1A;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <div>
+          <h2 class="material-details-code">${Security.escapeHTML(m.code)}</h2>
+          <div style="font-size:14px;color:#8A8A8A;margin-top:4px;">${Security.escapeHTML(m.desc || m.model || 'Item Cadastrado')}</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.5);backdrop-filter:blur(10px);border-radius:24px;padding:4px;display:flex;gap:4px;">
+        <button onclick="comparePrices()" style="background:#FFF;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;color:#1A1A1A;box-shadow:0 2px 8px rgba(0,0,0,0.05);cursor:pointer;">Comparar Preços</button>
+        <button data-info-action="locate" style="background:transparent;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:500;color:#8A8A8A;cursor:pointer;">Localizar no Mapa</button>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:center;">
+        <div style="background:#FFF;border-radius:20px;padding:8px 16px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:#1A1A1A;box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          Setor: ${Security.escapeHTML(m.sector)} ${m.location ? `- ${Security.escapeHTML(m.location)}` : ''}
+        </div>
+        <button data-info-action="classic" style="width:40px;height:40px;border-radius:12px;background:#FFF;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.05);color:#1A1A1A;" title="Visualização compacta" aria-label="Visualização compacta">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Area Grid Layout -->
+    <div class="material-details-grid">
+      
+      <!-- 3D Viewer Area (Row 1, Col 1) -->
+      <div class="viewer-area-wrapper" id="eoMediaGallery" style="grid-column: 1; grid-row: 1; position: relative; border-radius: 20px; min-height: 380px;">
+        <div style="position:absolute; top:0; left:0; right:0; bottom:0; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+          ${imgSrc ? `<img id="eoMediaImage" src="${Security.escapeHTML(imgSrc)}" style="display:none;width:100%;height:100%;object-fit:contain;border-radius:16px;box-sizing:border-box;padding:20px;">` : `<div id="eoMediaImage" style="display:none;"></div>`}
+          <div id="eoMediaCanvas" style="display:block;width:100%;height:100%;cursor:grab;"></div>
+          <div id="eoMediaLoading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:12px;display:none;background:rgba(0,0,0,0.7);padding:8px 16px;border-radius:20px;">Carregando 3D...</div>
+          
+          <div class="material-media-controls" style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:10;background:rgba(255,255,255,0.8);backdrop-filter:blur(10px);padding:6px;border-radius:24px;border:1px solid rgba(255,255,255,0.8);box-shadow:0 8px 24px rgba(0,0,0,0.08);">
+            <button id="eoMediaToggleBtn" onclick="toggleInfoMedia()" style="display:none;background:#FFF;border:1px solid #E8E8E8;border-radius:16px;padding:6px 20px;font-size:12px;font-weight:600;color:#1A1A1A;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.05);transition:all 0.2s;">Alternar 2D/3D</button>
+            <button data-info-fullscreen onclick="expandMiniViewer()" style="background:transparent;border:none;border-radius:16px;padding:6px 20px;font-size:12px;font-weight:600;color:#8A8A8A;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Tela Cheia
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Floating Card (Row 1 to 2, Col 2) -->
+      <div class="volvo-card right-card" style="grid-column: 2; grid-row: 1 / span 2; display:flex;flex-direction:column;gap:20px;overflow-y:auto;max-height:100%;">
+        <div>
+          <div style="font-size:14px;font-weight:600;color:#1A1A1A;margin-bottom:4px;">Disponibilidade</div>
+          <div style="font-size:12px;color:#8A8A8A;margin-bottom:12px;">Estoque Atual</div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <div style="font-size:32px;font-weight:700;color:#1A1A1A;">${Security.escapeHTML(Number(m.qty).toLocaleString('pt-BR', {maximumFractionDigits:3}))}</div>
+            <span style="background:${newStatusBg};color:${newStatusColor};padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;">${newStatusText}</span>
+          </div>
+          <div style="background:rgba(0,0,0,0.05);border-radius:4px;height:6px;width:100%;margin-bottom:8px;overflow:hidden;">
+            <div style="height:100%;background:${newBarColor};width:${pct}%;border-radius:4px;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#8A8A8A;">
+            <span>Mín: ${Security.escapeHTML(m.min)}</span><span>Máx: ${Security.escapeHTML(m.max > 0 ? m.max : 'Sem limite')}</span>
+          </div>
+        </div>
+        
+        <hr style="border:none;border-top:1px solid rgba(0,0,0,0.05);margin:0;">
+
+        <div>
+          <div style="font-size:14px;font-weight:600;color:#1A1A1A;margin-bottom:12px;">Especificações Técnicas</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div><div style="font-size:11px;color:#8A8A8A;margin-bottom:2px;">Marca</div><div style="font-size:13px;font-weight:600;color:#1A1A1A;">${Security.escapeHTML(m.brand||'N/A')}</div></div>
+            <div><div style="font-size:11px;color:#8A8A8A;margin-bottom:2px;">Modelo</div><div style="font-size:13px;font-weight:600;color:#1A1A1A;">${Security.escapeHTML(m.model||'—')}</div></div>
+            <div><div style="font-size:11px;color:#8A8A8A;margin-bottom:2px;">Intercambiável</div><div style="font-size:13px;font-weight:600;color:${Security.escapeHTML(m.interchangeable?'#1B7A4E':'#FF4757')};">${Security.escapeHTML(m.interchangeable?'Sim':'Não')}</div></div>
+            ${m.interchangeable && m.interchangeWith ? `<div><div style="font-size:11px;color:#8A8A8A;margin-bottom:2px;">Substitutas</div><div style="font-size:13px;font-weight:600;color:#1A1A1A;">${Security.escapeHTML(m.interchangeWith)}</div></div>` : ''}
+          </div>
+          ${m.manufacturerUrl ? `<div style="margin-top:12px;"><a href="${Security.escapeHTML(Security.webURL(m.manufacturerUrl))}" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#1B7A4E;text-decoration:none;font-weight:500;">Site do fabricante</a></div>` : ''}
+          
+          <div style="margin-top:16px;background:rgba(255,255,255,0.5);border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:11px;color:#8A8A8A;font-weight:500;">Valor Unitário</span>
+            <span style="font-size:18px;font-weight:700;color:#1A1A1A;">${formatBRL(m.price)}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Cards Row (Row 2, Col 1) -->
+      <div class="material-details-cards">
+        <div class="volvo-card" style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            ${machImg?`<img src="${Security.escapeHTML(machImg)}" style="width:40px;height:40px;border-radius:10px;object-fit:cover;">`:`<div style="width:40px;height:40px;border-radius:10px;background:rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:center;font-size:10px;color:#8A8A8A;flex-shrink:0;">Sem Img</div>`}
+            <div>
+              <div style="font-size:12px;color:#8A8A8A;margin-bottom:2px;">Aplicação principal</div>
+              <div style="font-size:14px;font-weight:600;color:#1A1A1A;line-height:1.2;">${Security.escapeHTML(m.machineryName||'Genérico')}</div>
+            </div>
+          </div>
+          ${m.machineryDesc ? `<div style="font-size:12px;color:#666;line-height:1.5;">${Security.escapeHTML(m.machineryDesc)}</div>` : ''}
+        </div>
+
+        <div class="volvo-card" style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(27,122,78,0.1);color:#1B7A4E;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            </div>
+            <div>
+              <div style="font-size:12px;color:#8A8A8A;margin-bottom:2px;">Instruções e Manuseio</div>
+              <div style="font-size:14px;font-weight:600;color:#1A1A1A;line-height:1.2;">Guia Técnico</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:#1A1A1A;line-height:1.5;">${Security.escapeHTML(m.usageDesc||'Ver manual.')}</div>
+          ${m.notes ? `<div style="margin-top:4px;padding:8px 12px;background:rgba(255,184,48,0.1);border-left:2px solid #FFB830;font-size:11px;color:#b37d1a;border-radius:0 8px 8px 0;line-height:1.4;">${Security.escapeHTML(m.notes)}</div>` : ''}
+        </div>
+
+        <div class="volvo-card" style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(0,0,0,0.05);color:#1A1A1A;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+            </div>
+            <div>
+              <div style="font-size:12px;color:#8A8A8A;margin-bottom:2px;">Documentos e Modelos</div>
+              <div style="font-size:14px;font-weight:600;color:#1A1A1A;line-height:1.2;">Anexos Disponíveis</div>
+            </div>
+          </div>
+          <div id="infoFilesList">Carregando...</div>
+        </div>
+      </div>
+
+    </div>
+  `;
+
+  // Salvar referencias p/ toggle
+  window._lastM = m;
+  window._lastFiles = files;
+
+  document.getElementById('infoContent').innerHTML = isOldDesign ? oldDesignHTML : newDesignHTML;
+  (contentEl.querySelector('[data-info-close]') || document.querySelector('#moreInfoModal .eo-modal-close'))?.focus({preventScroll:true});
+  contentEl.querySelectorAll('[data-info-action]').forEach(button => {
+    button.addEventListener('click', () => {
+      if (button.dataset.infoAction === 'locate') {
+        closeMoreInfoModal();
+        locateOnMap(m.code);
+      } else {
+        window.useOldDesign = button.dataset.infoAction === 'classic';
+        openMoreInfo(m.code);
+      }
+    });
+  });
+
+  // Apply responsive fix to grid
+  const styleEl = document.createElement('style');
+  styleEl.innerHTML = `@media (max-width: 800px) { #infoModernGrid { grid-template-columns: 1fr !important; } #infoModernGrid > div:first-child { position: static !important; } }`;
+  document.getElementById('infoContent').appendChild(styleEl);
+
+  // Render Files List
+  _renderInfoFilesList(files, m.code);
+  if (!filesRes.success) {
+    const feedback = document.createElement('p');
+    feedback.setAttribute('role', 'status');
+    feedback.textContent = 'Não foi possível carregar os anexos. Feche e abra os detalhes para tentar novamente.';
+    document.getElementById('infoFilesList').append(feedback);
+  }
+
+  // Initialize Media Gallery (Image + 3D)
+  // Pass full files list so viewer can load associated MTL/textures
+  const filesContext = { code: m.code, files: files };
+  if(prod3D) {
+    const ext = prod3D.filename.split('.').pop().toLowerCase();
+    setupInfoMediaGallery(prod3D.id, m.code, prod3D.filename, ext, imgSrc, filesContext);
+  } else {
+    setupInfoMediaGallery(null, null, null, null, imgSrc, filesContext);
+  }
+}
+
+function _renderInfoFilesList(files, code){
+  const el = document.getElementById('infoFilesList');
+  if(!el) return;
+  const legacyManual = currentInfoMaterial && currentInfoMaterial.manualUrl;
+  if(!files.length && !legacyManual){
+    el.innerHTML='<p style="color:var(--text-tertiary);font-size:13px;">Nenhum arquivo anexado</p>';
+    return;
+  }
+  const catLabel = {product_3d:'3D Produto',machinery_3d:'3D Maquinário',manual:'Manual',electrical:'Elétrico',mechanical:'Mecânico',other:'Outro'};
+  const catGroups = Object.create(null);
+  files.forEach(f=>{
+    if(!catGroups[f.category]) catGroups[f.category]=[];
+    catGroups[f.category].push(f);
+  });
+  let html = '';
+  const fileActions = [];
+  if(legacyManual && !files.find(f=>f.category==='manual')){
+    html += `<div style="width:100%;"><div style="font-size:11px;color:#8A8A8A;margin:8px 0 4px 0;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Manual Legado</div><div style="display:flex;gap:8px;flex-wrap:wrap;"><button class="eo-info-file-btn" onclick="openManualCurrent()">Manual (PDF)</button></div></div>`;
+  }
+  Object.entries(catGroups).forEach(([cat,flist])=>{
+    const label = catLabel[cat]||cat;
+    html += `<div style="width:100%;"><div style="font-size:11px;color:#8A8A8A;margin:8px 0 4px 0;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">${Security.escapeHTML(label)}</div><div style="display:flex;gap:8px;flex-wrap:wrap;">`;
+    flist.forEach(f=>{
+      const icon = getFileIcon(f.filename);
+      fileActions.push(() => f.file_url ? _openInfoFile(f.id, code, f.filename, f.file_url) : _openInfoFile(f.id, code, f.filename));
+      html += `<button class="eo-info-file-btn" data-info-file title="${Security.escapeHTML(f.filename)} [${Security.escapeHTML(label)}]">${icon} ${Security.escapeHTML(f.filename.length>22?f.filename.substring(0,20)+'...':f.filename)}</button>`;
+    });
+    html += `</div></div>`;
+  });
+  el.innerHTML = html || '<p style="color:var(--text-tertiary);font-size:13px;">Nenhum arquivo anexado</p>';
+  el.querySelectorAll('[data-info-file]').forEach((button, index) => {
+    button.addEventListener('click', fileActions[index]);
+  });
+}
+
+async function _openInfoFile(fileId, code, filename, externalUrl){
+  if(externalUrl){try{const publicUrl=new URL(externalUrl);if(publicUrl.protocol!=='https:'||publicUrl.username||publicUrl.password)throw Error();window.open(publicUrl.href,'_blank','noopener');return;}catch(_){showToast('Endereço do arquivo inválido.','error');return;}}
+  filename = typeof filename === 'string' ? filename : '';
+  const ext = filename.split('.').pop().toLowerCase();
+  const url = `${typeof API !== 'undefined' ? API.BASE_URL : '/api'}/materials/${encodeURIComponent(code)}/files/${encodeURIComponent(fileId)}/data`;
+  if (['stl', 'obj', 'gltf', 'glb', 'step', 'stp', 'iges', 'igs'].includes(ext)) {
+    if (typeof open3DViewer === 'function') open3DViewer(url, ext, filename);
+    else showToast('Visualizador 3D indisponível', 'error');
+    return;
+  }
+  try {
+    const response = await fetch(url, { redirect:'error', headers: { Authorization: `Bearer ${localStorage.getItem('astha_token') || ''}` } });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const blobUrl = URL.createObjectURL(await response.blob());
+    const link=document.createElement('a');link.href=blobUrl;link.download=filename||'anexo';document.body.append(link);link.click();link.remove();
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+  } catch (_) { showToast('Erro ao abrir arquivo', 'error'); }
+}
+
+function closeMoreInfoModal(){
+  infoLoadVersion++;
+  document.getElementById('moreInfoModal').classList.remove('active');
+  if(typeof miniViewerInst !== 'undefined' && miniViewerInst) {
+    miniViewerInst.stop();
+  }
+}
+// -- PDF & Manual --
+function openManualCurrent(){
+  if(!currentInfoMaterial||!currentInfoMaterial.manualUrl){showToast('Nenhum manual disponível','info');return;}
+  _openManualUrl(currentInfoMaterial.manualUrl);
+}
+function downloadManualCurrent(){
+  if(!currentInfoMaterial||!currentInfoMaterial.manualUrl){showToast('Nenhum manual disponível','info');return;}
+  _openManualUrl(currentInfoMaterial.manualUrl,`manual-${currentInfoMaterial.code}.pdf`);
+}
+function _openManualUrl(url,filename='anexo'){
+  if(!url)return;
+  if(url.startsWith('data:')){
+    try{
+      const parts=url.split(',');
+      const mime=parts[0].split(':')[1].split(';')[0];
+      const bstr=atob(parts[1]);
+      const ab=new Uint8Array(bstr.length);
+      for(let i=0;i<bstr.length;i++)ab[i]=bstr.charCodeAt(i);
+      if(ab.length>10*1024*1024)throw Error('Arquivo grande demais');
+      const safeType=['application/pdf','image/png','image/jpeg','image/webp'].includes(mime)?mime:'application/octet-stream';
+      const blob=new Blob([ab],{type:safeType});
+      const blobUrl=URL.createObjectURL(blob);
+      const link=document.createElement('a');link.href=blobUrl;link.download=filename;document.body.append(link);link.click();link.remove();
+      setTimeout(()=>URL.revokeObjectURL(blobUrl),60000);
+    }catch(e){showToast('Erro ao abrir o manual','error');console.error(e);}
+  }else{const safe=Security.webURL(url);if(safe)window.open(safe,'_blank','noopener');else showToast('Endereço do arquivo inválido.','error');}
+}
+function openPdfViewer(url,title){_openManualUrl(url);}
+function closePdfViewer(){document.getElementById('pdfViewerModal').classList.remove('active');document.getElementById('pdfFrame').src='';}
+// â⬝??â⬝?? Price Comparison â⬝??â⬝??
+function comparePrices(){if(currentInfoMaterial)comparePricesFor(currentInfoMaterial.code)}
+function comparePricesFor(code){
+  const m=materials.find(x=>x.code===code);if(!m)return;
+  const q=encodeURIComponent(`${m.brand} ${m.model} ${m.desc}`);
+  window.open(`https://www.google.com/search?tbm=shop&q=${q}`,'_blank');
+  showToast('Comparação aberta no Google Shopping','info');
+}
+
+// â⬝??â⬝?? Entry/Exit â⬝??â⬝??
+function lookupMaterial(prefix){
+  const code=document.getElementById(prefix+'Code').value.trim().toUpperCase();
+  const desc=document.getElementById(prefix+'Desc');
+  const found=materials.find(m=>m.code===code);
+  desc.value=found?found.desc:(code.length>=5?'Não encontrado':'Aguardando código...');
+}
+async function handleEntry(e){
+  e.preventDefault();
+  const code=document.getElementById('entryCode').value.trim().toUpperCase();
+  const qty=Number(document.getElementById('entryQty').value);
+  const priceText=document.getElementById('entryPrice').value.trim();
+  const price=priceText===''?null:Number(priceText);
+  const supplier=document.getElementById('entrySupplier').value.trim();
+  const mat=materials.find(m=>m.code===code);
+  if(!mat){showToast('Material não encontrado!','error');return}
+  if(!validStockQuantity(qty)){showToast('Informe uma quantidade positiva, com até 3 casas decimais.','error');return}
+  if(price!==null&&(!Number.isFinite(price)||price<0||price>1e9||Math.abs(price*100-Math.round(price*100))>0.000001)){showToast('Informe um preço válido, com até 2 casas decimais.','error');return}
+
+  const payload = {
+    code: code,
+    quantity: qty,
+    ...(price===null?{}:{unit_price:price}),
+    nf_number: supplier || 'Sistema',
+    responsible: supplier || 'Sistema'
+  };
+
+  const res = await submitStockMovement(e.target, '/movements/entry', payload);
+  if(!res)return;
+  if (res.success) {
+    showToast(`Entrada: ${qty}x ${mat.desc}`,'success');
+    e.target.reset();
+    document.getElementById('entryDesc').value='Aguardando código...';
+    await initAppData();
+  } else {
+    showToast(`Erro ao registrar entrada: ${res.error}`,'error');
+  }
+}
+async function handleExit(e){
+  e.preventDefault();
+  const code=document.getElementById('exitCode').value.trim().toUpperCase();
+  const qty=Number(document.getElementById('exitQty').value);
+  const center=document.getElementById('exitCenter').value.trim();
+  const mat=materials.find(m=>m.code===code);
+  if(!mat){showToast('Material não encontrado!','error');return}
+  if(!validStockQuantity(qty)){showToast('Informe uma quantidade positiva, com até 3 casas decimais.','error');return}
+  if(qty>mat.qty){showToast(`Saldo insuficiente! Disponível: ${mat.qty}`,'error');return}
+
+  const payload = {
+    code: code,
+    quantity: qty,
+    responsible: center || 'Sistema',
+    reason: center || 'Sistema'
+  };
+
+  const res = await submitStockMovement(e.target, '/movements/exit', payload);
+  if(!res)return;
+  if (res.success) {
+    showToast(`Saída: ${qty}x ${mat.desc}`,'success');
+    e.target.reset();
+    document.getElementById('exitDesc').value='Aguardando código...';
+    await initAppData();
+  } else {
+    showToast(`Erro ao registrar saída: ${res.error}`,'error');
+  }
+}
+
+function validStockQuantity(value){return Number.isFinite(value)&&value>0&&value<=1e9&&Math.abs(value*1000-Math.round(value*1000))<0.000001;}
+async function submitStockMovement(form,endpoint,payload){
+  if(form.dataset.submitting==='true')return null;
+  form.dataset.submitting='true';
+  const button=form.querySelector('[type="submit"]'),wasDisabled=button?.disabled;
+  if(button)button.disabled=true;
+  try{return await API.post(endpoint,payload);}
+  catch(_){return{success:false,error:'Não foi possível confirmar o movimento. Confira o histórico antes de tentar novamente.'};}
+  finally{delete form.dataset.submitting;if(button)button.disabled=wasDisabled;}
+}
+
+// â⬝??â⬝?? Reports â⬝??â⬝??
+function filteredReportRows(){
+  const query=(document.getElementById('reportFilter')?.value||'').trim().toLocaleLowerCase('pt-BR');
+  const type=document.getElementById('reportType')?.value||'';
+  const from=document.getElementById('reportFrom')?.value||'';
+  const to=document.getElementById('reportTo')?.value||'';
+  return movements.filter(m=>{
+    if(type&&m.type!==type)return false;
+    if(from&&(!m.day||m.day<from))return false;
+    if(to&&(!m.day||m.day>to))return false;
+    return !query||[m.code,m.desc,m.responsible].some(value=>String(value||'').toLocaleLowerCase('pt-BR').includes(query));
+  });
+}
+function renderReports(){
+  const tbody=document.getElementById('reportsTableBody');
+  const empty=document.getElementById('reportsEmpty');
+  if(!tbody)return;
+  const f=filteredReportRows();
+  document.getElementById('reportTotal').textContent=f.length.toLocaleString('pt-BR');
+  document.getElementById('reportEntries').textContent=f.filter(m=>m.type==='entrada').reduce((sum,m)=>sum+m.qty,0).toLocaleString('pt-BR');
+  document.getElementById('reportExits').textContent=f.filter(m=>m.type==='saida').reduce((sum,m)=>sum+m.qty,0).toLocaleString('pt-BR');
+  document.getElementById('reportExport').disabled=!f.length;
+  if(!f.length){tbody.innerHTML='';if(empty)empty.style.display='block';return}
+  if(empty)empty.style.display='none';
+  tbody.innerHTML=f.map(m=>`<tr><td>${Security.escapeHTML(m.date)}</td><td><span class="material-code">${Security.escapeHTML(m.code)}</span></td><td>${Security.escapeHTML(m.desc)}</td><td><span class="eo-status ${Security.escapeHTML(m.opClass)}">${Security.escapeHTML(m.operation)}</span></td><td>${Security.escapeHTML(Number(m.qty).toLocaleString('pt-BR', {maximumFractionDigits:3}))}</td><td>${Security.escapeHTML(m.responsible)}</td></tr>`).join('');
+}
+function filterReports(){renderReports()}
+async function refreshReports(){
+  const result=await API.get('/movements');
+  if(!result.success||!Array.isArray(result.data)){showToast(result.error||'Não foi possível atualizar o relatório','error');return}
+  movements=result.data.map(mapMovementToFrontend);
+  renderReports();
+  showToast('Relatório atualizado','success');
+}
+function exportReportsCsv(){
+  const rows=filteredReportRows();
+  if(!rows.length)return;
+  const cell=value=>{
+    let text=String(value??'');
+    if(/^\s*[=+\-@]/.test(text))text=`'${text}`;
+    return `"${text.replace(/"/g,'""')}"`;
+  };
+  const header=['Data','Código','Descrição','Operação','Quantidade','Responsável'];
+  const data=rows.map(m=>[m.date,m.code,m.desc,m.operation,m.qty,m.responsible]);
+  const csv='\uFEFF'+[header,...data].map(row=>row.map(cell).join(';')).join('\r\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  const link=document.createElement('a');link.href=url;link.download=`astha-movimentacoes-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+// â⬝??â⬝?? Components â⬝??â⬝??
+function renderComponents(){
+  const grid=document.getElementById('componentsGrid');
+  const empty=document.getElementById('componentsEmpty');
+  if(!customComponents.length){grid.innerHTML='';empty.style.display='block';return}
+  empty.style.display='none';
+  grid.innerHTML=customComponents.map((c,i)=>{
+    let totalCost=0;
+    const items=c.materials.map(cm=>{
+      const m=materials.find(x=>x.code===cm.code);
+      const cost=m?(m.price*cm.qty):0;totalCost+=cost;
+      return`<div class="eo-component-material-item"><span>${Security.escapeHTML(m?m.desc:cm.code)}</span><span>${Security.escapeHTML(cm.qty)}x ${m?formatBRL(cost):'-'}</span></div>`;
+    }).join('');
+    return`<div class="eo-component-card">
+      <div class="eo-component-name">${Security.escapeHTML(c.name)}</div>
+      <div class="eo-component-desc">${Security.escapeHTML(c.description||'')}</div>
+      <div class="eo-component-materials">${items}</div>
+      <div class="eo-component-total">Custo Total: ${formatBRL(totalCost)}</div>
+    </div>`;
+  }).join('');
+}
+function openNewComponentModal(){
+  document.getElementById('componentForm').reset();
+  document.getElementById('compMaterialsList').innerHTML='';
+  addCompMaterialRow();
+  document.getElementById('componentModal').classList.add('active');
+}
+document.getElementById('newComponentButton')?.addEventListener('click', openNewComponentModal);
+function closeComponentModal(){document.getElementById('componentModal').classList.remove('active')}
+function addCompMaterialRow(){
+  const div=document.createElement('div');div.style.cssText='display:flex;gap:8px;margin-bottom:8px;align-items:end';
+  const opts=materials.map(m=>`<option value="${Security.escapeHTML(m.code)}">${Security.escapeHTML(m.code)} — ${Security.escapeHTML(m.desc)}</option>`).join('');
+  div.innerHTML=`<div class="input-group" style="flex:2"><select class="eo-input comp-mat-code">${opts}</select></div>
+    <div class="input-group" style="flex:1"><input type="number" class="eo-input comp-mat-qty" value="1" min="1"></div>
+    <button type="button" class="eo-action-btn danger" onclick="this.parentElement.remove()" style="margin-bottom:4px" aria-label="Remover material do componente">Remover</button>`;
+  document.getElementById('compMaterialsList').appendChild(div);
+}
+async function handleNewComponent(e){
+  e.preventDefault();
+  const name=document.getElementById('compName').value.trim();
+  const desc=document.getElementById('compDesc').value.trim();
+  const rows=document.querySelectorAll('#compMaterialsList > div');
+  const mats=[];
+  rows.forEach(r=>{
+    const code=r.querySelector('.comp-mat-code').value;
+    const qty=parseInt(r.querySelector('.comp-mat-qty').value)||1;
+    mats.push({code,qty});
+  });
+  if(!name){showToast('Nome obrigatório','error');return}
+  if(!mats.length){showToast('Adicione ao menos um material','error');return}
+
+  const payload = {
+    name: name,
+    description: desc,
+    materials: mats
+  };
+
+  const res = await API.post('/components', payload);
+  if (res.success) {
+    showToast(`Componente "${name}" criado!`,'success');
+    closeComponentModal();
+    await initAppData();
+  } else {
+    showToast(`Erro ao criar componente: ${res.error}`,'error');
+  }
+}
+
+// â⬝??â⬝?? Users â⬝??â⬝??
+function getRoleLabel(role) {
+  return role === 'superadmin' ? 'Super Admin'
+    : role === 'admin' ? 'Admin'
+    : role === 'manager' ? 'Gerente'
+    : role === 'operator' ? 'Operador'
+    : 'Visualizador';
+}
+function renderUsers(){
+  const grid = document.getElementById('usersGrid');
+  if (!grid) return;
+  const isAdmin = Auth.canManageUsers();
+  if (!users || users.length === 0) {
+    grid.innerHTML = '<div style="padding:var(--space-8);text-align:center;color:var(--text-secondary)">Nenhum usuário encontrado</div>';
+    return;
+  }
+  grid.innerHTML = users.map(u => `
+    <div style="display:grid;grid-template-columns:40px minmax(120px,1fr) auto auto;gap:12px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--surface-border);">
+      <div data-user-avatar="${Number(u.id)}" style="width:36px;height:36px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;overflow:hidden;"></div>
+      <div style="overflow:hidden;min-width:0;">
+        <div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${Security.escapeHTML(u.name || 'Usuário')}</div>
+        <div style="font-size:11px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${Security.escapeHTML(u.email || '')}</div>
+        <div style="font-size:10px;color:${u.is_active===false?'var(--text-tertiary)':'var(--color-success)'};">${u.is_active===false?'Inativo':'Ativo'}</div>
+      </div>
+      <span class="eo-role-badge ${Security.escapeHTML(u.role||'viewer')}" style="white-space:nowrap;flex-shrink:0;">${Security.escapeHTML(getRoleLabel(u.role))}</span>
+      ${isAdmin && u.role !== 'superadmin' && Number(u.id) !== Number(Auth.getUser()?.id) ? `<select class="eo-input" style="width:auto;padding:4px 8px;font-size:11px;flex-shrink:0;" data-user-role>
+        <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+        <option value="manager" ${u.role==='manager'?'selected':''}>Gerente</option>
+        <option value="operator" ${u.role==='operator'?'selected':''}>Operador</option>
+        <option value="viewer" ${u.role==='viewer'?'selected':''}>Visualizador</option>
+      </select>` : ''}
+    </div>`).join('');
+  grid.querySelectorAll('[data-user-role]').forEach((select, index) => {
+    select.addEventListener('change', () => changeUserRole(users[index].id, select.value));
+  });
+  grid.querySelectorAll('[data-user-avatar]').forEach(avatar => {
+    const user = users.find(entry => Number(entry.id) === Number(avatar.dataset.userAvatar));
+    if (window.ProfileAvatar && user) ProfileAvatar.render(avatar, user);
+    else if (user) avatar.textContent = (user.name || 'U').trim().charAt(0).toUpperCase();
+  });
+}
+async function changeUserRole(id,role){
+  const res = await API.put(`/auth/users/${id}/role`, { role });
+  if (res.success) {
+    showToast(`Permissío alterada para ${role}`,'success');
+    await initAppData();
+  } else {
+    showToast(`Erro ao alterar permissío: ${res.error}`,'error');
+  }
+}
+function openAddUserModal(){
+  const modal=document.getElementById('addUserModal');
+  modal?.classList.add('active');
+  const output=document.getElementById('newUserInviteResult');
+  if(output){output.style.display='none';output.textContent='';}
+  const form=modal?.querySelector('form');
+  form?.reset();
+  const adminOption=document.querySelector('#newUserRole option[value="admin"]');
+  if(adminOption)adminOption.hidden=Auth.getUserRole()!=='superadmin';
+  const role=document.getElementById('newUserRole');
+  if(role&&adminOption?.hidden)role.value='viewer';
+}
+function closeAddUserModal(){document.getElementById('addUserModal').classList.remove('active')}
+async function handleAddUser(e){
+  e.preventDefault();
+  const email=document.getElementById('newUserEmail').value.trim();
+  const role=document.getElementById('newUserRole').value;
+  const expiry=Number(document.getElementById('newUserExpiry').value||48);
+  const result=await API.post('/org/invites',{email:email||null,role,expires_hours:expiry});
+  if(!result.success){showToast(`Não foi possível gerar o convite: ${result.error}`,'error');return;}
+  const output=document.getElementById('newUserInviteResult');
+  output.style.display='block';
+  output.textContent=`Convite criado: ${result.data.code}. Compartilhe o código com a pessoa para ela concluir o cadastro. Expira em ${new Date(result.data.expires_at).toLocaleString('pt-BR')}.`;
+  showToast('Convite gerado com sucesso!','success');
+}
+
+// â⬝??â⬝?? Close modals on overlay click â⬝??â⬝??
+document.addEventListener('click',e=>{
+  ['materialModal','moreInfoModal','pdfViewerModal','componentModal','assignModal','addUserModal'].forEach(id=>{
+    if(e.target.id===id)document.getElementById(id).classList.remove('active');
+  });
+});
+
+
+
+
+
+
+

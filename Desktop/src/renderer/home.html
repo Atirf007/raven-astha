@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <link rel="icon" type="image/png" href="./images/astha-wordmark.png?v=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home — ASTHA RAVEN</title>
+  <link rel="stylesheet" href="./css/home.css?v=6">
+  <link rel="stylesheet" href="./css/app-shell.css?v=9">
+  <link rel="stylesheet" href="./css/stock-insights.css?v=1">
+  <link rel="stylesheet" href="./css/launchpad.css?v=6">
+<link rel="stylesheet" href="./css/file-upload.css?v=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="home-shell">
+    <aside id="appSidebar" class="app-sidebar home-sidebar" aria-label="Navegação principal">
+      <div class="app-sidebar-heading">
+        <a class="app-brand home-brand" data-app-brand href="./home.html" aria-label="ASTHA PRO">
+          <span class="app-brand-default" data-brand-default><svg class="app-brand-symbol" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 29 26H3L16 3Z"/><path d="M11 20h10M13 16h6"/></svg><span class="app-brand-name">ASTHA</span><span class="app-brand-badge" data-brand-default-plan>Free</span></span>
+          <span class="app-brand-company" data-brand-company hidden><span class="app-brand-company-mark"><img data-brand-logo alt=""><span data-brand-initial aria-hidden="true">O</span></span><span class="app-brand-company-copy"><strong data-brand-name>Organização</strong><small data-brand-plan>Free</small></span></span>
+        </a>
+        <button class="app-sidebar-toggle" type="button" data-sidebar-toggle aria-controls="appSidebar" aria-label="Recolher menu lateral" title="Recolher menu lateral" aria-expanded="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7"/></svg></button>
+      </div>
+      <nav class="app-nav" aria-label="Módulos">
+        <section class="app-nav-section">
+          <p class="app-nav-label">Principal</p>
+          <a class="app-nav-item active" href="./home.html" aria-current="page" aria-label="Launchpad" title="Launchpad"><span class="app-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span><span class="app-nav-label-text">Launchpad</span></a>
+          <a class="app-nav-item" href="./sistema.html?tab=dashboard" data-module="wms" aria-label="WMS Core" title="WMS Core"><span class="app-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 7 9-4 9 4v10l-9 4-9-4z"/><path d="m3 7 9 5 9-5M12 12v9"/></svg></span><span class="app-nav-label-text">WMS Core</span></a>
+          <a class="app-nav-item" href="./sistema.html?tab=componentes" data-role="componentes" aria-label="Componentes" title="Componentes"><span class="app-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Z"/><path d="m4 7.5 8 4.6 8-4.6M12 12v9M8 5.2l8 4.6"/></svg></span><span class="app-nav-label-text">Componentes</span></a>
+          <a class="app-nav-item" href="./sistema.html?tab=eam" aria-label="Ativos e manutenção" title="Ativos e manutenção"><span class="app-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 6.5a4.5 4.5 0 0 0-5.8 5.8L3 17.5 6.5 21l5.2-5.2a4.5 4.5 0 0 0 5.8-5.8l-3 3-3.5-3.5z"/><path d="m15 4 5 5"/></svg></span><span class="app-nav-label-text">Ativos e manutenção</span></a>
+          <a class="app-nav-item" href="./analytics.html" data-analytics-link hidden aria-label="Estúdio de análises" title="Estúdio de análises"><span class="app-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18M6 15l4-5 4 3 6-8"/><circle cx="10" cy="10" r="1"/></svg></span><span class="app-nav-label-text">Estúdio de análises</span></a>
+          <a class="app-nav-item" href="./sistema.html?tab=relatorios" aria-label="Relatórios" title="Relatórios"><span class="app-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V11M10 20V5M16 20v-8M22 20H2"/></svg></span><span class="app-nav-label-text">Relatórios</span></a>
+          <a class="app-nav-item" href="./settings.html?tab=members" data-role="usuarios" aria-label="Usuários" title="Usuários"><span class="app-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 21v-2a6.5 6.5 0 0 1 13 0v2M17 5a3.5 3.5 0 0 1 0 6.8M18 15a5 5 0 0 1 3.5 4.8V21"/></svg></span><span class="app-nav-label-text">Usuários</span></a>
+        </section>
+        <section class="app-nav-section">
+          <p class="app-nav-label">Configurações</p>
+          <a class="app-nav-item" href="./settings.html?tab=workspace" aria-label="Corporativo" title="Corporativo"><span class="app-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V5l7-3v19M12 8h7v13M8 7h1M8 11h1M8 15h1M15 11h1M15 15h1"/></svg></span><span class="app-nav-label-text">Corporativo</span></a>
+          <a class="app-nav-item" href="./settings.html?tab=profile" aria-label="Meu Perfil" title="Meu Perfil"><span id="homeProfileNavAvatar" class="app-profile-avatar" aria-hidden="true">U</span><span class="app-nav-label-text">Meu Perfil</span></a>
+        </section>
+      </nav>
+      <section class="app-support-box home-support-box" aria-label="Suporte">
+        <h2>Precisa de ajuda?</h2>
+        <p>Suporte técnico 24/7 disponível.</p>
+        <a class="app-support-button" href="mailto:suporte@astha.com">Falar com Suporte</a>
+      </section>
+    </aside>
+
+    <main class="home-main">
+      <header class="home-header">
+        <div><p class="home-overline">Launchpad · Visão geral</p><h1>Painel de operação</h1><p class="home-subtitle">Seu estoque, suas prioridades e sua operação em um só lugar.</p></div>
+        <a class="home-user" href="./settings.html?tab=profile"><span class="home-user-org-mark" id="homeWorkspaceMark" hidden><img id="homeWorkspaceLogo" alt=""><span data-workspace-initial aria-hidden="true">W</span></span><span class="home-user-avatar" id="homeAvatar" aria-hidden="true">U</span><span id="homeUserName">Usuário</span></a>
+      </header>
+
+      <nav class="launchpad-shortcuts" aria-label="Atalhos da operação">
+        <a href="./home.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>Visão geral</a>
+        <a href="./home.html?view=stocks" data-launchpad-stock-link><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18M6 15l4-5 4 3 6-8"/></svg>Visão dos estoques</a>
+        <a href="./sistema.html?tab=estoque"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 7 9-4 9 4v10l-9 4-9-4zM3 7l9 5 9-5M12 12v9"/></svg>Gerenciar estoque</a>
+        <a href="./sistema.html?tab=mapa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2zM9 3v16M15 5v16"/></svg>Mapas</a>
+        <a href="./sistema.html?tab=relatorios"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20v-9M10 20V5M16 20v-8M2 20h20"/></svg>Relatórios</a>
+      </nav>
+      <div class="home-intro">
+        <div><h2>Resumo da organização</h2><p id="homeUpdated">Carregando dados atuais…</p></div>
+        <button class="home-refresh" id="homeRefresh" type="button">Atualizar dados</button>
+      </div>
+      <p class="home-feedback" id="homeFeedback" role="status" hidden></p>
+
+      <section class="home-metrics" aria-label="Indicadores atuais">
+        <article class="home-metric"><span class="home-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4v10l-9 4-9-4z M3 7l9 5 9-5 M12 12v9"/></svg></span><span class="home-metric-label">Materiais cadastrados</span><strong class="home-metric-value" id="homeMaterials">—</strong><span class="home-metric-detail">Itens no estoque</span></article>
+        <article class="home-metric"><span class="home-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l10 18H2z M12 9v5 M12 17h.01"/></svg></span><span class="home-metric-label">No mínimo ou abaixo</span><strong class="home-metric-value" id="homeLowStock">—</strong><span class="home-metric-detail">Materiais que exigem atenção</span></article>
+        <article class="home-metric"><span class="home-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z M8 8h8 M8 12h8 M8 16h5"/></svg></span><span class="home-metric-label">Ativos cadastrados</span><strong class="home-metric-value" id="homeAssets">—</strong><span class="home-metric-detail">Máquinas e equipamentos</span></article>
+        <article class="home-metric"><span class="home-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3v3 M17 3v3 M3 9h18 M4 5h16v16H4z"/></svg></span><span class="home-metric-label">Ordens em aberto</span><strong class="home-metric-value" id="homeOpenOrders">—</strong><span class="home-metric-detail">Ordens não concluídas</span></article>
+      </section>
+
+      <div class="launchpad-workspace">
+      <div class="home-grid">
+        <section class="home-panel" aria-labelledby="lowStockHeading">
+          <div class="home-section-heading"><h2 id="lowStockHeading">Estoque que precisa de atenção</h2><a href="./sistema.html?tab=estoque">Ver estoque →</a></div>
+          <div class="home-list" id="homeLowStockList"><p class="home-empty">Carregando…</p></div>
+        </section>
+        <section class="home-panel" aria-labelledby="ordersHeading">
+          <div class="home-section-heading"><h2 id="ordersHeading">Ordens em andamento</h2><a href="./sistema.html?tab=eam">Ver ordens →</a></div>
+          <div class="home-list" id="homeOrdersList"><p class="home-empty">Carregando…</p></div>
+        </section>
+      </div>
+
+      <section id="homeStockInsights" aria-label="Análises de estoque" hidden></section>
+      </div>
+
+      <section class="home-panel" aria-labelledby="movementsHeading">
+        <div class="home-section-heading"><h2 id="movementsHeading">Movimentações recentes</h2><a href="./sistema.html?tab=relatorios">Abrir relatórios →</a></div>
+        <div class="home-table-wrap"><table class="home-table"><thead><tr><th>Data</th><th>Material</th><th>Operação</th><th>Quantidade</th><th>Responsável</th></tr></thead><tbody id="homeRecentBody"><tr><td colspan="5">Carregando…</td></tr></tbody></table></div>
+      </section>
+
+      <section class="home-modules" aria-labelledby="modulesHeading">
+        <div class="home-section-heading"><h2 id="modulesHeading">Acessar módulos</h2></div>
+        <div class="home-module-grid">
+          <a class="home-module" href="./sistema.html?tab=dashboard"><strong>WMS Core</strong><span>Estoque, entradas, saídas e mapa.</span></a>
+          <a class="home-module" href="./sistema.html?tab=componentes" data-role="componentes"><strong>Componentes</strong><span>Conjuntos e materiais vinculados.</span></a>
+          <a class="home-module" href="./sistema.html?tab=eam"><strong>Ativos e manutenção</strong><span>Equipamentos, ordens e preventivas.</span></a>
+          <a class="home-module" href="./analytics.html" data-analytics-link hidden><strong>Estúdio de análises</strong><span>Estudos, versões dos dados e resultados reproduzíveis.</span></a>
+          <a class="home-module" href="./sistema.html?tab=relatorios"><strong>Relatórios</strong><span>Filtrar e exportar movimentações.</span></a>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="./js/api.js?v=9"></script>
+  <script src="./js/group-access-ui.js?v=1"></script>
+  <script src="./js/auth.js?v=4"></script>
+  <script src="./js/profile-avatar.js?v=5"></script>
+  <script src="./js/app-shell.js?v=5"></script>
+  <script src="./js/stock-insights.js?v=4"></script>
+  <script src="./js/home.js?v=10"></script>
+  <script src="./js/operational-assistant.js?v=4"></script>
+</body>
+</html>
+
+
+

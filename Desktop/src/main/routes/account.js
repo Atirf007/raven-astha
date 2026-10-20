@@ -1,0 +1,14 @@
+'use strict';
+const router=require('express').Router(),{pool}=require('../database/connection'),auth=require('../middleware/auth'),limits=require('../middleware/accountLimit'),service=require('../services/account');
+const handle=fn=>async(req,res)=>{try{const result=await fn(req);if(result.signOut)res.clearCookie('astha_page_session',{path:'/app'});res.json(result);}catch(e){res.status(e.status||503).json({error:e.status?e.message:'Não foi possível concluir esta ação agora.',...(e.status&&e.code?{code:e.code}:{})});}};
+router.post('/recover',limits.recovery,handle(req=>service.recover(pool,req.body)));
+router.use(auth);
+router.get('/',handle(req=>service.context(pool,req)));
+router.get('/sessions',handle(req=>service.sessions(pool,req)));
+router.delete('/sessions/:id',handle(req=>service.revokeSession(pool,req,req.params.id)));
+router.post('/sessions/revoke-others',handle(req=>service.revokeOthers(pool,req)));
+router.post('/password',limits.sensitive,handle(req=>service.changePassword(pool,req,req.body)));
+router.post('/email',limits.sensitive,handle(req=>service.changeEmail(pool,req,req.body)));
+router.post('/recovery-codes',limits.sensitive,handle(req=>service.recoveryCodes(pool,req,req.body)));
+router.post('/delete',limits.sensitive,handle(req=>service.deleteAccount(pool,req,req.body)));
+module.exports=router;

@@ -1,0 +1,42 @@
+.eam-ux-dialog { position:fixed;inset:0;margin:auto;width:min(760px,calc(100vw - 32px));max-height:calc(100dvh - 48px);overflow:auto;padding:0;border:0;border-radius:24px;background:#fff;color:#111827;box-sizing:border-box;box-shadow:0 24px 90px #0003; }
+.eam-ux-dialog::backdrop { background:#11182780; }
+.eam-ux-dialog header { display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 28px;border-bottom:1px solid #e5e7eb; }
+.eam-ux-dialog h3 { margin:0;font-size:20px; }
+.eam-ux-close { display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:10px;background:#f5f6f8;cursor:pointer; }
+.eam-ux-dialog form.eo-form-grid { margin:0;padding:24px 28px;gap:20px; }
+.eam-ux-dialog form > button[type=submit] { grid-column:1/-1;justify-self:end;min-height:42px;padding:10px 20px; }
+.eam-ux-dialog .eo-input { width:100%;min-width:0;box-sizing:border-box;background:#fff;color:#111827;border:1px solid #dfe5ed;border-radius:12px; }
+.eam-ux-dialog .eo-input-label { color:#536176; }
+.eam-ux-dialog .btn-primary { background:#111827;color:#fff;border:1px solid #111827;border-radius:10px; }
+.eam-ux-dialog .btn-secondary { background:#fff;color:#111827;border:1px solid #dfe5ed; }
+.eam-ux-dialog label { display:grid;gap:8px;min-width:0;font-size:13px;color:#536176; }
+.eam-ux-dialog .eam-preventive-form { margin:0;padding:24px 28px;border:0;box-shadow:none; }
+.eam-ux-dialog .eo-component-card { overflow-wrap:anywhere; }
+.eam-ux-dialog > .eo-form-grid { padding:24px 28px; }
+.eam-ux-dialog [role=status] { padding:0 28px 20px; }
+.eam-ux-dialog > div:not(header) { padding:20px 28px; }
+.eam-ux-actions { display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px; }
+.eam-reliability-filters { display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:16px;align-items:end;margin-bottom:24px; }
+.eam-reliability-filters label { display:grid;gap:8px;font-size:13px;color:#536176;min-width:0; }
+.eam-reliability-charts { display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:24px 0; }
+.eam-reliability-chart { border:1px solid #e1e6ee;border-radius:16px;padding:20px;background:#fff; }
+.eam-reliability-chart h4 { margin:0 0 16px; }
+.eam-reliability-chart svg { width:100%;height:auto; }
+.eam-reliability-chart p { color:#64748b;font-size:13px;line-height:1.6; }
+.eam-reliability-identity { margin:0 0 20px;color:#536176; }
+@media(max-width:760px) { .eam-reliability-filters,.eam-reliability-charts { grid-template-columns:1fr; }.eam-ux-dialog form.eo-form-grid { grid-template-columns:1fr;padding:20px; } }
+
+#eamReliabilityResult {display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin:24px 0;}
+#eamReliabilityResult .eo-component-card {display:flex;flex-direction:column;gap:12px;min-width:0;margin:0;padding:22px;border:1px solid #e1e6ee;border-radius:16px;box-shadow:none;}
+#eamReliabilityResult strong {font-size:13px;color:#64748b;line-height:1.4;}
+#eamReliabilityResult span {font-size:24px;font-weight:600;line-height:1.3;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
+.eam-ux-actions {gap:10px;margin-top:20px;margin-bottom:28px;}
+.eam-observation-confirmation {grid-column:1/-1;display:flex!important;align-items:flex-start;gap:10px!important;}
+.eam-observation-confirmation input {width:auto!important;margin-top:3px;}
+#eamObservationsDialog [hidden] {display:none!important;}
+.eam-reliability-filters {padding:20px;background:#f8fafc;border:1px solid #e1e6ee;border-radius:16px;}
+.eam-live-controls{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.eam-live-controls p{margin:0;font-size:13px;color:#536176}
+.eo-form-grid > .eo-form-field {display:flex;flex-direction:column;gap:8px;min-width:0;margin:0;text-transform:none;}
+.eo-form-field > .eo-input-label {margin:0;line-height:1.4;}
+.eo-form-field > .eo-input {width:100%;min-width:0;box-sizing:border-box;}

@@ -1,0 +1,56 @@
+{
+  "sistema": {
+    "nome": "ASTHA RAVEN WMS — Edição Desktop (Electron)",
+    "versao": "1.0.0",
+    "arquitetura": {
+      "padrao": "Oficial da Indústria para Electron (Main / Preload / Renderer / Dados)",
+      "cozinha": "src/main/index.js (Back-end Node.js + Processo Principal Electron)",
+      "garcom": "src/main/preload.js (Ponte de Contexto Segura via contextBridge)",
+      "cliente": "src/renderer/renderer.js + src/renderer/index.html (Front-end / Interface UI)",
+      "bancoLocal": "dados.json (Persistência JSON local sincronizada com o MySQL)"
+    },
+    "integracaoEcossistema": "Aplicação Desktop independente que compartilha o mesmo banco de dados MySQL com o Web App, unificando ambos em tempo real."
+  },
+  "conexaoBanco": {
+    "perfilAtivo": "local",
+    "host": "127.0.0.1",
+    "porta": 3306,
+    "database": "astha_raven_lab",
+    "status": "conectado_sincronizado",
+    "ultimaSincronizacao": "2026-10-20T02:45:08.989Z"
+  },
+  "estatisticasSincronizadas": {
+    "organizacoes": 122,
+    "usuarios": 151,
+    "materiais": 42,
+    "movimentacoes": 0,
+    "ativosEam": 0,
+    "espacosPessoais": 0
+  },
+  "ultimosMateriais": [],
+  "preferenciasDesktop": {
+    "tema": "dark-industrial",
+    "mostrarIndicadorSincronizacao": true,
+    "sincronizacaoAutomatica": true
+  },
+  "registrosLocais": [
+    {
+      "id": "evt-1792464306734",
+      "titulo": "Servidor Desktop inicializado no perfil local (porta 3001)",
+      "origem": "main-cozinha",
+      "criadoEm": "2026-10-20T02:45:06.734Z"
+    },
+    {
+      "id": "evt-1792460345067",
+      "titulo": "Servidor Desktop inicializado no perfil local (porta 3001)",
+      "origem": "main-cozinha",
+      "criadoEm": "2026-10-20T01:39:05.067Z"
+    },
+    {
+      "id": "init-001",
+      "titulo": "Estrutura Oficial Electron Inicializada",
+      "origem": "electron-desktop",
+      "criadoEm": "2026-10-19T22:30:00.000Z"
+    }
+  ]
+}
