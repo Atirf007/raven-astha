@@ -1,8 +1,0 @@
-{
-  "start": "2026-09-14T20:11:10.6851294Z",
-  "end": "2026-09-14T20:11:11.4867976Z",
-  "command": "node --test --test-isolation=none tests/security/auth-session.test.js",
-  "exitCode": 1,
-  "target": "ephemeral loopback Express with fake pool",
-  "classification": "PREEXISTING_FAILURE"
-}
