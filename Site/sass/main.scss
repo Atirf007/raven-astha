@@ -1,0 +1,16 @@
+$primary: #9861f2;
+$min-contrast-ratio: 3; 
+
+// cores tiradas da paleta do TCC (Quadro 2)
+$dark: #0b1120;
+$success: #10b981;
+$warning: #f59e0b;
+$danger: #ef4444;
+$info: #06b6d4;
+
+$font-family-sans-serif: Nunito, system-ui, sans-serif;
+$headings-font-weight: 800;
+$border-radius-lg: .9rem;
+$enable-smooth-scroll: false;
+
+@import '../node_modules/bootstrap/scss/bootstrap';
